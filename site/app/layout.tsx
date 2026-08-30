@@ -32,7 +32,8 @@ export const metadata: Metadata = {
 const LINKS = [
   { href: "/", label: "Overview" },
   { href: "/method", label: "Method" },
-  { href: "/report", label: "Report" },
+  { href: "/report", label: "Review" },
+  { href: "/trajectory", label: "Agent" },
   { href: "/compare", label: "Compare" },
   { href: "/changelog", label: "Changelog" },
   { href: "/reproduce", label: "Reproduce" },

@@ -1,4 +1,5 @@
 import payload from "@/data/repro.json";
+import { PipelineChecks } from "@/components/pipelinechecks";
 
 interface Step {
   label: string;
@@ -25,6 +26,14 @@ export default function ReproducePage() {
         three commands below, and running them regenerates the corpus, the report data and the
         comparison from scratch. No key, no account and no network call is involved.
       </p>
+
+      <h2 className="ruled">It runs on every pull request</h2>
+      <p className="lede short">
+        The same commands run in CI, so the claim on this site is checked against the code on every
+        change rather than on the day it was written. The job is
+        <code> .github/workflows/shakedown.yml</code>.
+      </p>
+      <PipelineChecks />
 
       <h2>What you need</h2>
       <table className="plain">

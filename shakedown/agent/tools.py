@@ -1,11 +1,12 @@
 from __future__ import annotations
 
+import json
 from pathlib import Path
 
 from ..bundle import Bundle
 from ..runner import run_candidate, run_nop, run_oracle
 
-MAX_CHARS = 6000
+MAX_CHARS = 2600
 
 
 def _clip(text: str, limit: int = MAX_CHARS) -> str:
@@ -146,15 +147,28 @@ class Toolbox:
         self.bundle = bundle
         self.timeout = timeout
         self.runs: list[dict] = []
+        self._seen: dict[tuple[str, str], str] = {}
 
     def call(self, name: str, args: dict) -> str:
         handler = getattr(self, f"_{name}", None)
         if handler is None:
             return f"There is no tool called {name}."
+        # Repeating a call verbatim cannot teach the agent anything it was not already
+        # told, and every repeat costs a step it will want at the end. Hand back the
+        # first answer with a nudge rather than running the bundle again.
+        key = (name, json.dumps(args, sort_keys=True, default=str))
+        if key in self._seen:
+            return (
+                self._seen[key]
+                + "\n\n(You already made this exact call. Nothing has changed since. "
+                "Try a different idea, or call report.)"
+            )
         try:
-            return handler(args)
+            answer = handler(args)
         except Exception as error:  # a tool failure is data for the agent, not a crash
-            return f"{type(error).__name__}: {error}"
+            answer = f"{type(error).__name__}: {error}"
+        self._seen[key] = answer
+        return answer
 
     # ------------------------------------------------------------------ reading
 
@@ -193,7 +207,7 @@ class Toolbox:
             }
         )
         head = f"reward={result.reward} exit={result.exit_code} in {result.seconds:.2f}s"
-        tail = _clip((result.stdout or "") + (result.stderr or ""), 1200)
+        tail = _clip((result.stdout or "") + (result.stderr or ""), 900)
         return f"{head}\n{tail}"
 
     def _run_reference(self, args: dict) -> str:

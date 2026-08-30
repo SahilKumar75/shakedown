@@ -1027,6 +1027,20 @@ td.num {
   .console {
     grid-template-columns: 1fr;
   }
+  /* One column means the queue sits above the review rather than beside it, so
+     sticking it to the viewport would float it over the comments as they scroll. */
+  .queue {
+    position: static;
+    max-height: 320px;
+    top: auto;
+  }
+  .check {
+    grid-template-columns: 20px 1fr auto;
+    row-gap: 2px;
+  }
+  .check .checknote {
+    grid-column: 2 / 4;
+  }
 }
 
 .queue {
@@ -1400,4 +1414,235 @@ td.num {
   color: var(--flare);
   border-color: var(--flare_line);
   background: var(--flare_wash);
+}
+
+/* -------------------------------------------------------------- trajectory */
+
+.trailhead {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 28px;
+  padding: 10px 16px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius) var(--radius) 0 0;
+  background: var(--wash);
+  font-family: var(--font_mono), monospace;
+  font-size: 11px;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: var(--ink_faint);
+}
+
+.trail {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  border: 1px solid var(--line);
+  border-top: none;
+  border-radius: 0 0 var(--radius) var(--radius);
+  background: var(--paper);
+}
+
+.tstep {
+  border-bottom: 1px solid var(--line_soft);
+}
+
+.tstep:last-child {
+  border-bottom: none;
+}
+
+.tstephead {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  border: none;
+  background: transparent;
+  padding: 10px 16px;
+  cursor: pointer;
+  font: inherit;
+  color: inherit;
+  text-align: left;
+  transition: background var(--step);
+}
+
+.tstephead:hover {
+  background: var(--wash);
+}
+
+.tstep.open .tstephead {
+  background: var(--wash);
+}
+
+.tnum {
+  font-family: var(--font_mono), monospace;
+  font-size: 11px;
+  color: var(--ink_faint);
+  width: 22px;
+  flex: 0 0 auto;
+  font-variant-numeric: tabular-nums;
+}
+
+.ticon {
+  display: inline-flex;
+  color: var(--sea);
+}
+
+.tlabel {
+  flex: 1 1 auto;
+  font-size: 14px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.treward {
+  font-family: var(--font_mono), monospace;
+  font-size: 11px;
+  color: var(--ink_faint);
+  border: 1px solid var(--line);
+  border-radius: 2px;
+  padding: 1px 6px;
+}
+
+.treward.hit {
+  color: var(--flare);
+  border-color: var(--flare_line);
+  background: var(--flare_wash);
+}
+
+.tsecs {
+  font-family: var(--font_mono), monospace;
+  font-size: 11px;
+  color: var(--ink_faint);
+  font-variant-numeric: tabular-nums;
+}
+
+.tbody {
+  padding: 4px 16px 18px 50px;
+  display: grid;
+  gap: 14px;
+}
+
+.tcap {
+  display: block;
+  font-family: var(--font_mono), monospace;
+  font-size: 10.5px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink_faint);
+  margin-bottom: 6px;
+}
+
+.tthought p {
+  margin: 0;
+  font-size: 14.5px;
+  color: var(--ink_soft);
+}
+
+.tcode pre {
+  margin: 0;
+  padding: 12px 14px;
+  border: 1px solid var(--line_soft);
+  border-radius: 2px;
+  background: var(--ground);
+  font-family: var(--font_mono), monospace;
+  font-size: 12.5px;
+  line-height: 1.65;
+  overflow-x: auto;
+  white-space: pre-wrap;
+  max-height: 320px;
+  overflow-y: auto;
+}
+
+.agentfinding {
+  border-top: 1px solid var(--line);
+  border-radius: var(--radius);
+  margin-top: 22px;
+}
+
+/* --------------------------------------------------------------- ci job */
+
+.job {
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--paper);
+  margin: 22px 0 8px;
+  overflow: hidden;
+}
+
+.jobhead {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+  padding: 12px 18px;
+  background: var(--wash);
+  border-bottom: 1px solid var(--line);
+  font-family: var(--font_mono), monospace;
+  font-size: 12.5px;
+}
+
+.jobname,
+.jobmeta {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.jobmeta {
+  color: var(--ink_faint);
+  font-size: 11.5px;
+}
+
+.jobstep {
+  display: grid;
+  grid-template-columns: 20px 22px 1fr;
+  align-items: start;
+  gap: 12px;
+  padding: 13px 18px;
+  border-bottom: 1px solid var(--line_soft);
+}
+
+.jobstep:last-child {
+  border-bottom: none;
+}
+
+.jobmark {
+  color: var(--sound);
+  display: inline-flex;
+  padding-top: 2px;
+}
+
+.jobnum {
+  font-family: var(--font_mono), monospace;
+  font-size: 11px;
+  color: var(--ink_faint);
+  padding-top: 3px;
+}
+
+.jobbody {
+  display: grid;
+  gap: 5px;
+  min-width: 0;
+}
+
+.jobtitle {
+  font-size: 14.5px;
+  font-weight: 500;
+}
+
+.jobbody code {
+  font-family: var(--font_mono), monospace;
+  font-size: 12.5px;
+  color: var(--sea);
+  overflow-x: auto;
+  white-space: pre;
+}
+
+.jobnote {
+  font-size: 13.5px;
+  color: var(--ink_soft);
 }
