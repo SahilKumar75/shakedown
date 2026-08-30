@@ -27,6 +27,23 @@ export interface Finding {
   detail: Record<string, unknown>;
 }
 
+export interface Execution {
+  action: string;
+  reward: number;
+  seconds: number;
+  exit_code: number;
+  reward_line: boolean;
+  source_bytes: number;
+}
+
+export interface TraceStep {
+  probe: string;
+  seconds: number;
+  executions: Execution[];
+  found: DefectClass[];
+  error: string;
+}
+
 export interface BundleReport {
   bundle: string;
   verdict: "hold" | "clear";
@@ -34,6 +51,7 @@ export interface BundleReport {
   dollars: number;
   findings: Finding[];
   notes: string[];
+  trace: TraceStep[];
   injected: DefectClass | null;
   theme: string;
   summary: string;

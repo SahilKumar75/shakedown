@@ -23,7 +23,7 @@
     {
       "bundle": "address_normalise_02",
       "verdict": "hold",
-      "seconds": 0.596,
+      "seconds": 0.738,
       "dollars": 0.0,
       "findings": [
         {
@@ -31,19 +31,91 @@
           "severity": "blocking",
           "location": "solution/solve.py",
           "summary": "The shipped reference solution scored 0.0 where the pipeline requires 1.0, so review stops before any probe runs.",
-          "evidence": "verify.py reported reward=0.0 in 0.19s. Last line: reward=0.0",
+          "evidence": "verify.py reported reward=0.0 in 0.24s. Last line: reward=0.0",
           "remedy": "Fix the reference solution or the graded expectations until the reference earns full reward on every case.",
           "confirmed": true,
           "reporter": "execution",
           "detail": {
             "reward": 0.0,
-            "seconds": 0.19034424994606525
+            "seconds": 0.23637170798610896
           },
           "title": "Reference solution does not earn full reward"
         }
       ],
       "notes": [
-        "oracle reward 0.0 in 0.19s, nop reward 0.0"
+        "oracle reward 0.0 in 0.24s, nop reward 0.0"
+      ],
+      "trace": [
+        {
+          "probe": "wording",
+          "seconds": 0.001,
+          "executions": [],
+          "found": [],
+          "error": ""
+        },
+        {
+          "probe": "execution",
+          "seconds": 0.482,
+          "executions": [
+            {
+              "action": "run_candidate",
+              "reward": 0.0,
+              "seconds": 0.236,
+              "exit_code": 0,
+              "reward_line": true,
+              "source_bytes": 1181
+            },
+            {
+              "action": "run_candidate",
+              "reward": 0.0,
+              "seconds": 0.229,
+              "exit_code": 0,
+              "reward_line": true,
+              "source_bytes": 55
+            }
+          ],
+          "found": [
+            "oracle_fails"
+          ],
+          "error": ""
+        },
+        {
+          "probe": "leak",
+          "seconds": 0.002,
+          "executions": [],
+          "found": [],
+          "error": ""
+        },
+        {
+          "probe": "determinism",
+          "seconds": 0.0,
+          "executions": [],
+          "found": [],
+          "error": ""
+        },
+        {
+          "probe": "mutation",
+          "seconds": 0.0,
+          "executions": [],
+          "found": [],
+          "error": ""
+        },
+        {
+          "probe": "resilience",
+          "seconds": 0.253,
+          "executions": [
+            {
+              "action": "run_candidate",
+              "reward": 0.0,
+              "seconds": 0.246,
+              "exit_code": 0,
+              "reward_line": true,
+              "source_bytes": 96
+            }
+          ],
+          "found": [],
+          "error": ""
+        }
       ],
       "injected": "oracle_fails",
       "theme": "",
@@ -52,11 +124,98 @@
     {
       "bundle": "address_normalise_05",
       "verdict": "clear",
-      "seconds": 2.078,
+      "seconds": 1.823,
       "dollars": 0.0,
       "findings": [],
       "notes": [
-        "oracle reward 1.0 in 0.32s, nop reward 0.0"
+        "oracle reward 1.0 in 0.31s, nop reward 0.0"
+      ],
+      "trace": [
+        {
+          "probe": "wording",
+          "seconds": 0.001,
+          "executions": [],
+          "found": [],
+          "error": ""
+        },
+        {
+          "probe": "execution",
+          "seconds": 0.624,
+          "executions": [
+            {
+              "action": "run_candidate",
+              "reward": 1.0,
+              "seconds": 0.306,
+              "exit_code": 0,
+              "reward_line": true,
+              "source_bytes": 1175
+            },
+            {
+              "action": "run_candidate",
+              "reward": 0.0,
+              "seconds": 0.302,
+              "exit_code": 0,
+              "reward_line": true,
+              "source_bytes": 55
+            }
+          ],
+          "found": [],
+          "error": ""
+        },
+        {
+          "probe": "leak",
+          "seconds": 0.001,
+          "executions": [],
+          "found": [],
+          "error": ""
+        },
+        {
+          "probe": "determinism",
+          "seconds": 0.315,
+          "executions": [
+            {
+              "action": "run_candidate",
+              "reward": 1.0,
+              "seconds": 0.308,
+              "exit_code": 0,
+              "reward_line": true,
+              "source_bytes": 1175
+            }
+          ],
+          "found": [],
+          "error": ""
+        },
+        {
+          "probe": "mutation",
+          "seconds": 0.163,
+          "executions": [],
+          "found": [],
+          "error": ""
+        },
+        {
+          "probe": "resilience",
+          "seconds": 0.718,
+          "executions": [
+            {
+              "action": "run_candidate",
+              "reward": 0.0,
+              "seconds": 0.335,
+              "exit_code": 0,
+              "reward_line": true,
+              "source_bytes": 96
+            },
+            {
+              "action": "run_candidate",
+              "reward": 0.0,
+              "seconds": 0.37,
+              "exit_code": 0,
+              "reward_line": true,
+              "source_bytes": 1678
+            }
+          ],
+          "found": [],
+          "error": ""
+        }
       ],
       "injected": "nondeterministic",
       "theme": "",
@@ -65,7 +224,7 @@
     {
       "bundle": "address_normalise_08",
       "verdict": "hold",
-      "seconds": 1.419,
+      "seconds": 1.395,
       "dollars": 0.0,
       "findings": [
         {
@@ -85,7 +244,97 @@
         }
       ],
       "notes": [
-        "oracle reward 1.0 in 0.34s, nop reward 0.0"
+        "oracle reward 1.0 in 0.22s, nop reward 0.0"
+      ],
+      "trace": [
+        {
+          "probe": "wording",
+          "seconds": 0.001,
+          "executions": [],
+          "found": [
+            "forbidden_wording",
+            "forbidden_wording"
+          ],
+          "error": ""
+        },
+        {
+          "probe": "execution",
+          "seconds": 0.457,
+          "executions": [
+            {
+              "action": "run_candidate",
+              "reward": 1.0,
+              "seconds": 0.224,
+              "exit_code": 0,
+              "reward_line": true,
+              "source_bytes": 1175
+            },
+            {
+              "action": "run_candidate",
+              "reward": 0.0,
+              "seconds": 0.217,
+              "exit_code": 0,
+              "reward_line": true,
+              "source_bytes": 55
+            }
+          ],
+          "found": [],
+          "error": ""
+        },
+        {
+          "probe": "leak",
+          "seconds": 0.001,
+          "executions": [],
+          "found": [],
+          "error": ""
+        },
+        {
+          "probe": "determinism",
+          "seconds": 0.226,
+          "executions": [
+            {
+              "action": "run_candidate",
+              "reward": 1.0,
+              "seconds": 0.219,
+              "exit_code": 0,
+              "reward_line": true,
+              "source_bytes": 1175
+            }
+          ],
+          "found": [],
+          "error": ""
+        },
+        {
+          "probe": "mutation",
+          "seconds": 0.179,
+          "executions": [],
+          "found": [],
+          "error": ""
+        },
+        {
+          "probe": "resilience",
+          "seconds": 0.531,
+          "executions": [
+            {
+              "action": "run_candidate",
+              "reward": 0.0,
+              "seconds": 0.259,
+              "exit_code": 0,
+              "reward_line": true,
+              "source_bytes": 96
+            },
+            {
+              "action": "run_candidate",
+              "reward": 0.0,
+              "seconds": 0.258,
+              "exit_code": 0,
+              "reward_line": true,
+              "source_bytes": 1678
+            }
+          ],
+          "found": [],
+          "error": ""
+        }
       ],
       "injected": "forbidden_wording",
       "theme": "",
@@ -94,11 +343,98 @@
     {
       "bundle": "address_normalise_10",
       "verdict": "clear",
-      "seconds": 1.32,
+      "seconds": 1.368,
       "dollars": 0.0,
       "findings": [],
       "notes": [
-        "oracle reward 1.0 in 0.25s, nop reward 0.0"
+        "oracle reward 1.0 in 0.22s, nop reward 0.0"
+      ],
+      "trace": [
+        {
+          "probe": "wording",
+          "seconds": 0.001,
+          "executions": [],
+          "found": [],
+          "error": ""
+        },
+        {
+          "probe": "execution",
+          "seconds": 0.457,
+          "executions": [
+            {
+              "action": "run_candidate",
+              "reward": 1.0,
+              "seconds": 0.225,
+              "exit_code": 0,
+              "reward_line": true,
+              "source_bytes": 1175
+            },
+            {
+              "action": "run_candidate",
+              "reward": 0.0,
+              "seconds": 0.215,
+              "exit_code": 0,
+              "reward_line": true,
+              "source_bytes": 55
+            }
+          ],
+          "found": [],
+          "error": ""
+        },
+        {
+          "probe": "leak",
+          "seconds": 0.002,
+          "executions": [],
+          "found": [],
+          "error": ""
+        },
+        {
+          "probe": "determinism",
+          "seconds": 0.232,
+          "executions": [
+            {
+              "action": "run_candidate",
+              "reward": 1.0,
+              "seconds": 0.224,
+              "exit_code": 0,
+              "reward_line": true,
+              "source_bytes": 1175
+            }
+          ],
+          "found": [],
+          "error": ""
+        },
+        {
+          "probe": "mutation",
+          "seconds": 0.162,
+          "executions": [],
+          "found": [],
+          "error": ""
+        },
+        {
+          "probe": "resilience",
+          "seconds": 0.514,
+          "executions": [
+            {
+              "action": "run_candidate",
+              "reward": 0.0,
+              "seconds": 0.242,
+              "exit_code": 0,
+              "reward_line": true,
+              "source_bytes": 96
+            },
+            {
+              "action": "run_candidate",
+              "reward": 0.0,
+              "seconds": 0.258,
+              "exit_code": 0,
+              "reward_line": true,
+              "source_bytes": 1678
+            }
+          ],
+          "found": [],
+          "error": ""
+        }
       ],
       "injected": "answer_leak",
       "theme": "",
@@ -107,7 +443,7 @@
     {
       "bundle": "address_normalise_13",
       "verdict": "clear",
-      "seconds": 0.599,
+      "seconds": 0.583,
       "dollars": 0.0,
       "findings": [
         {
@@ -126,7 +462,96 @@
         }
       ],
       "notes": [
-        "oracle reward 1.0 in 0.13s, nop reward 0.0"
+        "oracle reward 1.0 in 0.10s, nop reward 0.0"
+      ],
+      "trace": [
+        {
+          "probe": "wording",
+          "seconds": 0.001,
+          "executions": [],
+          "found": [],
+          "error": ""
+        },
+        {
+          "probe": "execution",
+          "seconds": 0.21,
+          "executions": [
+            {
+              "action": "run_candidate",
+              "reward": 1.0,
+              "seconds": 0.099,
+              "exit_code": 0,
+              "reward_line": true,
+              "source_bytes": 1175
+            },
+            {
+              "action": "run_candidate",
+              "reward": 0.0,
+              "seconds": 0.097,
+              "exit_code": 0,
+              "reward_line": true,
+              "source_bytes": 55
+            }
+          ],
+          "found": [],
+          "error": ""
+        },
+        {
+          "probe": "leak",
+          "seconds": 0.001,
+          "executions": [],
+          "found": [],
+          "error": ""
+        },
+        {
+          "probe": "determinism",
+          "seconds": 0.106,
+          "executions": [
+            {
+              "action": "run_candidate",
+              "reward": 1.0,
+              "seconds": 0.1,
+              "exit_code": 0,
+              "reward_line": true,
+              "source_bytes": 1175
+            }
+          ],
+          "found": [],
+          "error": ""
+        },
+        {
+          "probe": "mutation",
+          "seconds": 0.041,
+          "executions": [],
+          "found": [
+            "hardcodable"
+          ],
+          "error": ""
+        },
+        {
+          "probe": "resilience",
+          "seconds": 0.224,
+          "executions": [
+            {
+              "action": "run_candidate",
+              "reward": 0.0,
+              "seconds": 0.104,
+              "exit_code": 0,
+              "reward_line": true,
+              "source_bytes": 96
+            },
+            {
+              "action": "run_candidate",
+              "reward": 0.0,
+              "seconds": 0.11,
+              "exit_code": 0,
+              "reward_line": true,
+              "source_bytes": 1678
+            }
+          ],
+          "found": [],
+          "error": ""
+        }
       ],
       "injected": "hardcodable",
       "theme": "",
@@ -135,11 +560,98 @@
     {
       "bundle": "address_normalise_16",
       "verdict": "clear",
-      "seconds": 1.291,
+      "seconds": 1.365,
       "dollars": 0.0,
       "findings": [],
       "notes": [
-        "oracle reward 1.0 in 0.23s, nop reward 0.0"
+        "oracle reward 1.0 in 0.22s, nop reward 0.0"
+      ],
+      "trace": [
+        {
+          "probe": "wording",
+          "seconds": 0.001,
+          "executions": [],
+          "found": [],
+          "error": ""
+        },
+        {
+          "probe": "execution",
+          "seconds": 0.458,
+          "executions": [
+            {
+              "action": "run_candidate",
+              "reward": 1.0,
+              "seconds": 0.22,
+              "exit_code": 0,
+              "reward_line": true,
+              "source_bytes": 1175
+            },
+            {
+              "action": "run_candidate",
+              "reward": 0.0,
+              "seconds": 0.222,
+              "exit_code": 0,
+              "reward_line": true,
+              "source_bytes": 55
+            }
+          ],
+          "found": [],
+          "error": ""
+        },
+        {
+          "probe": "leak",
+          "seconds": 0.001,
+          "executions": [],
+          "found": [],
+          "error": ""
+        },
+        {
+          "probe": "determinism",
+          "seconds": 0.229,
+          "executions": [
+            {
+              "action": "run_candidate",
+              "reward": 1.0,
+              "seconds": 0.222,
+              "exit_code": 0,
+              "reward_line": true,
+              "source_bytes": 1175
+            }
+          ],
+          "found": [],
+          "error": ""
+        },
+        {
+          "probe": "mutation",
+          "seconds": 0.164,
+          "executions": [],
+          "found": [],
+          "error": ""
+        },
+        {
+          "probe": "resilience",
+          "seconds": 0.512,
+          "executions": [
+            {
+              "action": "run_candidate",
+              "reward": 0.0,
+              "seconds": 0.245,
+              "exit_code": 0,
+              "reward_line": true,
+              "source_bytes": 96
+            },
+            {
+              "action": "run_candidate",
+              "reward": 0.0,
+              "seconds": 0.255,
+              "exit_code": 0,
+              "reward_line": true,
+              "source_bytes": 1678
+            }
+          ],
+          "found": [],
+          "error": ""
+        }
       ],
       "injected": "path_escape",
       "theme": "",
@@ -148,11 +660,98 @@
     {
       "bundle": "address_normalise_18",
       "verdict": "clear",
-      "seconds": 1.049,
+      "seconds": 1.382,
       "dollars": 0.0,
       "findings": [],
       "notes": [
-        "oracle reward 1.0 in 0.17s, nop reward 0.0"
+        "oracle reward 1.0 in 0.22s, nop reward 0.0"
+      ],
+      "trace": [
+        {
+          "probe": "wording",
+          "seconds": 0.001,
+          "executions": [],
+          "found": [],
+          "error": ""
+        },
+        {
+          "probe": "execution",
+          "seconds": 0.45,
+          "executions": [
+            {
+              "action": "run_candidate",
+              "reward": 1.0,
+              "seconds": 0.219,
+              "exit_code": 0,
+              "reward_line": true,
+              "source_bytes": 1175
+            },
+            {
+              "action": "run_candidate",
+              "reward": 0.0,
+              "seconds": 0.216,
+              "exit_code": 0,
+              "reward_line": true,
+              "source_bytes": 55
+            }
+          ],
+          "found": [],
+          "error": ""
+        },
+        {
+          "probe": "leak",
+          "seconds": 0.001,
+          "executions": [],
+          "found": [],
+          "error": ""
+        },
+        {
+          "probe": "determinism",
+          "seconds": 0.229,
+          "executions": [
+            {
+              "action": "run_candidate",
+              "reward": 1.0,
+              "seconds": 0.223,
+              "exit_code": 0,
+              "reward_line": true,
+              "source_bytes": 1175
+            }
+          ],
+          "found": [],
+          "error": ""
+        },
+        {
+          "probe": "mutation",
+          "seconds": 0.16,
+          "executions": [],
+          "found": [],
+          "error": ""
+        },
+        {
+          "probe": "resilience",
+          "seconds": 0.541,
+          "executions": [
+            {
+              "action": "run_candidate",
+              "reward": 0.0,
+              "seconds": 0.263,
+              "exit_code": 0,
+              "reward_line": true,
+              "source_bytes": 96
+            },
+            {
+              "action": "run_candidate",
+              "reward": 0.0,
+              "seconds": 0.264,
+              "exit_code": 0,
+              "reward_line": true,
+              "source_bytes": 1678
+            }
+          ],
+          "found": [],
+          "error": ""
+        }
       ],
       "injected": null,
       "theme": "",
@@ -161,7 +760,7 @@
     {
       "bundle": "address_normalise_21",
       "verdict": "hold",
-      "seconds": 1.284,
+      "seconds": 1.444,
       "dollars": 0.0,
       "findings": [
         {
@@ -194,7 +793,98 @@
         }
       ],
       "notes": [
-        "oracle reward 1.0 in 0.18s, nop reward 1.0"
+        "oracle reward 1.0 in 0.23s, nop reward 1.0"
+      ],
+      "trace": [
+        {
+          "probe": "wording",
+          "seconds": 0.001,
+          "executions": [],
+          "found": [],
+          "error": ""
+        },
+        {
+          "probe": "execution",
+          "seconds": 0.483,
+          "executions": [
+            {
+              "action": "run_candidate",
+              "reward": 1.0,
+              "seconds": 0.228,
+              "exit_code": 0,
+              "reward_line": true,
+              "source_bytes": 1175
+            },
+            {
+              "action": "run_candidate",
+              "reward": 1.0,
+              "seconds": 0.24,
+              "exit_code": 0,
+              "reward_line": true,
+              "source_bytes": 55
+            }
+          ],
+          "found": [
+            "nop_passes"
+          ],
+          "error": ""
+        },
+        {
+          "probe": "leak",
+          "seconds": 0.001,
+          "executions": [],
+          "found": [],
+          "error": ""
+        },
+        {
+          "probe": "determinism",
+          "seconds": 0.233,
+          "executions": [
+            {
+              "action": "run_candidate",
+              "reward": 1.0,
+              "seconds": 0.226,
+              "exit_code": 0,
+              "reward_line": true,
+              "source_bytes": 1175
+            }
+          ],
+          "found": [],
+          "error": ""
+        },
+        {
+          "probe": "mutation",
+          "seconds": 0.188,
+          "executions": [],
+          "found": [],
+          "error": ""
+        },
+        {
+          "probe": "resilience",
+          "seconds": 0.538,
+          "executions": [
+            {
+              "action": "run_candidate",
+              "reward": 0.0,
+              "seconds": 0.258,
+              "exit_code": 0,
+              "reward_line": true,
+              "source_bytes": 96
+            },
+            {
+              "action": "run_candidate",
+              "reward": 1.0,
+              "seconds": 0.264,
+              "exit_code": 0,
+              "reward_line": true,
+              "source_bytes": 1678
+            }
+          ],
+          "found": [
+            "path_escape"
+          ],
+          "error": ""
+        }
       ],
       "injected": "nop_passes",
       "theme": "",
@@ -203,11 +893,98 @@
     {
       "bundle": "ledger_merge_00",
       "verdict": "clear",
-      "seconds": 1.03,
+      "seconds": 1.374,
       "dollars": 0.0,
       "findings": [],
       "notes": [
-        "oracle reward 1.0 in 0.18s, nop reward 0.0"
+        "oracle reward 1.0 in 0.22s, nop reward 0.0"
+      ],
+      "trace": [
+        {
+          "probe": "wording",
+          "seconds": 0.001,
+          "executions": [],
+          "found": [],
+          "error": ""
+        },
+        {
+          "probe": "execution",
+          "seconds": 0.454,
+          "executions": [
+            {
+              "action": "run_candidate",
+              "reward": 1.0,
+              "seconds": 0.222,
+              "exit_code": 0,
+              "reward_line": true,
+              "source_bytes": 1320
+            },
+            {
+              "action": "run_candidate",
+              "reward": 0.0,
+              "seconds": 0.217,
+              "exit_code": 0,
+              "reward_line": true,
+              "source_bytes": 55
+            }
+          ],
+          "found": [],
+          "error": ""
+        },
+        {
+          "probe": "leak",
+          "seconds": 0.001,
+          "executions": [],
+          "found": [],
+          "error": ""
+        },
+        {
+          "probe": "determinism",
+          "seconds": 0.234,
+          "executions": [
+            {
+              "action": "run_candidate",
+              "reward": 1.0,
+              "seconds": 0.228,
+              "exit_code": 0,
+              "reward_line": true,
+              "source_bytes": 1320
+            }
+          ],
+          "found": [],
+          "error": ""
+        },
+        {
+          "probe": "mutation",
+          "seconds": 0.163,
+          "executions": [],
+          "found": [],
+          "error": ""
+        },
+        {
+          "probe": "resilience",
+          "seconds": 0.521,
+          "executions": [
+            {
+              "action": "run_candidate",
+              "reward": 0.0,
+              "seconds": 0.25,
+              "exit_code": 0,
+              "reward_line": true,
+              "source_bytes": 96
+            },
+            {
+              "action": "run_candidate",
+              "reward": 0.0,
+              "seconds": 0.257,
+              "exit_code": 0,
+              "reward_line": true,
+              "source_bytes": 1836
+            }
+          ],
+          "found": [],
+          "error": ""
+        }
       ],
       "injected": null,
       "theme": "",
@@ -216,7 +993,7 @@
     {
       "bundle": "ledger_merge_03",
       "verdict": "hold",
-      "seconds": 1.038,
+      "seconds": 1.388,
       "dollars": 0.0,
       "findings": [
         {
@@ -249,7 +1026,98 @@
         }
       ],
       "notes": [
-        "oracle reward 1.0 in 0.17s, nop reward 1.0"
+        "oracle reward 1.0 in 0.23s, nop reward 1.0"
+      ],
+      "trace": [
+        {
+          "probe": "wording",
+          "seconds": 0.001,
+          "executions": [],
+          "found": [],
+          "error": ""
+        },
+        {
+          "probe": "execution",
+          "seconds": 0.463,
+          "executions": [
+            {
+              "action": "run_candidate",
+              "reward": 1.0,
+              "seconds": 0.227,
+              "exit_code": 0,
+              "reward_line": true,
+              "source_bytes": 1320
+            },
+            {
+              "action": "run_candidate",
+              "reward": 1.0,
+              "seconds": 0.221,
+              "exit_code": 0,
+              "reward_line": true,
+              "source_bytes": 55
+            }
+          ],
+          "found": [
+            "nop_passes"
+          ],
+          "error": ""
+        },
+        {
+          "probe": "leak",
+          "seconds": 0.001,
+          "executions": [],
+          "found": [],
+          "error": ""
+        },
+        {
+          "probe": "determinism",
+          "seconds": 0.232,
+          "executions": [
+            {
+              "action": "run_candidate",
+              "reward": 1.0,
+              "seconds": 0.225,
+              "exit_code": 0,
+              "reward_line": true,
+              "source_bytes": 1320
+            }
+          ],
+          "found": [],
+          "error": ""
+        },
+        {
+          "probe": "mutation",
+          "seconds": 0.165,
+          "executions": [],
+          "found": [],
+          "error": ""
+        },
+        {
+          "probe": "resilience",
+          "seconds": 0.526,
+          "executions": [
+            {
+              "action": "run_candidate",
+              "reward": 0.0,
+              "seconds": 0.252,
+              "exit_code": 0,
+              "reward_line": true,
+              "source_bytes": 96
+            },
+            {
+              "action": "run_candidate",
+              "reward": 1.0,
+              "seconds": 0.26,
+              "exit_code": 0,
+              "reward_line": true,
+              "source_bytes": 1836
+            }
+          ],
+          "found": [
+            "path_escape"
+          ],
+          "error": ""
+        }
       ],
       "injected": "nop_passes",
       "theme": "",
@@ -258,7 +1126,7 @@
     {
       "bundle": "ledger_merge_06",
       "verdict": "hold",
-      "seconds": 1.006,
+      "seconds": 1.411,
       "dollars": 0.0,
       "findings": [
         {
@@ -278,7 +1146,96 @@
         }
       ],
       "notes": [
-        "oracle reward 1.0 in 0.16s, nop reward 0.0"
+        "oracle reward 1.0 in 0.22s, nop reward 0.0"
+      ],
+      "trace": [
+        {
+          "probe": "wording",
+          "seconds": 0.001,
+          "executions": [],
+          "found": [],
+          "error": ""
+        },
+        {
+          "probe": "execution",
+          "seconds": 0.469,
+          "executions": [
+            {
+              "action": "run_candidate",
+              "reward": 1.0,
+              "seconds": 0.224,
+              "exit_code": 0,
+              "reward_line": true,
+              "source_bytes": 1320
+            },
+            {
+              "action": "run_candidate",
+              "reward": 0.0,
+              "seconds": 0.229,
+              "exit_code": 1,
+              "reward_line": false,
+              "source_bytes": 55
+            }
+          ],
+          "found": [],
+          "error": ""
+        },
+        {
+          "probe": "leak",
+          "seconds": 0.001,
+          "executions": [],
+          "found": [],
+          "error": ""
+        },
+        {
+          "probe": "determinism",
+          "seconds": 0.243,
+          "executions": [
+            {
+              "action": "run_candidate",
+              "reward": 1.0,
+              "seconds": 0.236,
+              "exit_code": 0,
+              "reward_line": true,
+              "source_bytes": 1320
+            }
+          ],
+          "found": [],
+          "error": ""
+        },
+        {
+          "probe": "mutation",
+          "seconds": 0.161,
+          "executions": [],
+          "found": [],
+          "error": ""
+        },
+        {
+          "probe": "resilience",
+          "seconds": 0.536,
+          "executions": [
+            {
+              "action": "run_candidate",
+              "reward": 0.0,
+              "seconds": 0.262,
+              "exit_code": 1,
+              "reward_line": false,
+              "source_bytes": 96
+            },
+            {
+              "action": "run_candidate",
+              "reward": 0.0,
+              "seconds": 0.26,
+              "exit_code": 1,
+              "reward_line": false,
+              "source_bytes": 1836
+            }
+          ],
+          "found": [
+            "graceless_failure"
+          ],
+          "error": ""
+        }
       ],
       "injected": "graceless_failure",
       "theme": "",
@@ -287,7 +1244,7 @@
     {
       "bundle": "ledger_merge_11",
       "verdict": "hold",
-      "seconds": 0.527,
+      "seconds": 0.709,
       "dollars": 0.0,
       "findings": [
         {
@@ -295,19 +1252,91 @@
           "severity": "blocking",
           "location": "solution/solve.py",
           "summary": "The shipped reference solution scored 0.0 where the pipeline requires 1.0, so review stops before any probe runs.",
-          "evidence": "verify.py reported reward=0.0 in 0.16s. Last line: reward=0.0",
+          "evidence": "verify.py reported reward=0.0 in 0.22s. Last line: reward=0.0",
           "remedy": "Fix the reference solution or the graded expectations until the reference earns full reward on every case.",
           "confirmed": true,
           "reporter": "execution",
           "detail": {
             "reward": 0.0,
-            "seconds": 0.16040216595865786
+            "seconds": 0.21946337504778057
           },
           "title": "Reference solution does not earn full reward"
         }
       ],
       "notes": [
-        "oracle reward 0.0 in 0.16s, nop reward 0.0"
+        "oracle reward 0.0 in 0.22s, nop reward 0.0"
+      ],
+      "trace": [
+        {
+          "probe": "wording",
+          "seconds": 0.001,
+          "executions": [],
+          "found": [],
+          "error": ""
+        },
+        {
+          "probe": "execution",
+          "seconds": 0.449,
+          "executions": [
+            {
+              "action": "run_candidate",
+              "reward": 0.0,
+              "seconds": 0.219,
+              "exit_code": 0,
+              "reward_line": true,
+              "source_bytes": 1320
+            },
+            {
+              "action": "run_candidate",
+              "reward": 0.0,
+              "seconds": 0.214,
+              "exit_code": 0,
+              "reward_line": true,
+              "source_bytes": 55
+            }
+          ],
+          "found": [
+            "oracle_fails"
+          ],
+          "error": ""
+        },
+        {
+          "probe": "leak",
+          "seconds": 0.001,
+          "executions": [],
+          "found": [],
+          "error": ""
+        },
+        {
+          "probe": "determinism",
+          "seconds": 0.0,
+          "executions": [],
+          "found": [],
+          "error": ""
+        },
+        {
+          "probe": "mutation",
+          "seconds": 0.0,
+          "executions": [],
+          "found": [],
+          "error": ""
+        },
+        {
+          "probe": "resilience",
+          "seconds": 0.257,
+          "executions": [
+            {
+              "action": "run_candidate",
+              "reward": 0.0,
+              "seconds": 0.25,
+              "exit_code": 0,
+              "reward_line": true,
+              "source_bytes": 96
+            }
+          ],
+          "found": [],
+          "error": ""
+        }
       ],
       "injected": "oracle_fails",
       "theme": "",
@@ -316,11 +1345,98 @@
     {
       "bundle": "ledger_merge_14",
       "verdict": "clear",
-      "seconds": 1.343,
+      "seconds": 1.863,
       "dollars": 0.0,
       "findings": [],
       "notes": [
-        "oracle reward 1.0 in 0.22s, nop reward 0.0"
+        "oracle reward 1.0 in 0.31s, nop reward 0.0"
+      ],
+      "trace": [
+        {
+          "probe": "wording",
+          "seconds": 0.001,
+          "executions": [],
+          "found": [],
+          "error": ""
+        },
+        {
+          "probe": "execution",
+          "seconds": 0.643,
+          "executions": [
+            {
+              "action": "run_candidate",
+              "reward": 1.0,
+              "seconds": 0.312,
+              "exit_code": 0,
+              "reward_line": true,
+              "source_bytes": 1320
+            },
+            {
+              "action": "run_candidate",
+              "reward": 0.0,
+              "seconds": 0.315,
+              "exit_code": 0,
+              "reward_line": true,
+              "source_bytes": 55
+            }
+          ],
+          "found": [],
+          "error": ""
+        },
+        {
+          "probe": "leak",
+          "seconds": 0.001,
+          "executions": [],
+          "found": [],
+          "error": ""
+        },
+        {
+          "probe": "determinism",
+          "seconds": 0.322,
+          "executions": [
+            {
+              "action": "run_candidate",
+              "reward": 1.0,
+              "seconds": 0.314,
+              "exit_code": 0,
+              "reward_line": true,
+              "source_bytes": 1320
+            }
+          ],
+          "found": [],
+          "error": ""
+        },
+        {
+          "probe": "mutation",
+          "seconds": 0.161,
+          "executions": [],
+          "found": [],
+          "error": ""
+        },
+        {
+          "probe": "resilience",
+          "seconds": 0.734,
+          "executions": [
+            {
+              "action": "run_candidate",
+              "reward": 0.0,
+              "seconds": 0.355,
+              "exit_code": 0,
+              "reward_line": true,
+              "source_bytes": 96
+            },
+            {
+              "action": "run_candidate",
+              "reward": 0.0,
+              "seconds": 0.365,
+              "exit_code": 0,
+              "reward_line": true,
+              "source_bytes": 1836
+            }
+          ],
+          "found": [],
+          "error": ""
+        }
       ],
       "injected": "nondeterministic",
       "theme": "",
@@ -329,7 +1445,7 @@
     {
       "bundle": "ledger_merge_17",
       "verdict": "hold",
-      "seconds": 1.071,
+      "seconds": 1.373,
       "dollars": 0.0,
       "findings": [
         {
@@ -349,7 +1465,97 @@
         }
       ],
       "notes": [
-        "oracle reward 1.0 in 0.17s, nop reward 0.0"
+        "oracle reward 1.0 in 0.23s, nop reward 0.0"
+      ],
+      "trace": [
+        {
+          "probe": "wording",
+          "seconds": 0.001,
+          "executions": [],
+          "found": [
+            "forbidden_wording",
+            "forbidden_wording"
+          ],
+          "error": ""
+        },
+        {
+          "probe": "execution",
+          "seconds": 0.456,
+          "executions": [
+            {
+              "action": "run_candidate",
+              "reward": 1.0,
+              "seconds": 0.225,
+              "exit_code": 0,
+              "reward_line": true,
+              "source_bytes": 1320
+            },
+            {
+              "action": "run_candidate",
+              "reward": 0.0,
+              "seconds": 0.215,
+              "exit_code": 0,
+              "reward_line": true,
+              "source_bytes": 55
+            }
+          ],
+          "found": [],
+          "error": ""
+        },
+        {
+          "probe": "leak",
+          "seconds": 0.001,
+          "executions": [],
+          "found": [],
+          "error": ""
+        },
+        {
+          "probe": "determinism",
+          "seconds": 0.225,
+          "executions": [
+            {
+              "action": "run_candidate",
+              "reward": 1.0,
+              "seconds": 0.218,
+              "exit_code": 0,
+              "reward_line": true,
+              "source_bytes": 1320
+            }
+          ],
+          "found": [],
+          "error": ""
+        },
+        {
+          "probe": "mutation",
+          "seconds": 0.164,
+          "executions": [],
+          "found": [],
+          "error": ""
+        },
+        {
+          "probe": "resilience",
+          "seconds": 0.525,
+          "executions": [
+            {
+              "action": "run_candidate",
+              "reward": 0.0,
+              "seconds": 0.245,
+              "exit_code": 0,
+              "reward_line": true,
+              "source_bytes": 96
+            },
+            {
+              "action": "run_candidate",
+              "reward": 0.0,
+              "seconds": 0.266,
+              "exit_code": 0,
+              "reward_line": true,
+              "source_bytes": 1836
+            }
+          ],
+          "found": [],
+          "error": ""
+        }
       ],
       "injected": "forbidden_wording",
       "theme": "",
@@ -358,11 +1564,98 @@
     {
       "bundle": "ledger_merge_19",
       "verdict": "clear",
-      "seconds": 1.024,
+      "seconds": 1.387,
       "dollars": 0.0,
       "findings": [],
       "notes": [
-        "oracle reward 1.0 in 0.19s, nop reward 0.0"
+        "oracle reward 1.0 in 0.22s, nop reward 0.0"
+      ],
+      "trace": [
+        {
+          "probe": "wording",
+          "seconds": 0.001,
+          "executions": [],
+          "found": [],
+          "error": ""
+        },
+        {
+          "probe": "execution",
+          "seconds": 0.477,
+          "executions": [
+            {
+              "action": "run_candidate",
+              "reward": 1.0,
+              "seconds": 0.225,
+              "exit_code": 0,
+              "reward_line": true,
+              "source_bytes": 1320
+            },
+            {
+              "action": "run_candidate",
+              "reward": 0.0,
+              "seconds": 0.235,
+              "exit_code": 0,
+              "reward_line": true,
+              "source_bytes": 55
+            }
+          ],
+          "found": [],
+          "error": ""
+        },
+        {
+          "probe": "leak",
+          "seconds": 0.002,
+          "executions": [],
+          "found": [],
+          "error": ""
+        },
+        {
+          "probe": "determinism",
+          "seconds": 0.231,
+          "executions": [
+            {
+              "action": "run_candidate",
+              "reward": 1.0,
+              "seconds": 0.223,
+              "exit_code": 0,
+              "reward_line": true,
+              "source_bytes": 1320
+            }
+          ],
+          "found": [],
+          "error": ""
+        },
+        {
+          "probe": "mutation",
+          "seconds": 0.164,
+          "executions": [],
+          "found": [],
+          "error": ""
+        },
+        {
+          "probe": "resilience",
+          "seconds": 0.513,
+          "executions": [
+            {
+              "action": "run_candidate",
+              "reward": 0.0,
+              "seconds": 0.241,
+              "exit_code": 0,
+              "reward_line": true,
+              "source_bytes": 96
+            },
+            {
+              "action": "run_candidate",
+              "reward": 0.0,
+              "seconds": 0.256,
+              "exit_code": 0,
+              "reward_line": true,
+              "source_bytes": 1836
+            }
+          ],
+          "found": [],
+          "error": ""
+        }
       ],
       "injected": "answer_leak",
       "theme": "",
@@ -371,7 +1664,7 @@
     {
       "bundle": "ledger_merge_22",
       "verdict": "clear",
-      "seconds": 0.413,
+      "seconds": 0.598,
       "dollars": 0.0,
       "findings": [
         {
@@ -390,7 +1683,96 @@
         }
       ],
       "notes": [
-        "oracle reward 1.0 in 0.08s, nop reward 0.0"
+        "oracle reward 1.0 in 0.10s, nop reward 0.0"
+      ],
+      "trace": [
+        {
+          "probe": "wording",
+          "seconds": 0.001,
+          "executions": [],
+          "found": [],
+          "error": ""
+        },
+        {
+          "probe": "execution",
+          "seconds": 0.215,
+          "executions": [
+            {
+              "action": "run_candidate",
+              "reward": 1.0,
+              "seconds": 0.103,
+              "exit_code": 0,
+              "reward_line": true,
+              "source_bytes": 1320
+            },
+            {
+              "action": "run_candidate",
+              "reward": 0.0,
+              "seconds": 0.099,
+              "exit_code": 0,
+              "reward_line": true,
+              "source_bytes": 55
+            }
+          ],
+          "found": [],
+          "error": ""
+        },
+        {
+          "probe": "leak",
+          "seconds": 0.001,
+          "executions": [],
+          "found": [],
+          "error": ""
+        },
+        {
+          "probe": "determinism",
+          "seconds": 0.108,
+          "executions": [
+            {
+              "action": "run_candidate",
+              "reward": 1.0,
+              "seconds": 0.102,
+              "exit_code": 0,
+              "reward_line": true,
+              "source_bytes": 1320
+            }
+          ],
+          "found": [],
+          "error": ""
+        },
+        {
+          "probe": "mutation",
+          "seconds": 0.042,
+          "executions": [],
+          "found": [
+            "hardcodable"
+          ],
+          "error": ""
+        },
+        {
+          "probe": "resilience",
+          "seconds": 0.232,
+          "executions": [
+            {
+              "action": "run_candidate",
+              "reward": 0.0,
+              "seconds": 0.107,
+              "exit_code": 0,
+              "reward_line": true,
+              "source_bytes": 96
+            },
+            {
+              "action": "run_candidate",
+              "reward": 0.0,
+              "seconds": 0.113,
+              "exit_code": 0,
+              "reward_line": true,
+              "source_bytes": 1836
+            }
+          ],
+          "found": [],
+          "error": ""
+        }
       ],
       "injected": "hardcodable",
       "theme": "",
@@ -399,11 +1781,107 @@
     {
       "bundle": "record_recover_01",
       "verdict": "clear",
-      "seconds": 1.426,
+      "seconds": 2.013,
       "dollars": 0.0,
       "findings": [],
       "notes": [
-        "oracle reward 1.0 in 0.21s, nop reward 0.0"
+        "oracle reward 1.0 in 0.23s, nop reward 0.0"
+      ],
+      "trace": [
+        {
+          "probe": "wording",
+          "seconds": 0.001,
+          "executions": [],
+          "found": [],
+          "error": ""
+        },
+        {
+          "probe": "execution",
+          "seconds": 0.472,
+          "executions": [
+            {
+              "action": "run_candidate",
+              "reward": 1.0,
+              "seconds": 0.234,
+              "exit_code": 0,
+              "reward_line": true,
+              "source_bytes": 1148
+            },
+            {
+              "action": "run_candidate",
+              "reward": 0.0,
+              "seconds": 0.22,
+              "exit_code": 0,
+              "reward_line": true,
+              "source_bytes": 55
+            }
+          ],
+          "found": [],
+          "error": ""
+        },
+        {
+          "probe": "leak",
+          "seconds": 0.001,
+          "executions": [],
+          "found": [],
+          "error": ""
+        },
+        {
+          "probe": "determinism",
+          "seconds": 0.237,
+          "executions": [
+            {
+              "action": "run_candidate",
+              "reward": 1.0,
+              "seconds": 0.23,
+              "exit_code": 0,
+              "reward_line": true,
+              "source_bytes": 1148
+            }
+          ],
+          "found": [],
+          "error": ""
+        },
+        {
+          "probe": "mutation",
+          "seconds": 0.745,
+          "executions": [
+            {
+              "action": "run_candidate",
+              "reward": 0.0,
+              "seconds": 0.231,
+              "exit_code": 0,
+              "reward_line": true,
+              "source_bytes": 1147
+            }
+          ],
+          "found": [],
+          "error": ""
+        },
+        {
+          "probe": "resilience",
+          "seconds": 0.556,
+          "executions": [
+            {
+              "action": "run_candidate",
+              "reward": 0.0,
+              "seconds": 0.281,
+              "exit_code": 0,
+              "reward_line": true,
+              "source_bytes": 96
+            },
+            {
+              "action": "run_candidate",
+              "reward": 0.0,
+              "seconds": 0.26,
+              "exit_code": 0,
+              "reward_line": true,
+              "source_bytes": 1653
+            }
+          ],
+          "found": [],
+          "error": ""
+        }
       ],
       "injected": "answer_leak",
       "theme": "",
@@ -412,7 +1890,7 @@
     {
       "bundle": "record_recover_04",
       "verdict": "clear",
-      "seconds": 0.577,
+      "seconds": 0.795,
       "dollars": 0.0,
       "findings": [
         {
@@ -431,7 +1909,105 @@
         }
       ],
       "notes": [
-        "oracle reward 1.0 in 0.09s, nop reward 0.0"
+        "oracle reward 1.0 in 0.10s, nop reward 0.0"
+      ],
+      "trace": [
+        {
+          "probe": "wording",
+          "seconds": 0.001,
+          "executions": [],
+          "found": [],
+          "error": ""
+        },
+        {
+          "probe": "execution",
+          "seconds": 0.218,
+          "executions": [
+            {
+              "action": "run_candidate",
+              "reward": 1.0,
+              "seconds": 0.101,
+              "exit_code": 0,
+              "reward_line": true,
+              "source_bytes": 1148
+            },
+            {
+              "action": "run_candidate",
+              "reward": 0.0,
+              "seconds": 0.103,
+              "exit_code": 0,
+              "reward_line": true,
+              "source_bytes": 55
+            }
+          ],
+          "found": [],
+          "error": ""
+        },
+        {
+          "probe": "leak",
+          "seconds": 0.001,
+          "executions": [],
+          "found": [],
+          "error": ""
+        },
+        {
+          "probe": "determinism",
+          "seconds": 0.105,
+          "executions": [
+            {
+              "action": "run_candidate",
+              "reward": 1.0,
+              "seconds": 0.099,
+              "exit_code": 0,
+              "reward_line": true,
+              "source_bytes": 1148
+            }
+          ],
+          "found": [],
+          "error": ""
+        },
+        {
+          "probe": "mutation",
+          "seconds": 0.231,
+          "executions": [
+            {
+              "action": "run_candidate",
+              "reward": 0.0,
+              "seconds": 0.099,
+              "exit_code": 0,
+              "reward_line": true,
+              "source_bytes": 1147
+            }
+          ],
+          "found": [
+            "hardcodable"
+          ],
+          "error": ""
+        },
+        {
+          "probe": "resilience",
+          "seconds": 0.239,
+          "executions": [
+            {
+              "action": "run_candidate",
+              "reward": 0.0,
+              "seconds": 0.105,
+              "exit_code": 0,
+              "reward_line": true,
+              "source_bytes": 96
+            },
+            {
+              "action": "run_candidate",
+              "reward": 0.0,
+              "seconds": 0.123,
+              "exit_code": 0,
+              "reward_line": true,
+              "source_bytes": 1653
+            }
+          ],
+          "found": [],
+          "error": ""
+        }
       ],
       "injected": "hardcodable",
       "theme": "",
@@ -440,11 +2016,107 @@
     {
       "bundle": "record_recover_07",
       "verdict": "clear",
-      "seconds": 1.547,
+      "seconds": 1.944,
       "dollars": 0.0,
       "findings": [],
       "notes": [
-        "oracle reward 1.0 in 0.28s, nop reward 0.0"
+        "oracle reward 1.0 in 0.23s, nop reward 0.0"
+      ],
+      "trace": [
+        {
+          "probe": "wording",
+          "seconds": 0.001,
+          "executions": [],
+          "found": [],
+          "error": ""
+        },
+        {
+          "probe": "execution",
+          "seconds": 0.458,
+          "executions": [
+            {
+              "action": "run_candidate",
+              "reward": 1.0,
+              "seconds": 0.225,
+              "exit_code": 0,
+              "reward_line": true,
+              "source_bytes": 1148
+            },
+            {
+              "action": "run_candidate",
+              "reward": 0.0,
+              "seconds": 0.217,
+              "exit_code": 0,
+              "reward_line": true,
+              "source_bytes": 55
+            }
+          ],
+          "found": [],
+          "error": ""
+        },
+        {
+          "probe": "leak",
+          "seconds": 0.001,
+          "executions": [],
+          "found": [],
+          "error": ""
+        },
+        {
+          "probe": "determinism",
+          "seconds": 0.229,
+          "executions": [
+            {
+              "action": "run_candidate",
+              "reward": 1.0,
+              "seconds": 0.222,
+              "exit_code": 0,
+              "reward_line": true,
+              "source_bytes": 1148
+            }
+          ],
+          "found": [],
+          "error": ""
+        },
+        {
+          "probe": "mutation",
+          "seconds": 0.739,
+          "executions": [
+            {
+              "action": "run_candidate",
+              "reward": 0.0,
+              "seconds": 0.237,
+              "exit_code": 0,
+              "reward_line": true,
+              "source_bytes": 1147
+            }
+          ],
+          "found": [],
+          "error": ""
+        },
+        {
+          "probe": "resilience",
+          "seconds": 0.516,
+          "executions": [
+            {
+              "action": "run_candidate",
+              "reward": 0.0,
+              "seconds": 0.244,
+              "exit_code": 0,
+              "reward_line": true,
+              "source_bytes": 96
+            },
+            {
+              "action": "run_candidate",
+              "reward": 0.0,
+              "seconds": 0.258,
+              "exit_code": 0,
+              "reward_line": true,
+              "source_bytes": 1653
+            }
+          ],
+          "found": [],
+          "error": ""
+        }
       ],
       "injected": "path_escape",
       "theme": "",
@@ -453,11 +2125,107 @@
     {
       "bundle": "record_recover_09",
       "verdict": "clear",
-      "seconds": 1.408,
+      "seconds": 1.966,
       "dollars": 0.0,
       "findings": [],
       "notes": [
-        "oracle reward 1.0 in 0.17s, nop reward 0.0"
+        "oracle reward 1.0 in 0.23s, nop reward 0.0"
+      ],
+      "trace": [
+        {
+          "probe": "wording",
+          "seconds": 0.001,
+          "executions": [],
+          "found": [],
+          "error": ""
+        },
+        {
+          "probe": "execution",
+          "seconds": 0.473,
+          "executions": [
+            {
+              "action": "run_candidate",
+              "reward": 1.0,
+              "seconds": 0.229,
+              "exit_code": 0,
+              "reward_line": true,
+              "source_bytes": 1148
+            },
+            {
+              "action": "run_candidate",
+              "reward": 0.0,
+              "seconds": 0.227,
+              "exit_code": 0,
+              "reward_line": true,
+              "source_bytes": 55
+            }
+          ],
+          "found": [],
+          "error": ""
+        },
+        {
+          "probe": "leak",
+          "seconds": 0.001,
+          "executions": [],
+          "found": [],
+          "error": ""
+        },
+        {
+          "probe": "determinism",
+          "seconds": 0.233,
+          "executions": [
+            {
+              "action": "run_candidate",
+              "reward": 1.0,
+              "seconds": 0.227,
+              "exit_code": 0,
+              "reward_line": true,
+              "source_bytes": 1148
+            }
+          ],
+          "found": [],
+          "error": ""
+        },
+        {
+          "probe": "mutation",
+          "seconds": 0.728,
+          "executions": [
+            {
+              "action": "run_candidate",
+              "reward": 0.0,
+              "seconds": 0.227,
+              "exit_code": 0,
+              "reward_line": true,
+              "source_bytes": 1147
+            }
+          ],
+          "found": [],
+          "error": ""
+        },
+        {
+          "probe": "resilience",
+          "seconds": 0.529,
+          "executions": [
+            {
+              "action": "run_candidate",
+              "reward": 0.0,
+              "seconds": 0.246,
+              "exit_code": 0,
+              "reward_line": true,
+              "source_bytes": 96
+            },
+            {
+              "action": "run_candidate",
+              "reward": 0.0,
+              "seconds": 0.27,
+              "exit_code": 0,
+              "reward_line": true,
+              "source_bytes": 1653
+            }
+          ],
+          "found": [],
+          "error": ""
+        }
       ],
       "injected": null,
       "theme": "",
@@ -466,7 +2234,7 @@
     {
       "bundle": "record_recover_12",
       "verdict": "hold",
-      "seconds": 1.432,
+      "seconds": 1.994,
       "dollars": 0.0,
       "findings": [
         {
@@ -499,7 +2267,107 @@
         }
       ],
       "notes": [
-        "oracle reward 1.0 in 0.16s, nop reward 1.0"
+        "oracle reward 1.0 in 0.22s, nop reward 1.0"
+      ],
+      "trace": [
+        {
+          "probe": "wording",
+          "seconds": 0.001,
+          "executions": [],
+          "found": [],
+          "error": ""
+        },
+        {
+          "probe": "execution",
+          "seconds": 0.459,
+          "executions": [
+            {
+              "action": "run_candidate",
+              "reward": 1.0,
+              "seconds": 0.225,
+              "exit_code": 0,
+              "reward_line": true,
+              "source_bytes": 1148
+            },
+            {
+              "action": "run_candidate",
+              "reward": 1.0,
+              "seconds": 0.218,
+              "exit_code": 0,
+              "reward_line": true,
+              "source_bytes": 55
+            }
+          ],
+          "found": [
+            "nop_passes"
+          ],
+          "error": ""
+        },
+        {
+          "probe": "leak",
+          "seconds": 0.001,
+          "executions": [],
+          "found": [],
+          "error": ""
+        },
+        {
+          "probe": "determinism",
+          "seconds": 0.233,
+          "executions": [
+            {
+              "action": "run_candidate",
+              "reward": 1.0,
+              "seconds": 0.227,
+              "exit_code": 0,
+              "reward_line": true,
+              "source_bytes": 1148
+            }
+          ],
+          "found": [],
+          "error": ""
+        },
+        {
+          "probe": "mutation",
+          "seconds": 0.773,
+          "executions": [
+            {
+              "action": "run_candidate",
+              "reward": 0.0,
+              "seconds": 0.264,
+              "exit_code": 0,
+              "reward_line": true,
+              "source_bytes": 1147
+            }
+          ],
+          "found": [],
+          "error": ""
+        },
+        {
+          "probe": "resilience",
+          "seconds": 0.526,
+          "executions": [
+            {
+              "action": "run_candidate",
+              "reward": 0.0,
+              "seconds": 0.247,
+              "exit_code": 0,
+              "reward_line": true,
+              "source_bytes": 96
+            },
+            {
+              "action": "run_candidate",
+              "reward": 1.0,
+              "seconds": 0.266,
+              "exit_code": 0,
+              "reward_line": true,
+              "source_bytes": 1653
+            }
+          ],
+          "found": [
+            "path_escape"
+          ],
+          "error": ""
+        }
       ],
       "injected": "nop_passes",
       "theme": "",
@@ -508,7 +2376,7 @@
     {
       "bundle": "record_recover_15",
       "verdict": "hold",
-      "seconds": 1.62,
+      "seconds": 2.056,
       "dollars": 0.0,
       "findings": [
         {
@@ -528,7 +2396,105 @@
         }
       ],
       "notes": [
-        "oracle reward 1.0 in 0.17s, nop reward 0.0"
+        "oracle reward 1.0 in 0.23s, nop reward 0.0"
+      ],
+      "trace": [
+        {
+          "probe": "wording",
+          "seconds": 0.001,
+          "executions": [],
+          "found": [],
+          "error": ""
+        },
+        {
+          "probe": "execution",
+          "seconds": 0.488,
+          "executions": [
+            {
+              "action": "run_candidate",
+              "reward": 1.0,
+              "seconds": 0.231,
+              "exit_code": 0,
+              "reward_line": true,
+              "source_bytes": 1148
+            },
+            {
+              "action": "run_candidate",
+              "reward": 0.0,
+              "seconds": 0.237,
+              "exit_code": 1,
+              "reward_line": false,
+              "source_bytes": 55
+            }
+          ],
+          "found": [],
+          "error": ""
+        },
+        {
+          "probe": "leak",
+          "seconds": 0.001,
+          "executions": [],
+          "found": [],
+          "error": ""
+        },
+        {
+          "probe": "determinism",
+          "seconds": 0.257,
+          "executions": [
+            {
+              "action": "run_candidate",
+              "reward": 1.0,
+              "seconds": 0.25,
+              "exit_code": 0,
+              "reward_line": true,
+              "source_bytes": 1148
+            }
+          ],
+          "found": [],
+          "error": ""
+        },
+        {
+          "probe": "mutation",
+          "seconds": 0.749,
+          "executions": [
+            {
+              "action": "run_candidate",
+              "reward": 0.0,
+              "seconds": 0.24,
+              "exit_code": 1,
+              "reward_line": false,
+              "source_bytes": 1147
+            }
+          ],
+          "found": [],
+          "error": ""
+        },
+        {
+          "probe": "resilience",
+          "seconds": 0.559,
+          "executions": [
+            {
+              "action": "run_candidate",
+              "reward": 0.0,
+              "seconds": 0.262,
+              "exit_code": 1,
+              "reward_line": false,
+              "source_bytes": 96
+            },
+            {
+              "action": "run_candidate",
+              "reward": 0.0,
+              "seconds": 0.283,
+              "exit_code": 1,
+              "reward_line": false,
+              "source_bytes": 1653
+            }
+          ],
+          "found": [
+            "graceless_failure"
+          ],
+          "error": ""
+        }
       ],
       "injected": "graceless_failure",
       "theme": "",
@@ -537,7 +2503,7 @@
     {
       "bundle": "record_recover_20",
       "verdict": "hold",
-      "seconds": 0.515,
+      "seconds": 0.737,
       "dollars": 0.0,
       "findings": [
         {
@@ -545,19 +2511,91 @@
           "severity": "blocking",
           "location": "solution/solve.py",
           "summary": "The shipped reference solution scored 0.0 where the pipeline requires 1.0, so review stops before any probe runs.",
-          "evidence": "verify.py reported reward=0.0 in 0.16s. Last line: reward=0.0",
+          "evidence": "verify.py reported reward=0.0 in 0.24s. Last line: reward=0.0",
           "remedy": "Fix the reference solution or the graded expectations until the reference earns full reward on every case.",
           "confirmed": true,
           "reporter": "execution",
           "detail": {
             "reward": 0.0,
-            "seconds": 0.16237145906779915
+            "seconds": 0.2388117500813678
           },
           "title": "Reference solution does not earn full reward"
         }
       ],
       "notes": [
-        "oracle reward 0.0 in 0.16s, nop reward 0.0"
+        "oracle reward 0.0 in 0.24s, nop reward 0.0"
+      ],
+      "trace": [
+        {
+          "probe": "wording",
+          "seconds": 0.001,
+          "executions": [],
+          "found": [],
+          "error": ""
+        },
+        {
+          "probe": "execution",
+          "seconds": 0.482,
+          "executions": [
+            {
+              "action": "run_candidate",
+              "reward": 0.0,
+              "seconds": 0.239,
+              "exit_code": 0,
+              "reward_line": true,
+              "source_bytes": 960
+            },
+            {
+              "action": "run_candidate",
+              "reward": 0.0,
+              "seconds": 0.222,
+              "exit_code": 0,
+              "reward_line": true,
+              "source_bytes": 55
+            }
+          ],
+          "found": [
+            "oracle_fails"
+          ],
+          "error": ""
+        },
+        {
+          "probe": "leak",
+          "seconds": 0.001,
+          "executions": [],
+          "found": [],
+          "error": ""
+        },
+        {
+          "probe": "determinism",
+          "seconds": 0.0,
+          "executions": [],
+          "found": [],
+          "error": ""
+        },
+        {
+          "probe": "mutation",
+          "seconds": 0.0,
+          "executions": [],
+          "found": [],
+          "error": ""
+        },
+        {
+          "probe": "resilience",
+          "seconds": 0.252,
+          "executions": [
+            {
+              "action": "run_candidate",
+              "reward": 0.0,
+              "seconds": 0.246,
+              "exit_code": 0,
+              "reward_line": true,
+              "source_bytes": 96
+            }
+          ],
+          "found": [],
+          "error": ""
+        }
       ],
       "injected": "oracle_fails",
       "theme": "",
@@ -566,11 +2604,107 @@
     {
       "bundle": "record_recover_23",
       "verdict": "clear",
-      "seconds": 1.76,
+      "seconds": 2.499,
       "dollars": 0.0,
       "findings": [],
       "notes": [
-        "oracle reward 1.0 in 0.22s, nop reward 0.0"
+        "oracle reward 1.0 in 0.31s, nop reward 0.0"
+      ],
+      "trace": [
+        {
+          "probe": "wording",
+          "seconds": 0.001,
+          "executions": [],
+          "found": [],
+          "error": ""
+        },
+        {
+          "probe": "execution",
+          "seconds": 0.628,
+          "executions": [
+            {
+              "action": "run_candidate",
+              "reward": 1.0,
+              "seconds": 0.312,
+              "exit_code": 0,
+              "reward_line": true,
+              "source_bytes": 1148
+            },
+            {
+              "action": "run_candidate",
+              "reward": 0.0,
+              "seconds": 0.299,
+              "exit_code": 0,
+              "reward_line": true,
+              "source_bytes": 55
+            }
+          ],
+          "found": [],
+          "error": ""
+        },
+        {
+          "probe": "leak",
+          "seconds": 0.001,
+          "executions": [],
+          "found": [],
+          "error": ""
+        },
+        {
+          "probe": "determinism",
+          "seconds": 0.317,
+          "executions": [
+            {
+              "action": "run_candidate",
+              "reward": 1.0,
+              "seconds": 0.311,
+              "exit_code": 0,
+              "reward_line": true,
+              "source_bytes": 1148
+            }
+          ],
+          "found": [],
+          "error": ""
+        },
+        {
+          "probe": "mutation",
+          "seconds": 0.838,
+          "executions": [
+            {
+              "action": "run_candidate",
+              "reward": 0.0,
+              "seconds": 0.331,
+              "exit_code": 0,
+              "reward_line": true,
+              "source_bytes": 1147
+            }
+          ],
+          "found": [],
+          "error": ""
+        },
+        {
+          "probe": "resilience",
+          "seconds": 0.713,
+          "executions": [
+            {
+              "action": "run_candidate",
+              "reward": 0.0,
+              "seconds": 0.34,
+              "exit_code": 0,
+              "reward_line": true,
+              "source_bytes": 96
+            },
+            {
+              "action": "run_candidate",
+              "reward": 0.0,
+              "seconds": 0.36,
+              "exit_code": 0,
+              "reward_line": true,
+              "source_bytes": 1653
+            }
+          ],
+          "found": [],
+          "error": ""
+        }
       ],
       "injected": "nondeterministic",
       "theme": "",

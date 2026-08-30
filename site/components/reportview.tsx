@@ -77,6 +77,38 @@ export function ReportView({ reports }: { reports: BundleReport[] }) {
           ))
         )}
 
+        {active.trace.length > 0 ? (
+          <div className="notes">
+            <div style={{ marginBottom: 8 }}>What ran, in order</div>
+            <table className="plain">
+              <thead>
+                <tr>
+                  <th>Probe</th>
+                  <th>Executions</th>
+                  <th>Seconds</th>
+                  <th>Reported</th>
+                </tr>
+              </thead>
+              <tbody>
+                {active.trace.map((step) => (
+                  <tr key={step.probe}>
+                    <td>{step.probe}</td>
+                    <td>
+                      {step.executions.length === 0
+                        ? "read only"
+                        : step.executions
+                            .map((run) => `reward ${run.reward} in ${run.seconds.toFixed(2)}s`)
+                            .join(", ")}
+                    </td>
+                    <td>{step.seconds.toFixed(2)}</td>
+                    <td>{step.found.length > 0 ? step.found.join(", ") : "nothing"}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        ) : null}
+
         {active.notes.length > 0 ? (
           <div className="notes">
             {active.notes.map((note, index) => (
