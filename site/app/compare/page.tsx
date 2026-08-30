@@ -1,5 +1,7 @@
 import { classNames, comparison } from "@/lib/compare";
 import { defectLabel } from "@/lib/data";
+import { ArmBars } from "@/components/armbars";
+import { Reveal } from "@/components/reveal";
 
 function percent(value: number): string {
   return `${Math.round(value * 100)} percent`;
@@ -55,7 +57,11 @@ export default function ComparePage() {
         below was measured on this machine rather than estimated.
       </p>
 
-      <h2>Headline</h2>
+      <Reveal>
+        <ArmBars />
+      </Reveal>
+
+      <h2 className="ruled">Headline</h2>
       <table className="plain">
         <thead>
           <tr>
