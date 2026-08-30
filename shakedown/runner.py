@@ -15,6 +15,26 @@ REWARD_PATTERN = re.compile(r"reward\s*=\s*(\d*\.?\d+)")
 
 NOP_SOURCE = "import sys\n\nif __name__ == '__main__':\n    sys.exit(0)\n"
 
+_recorder: list[dict] | None = None
+
+
+def start_recording() -> list[dict]:
+    global _recorder
+    _recorder = []
+    return _recorder
+
+
+def stop_recording() -> list[dict]:
+    global _recorder
+    captured = _recorder or []
+    _recorder = None
+    return captured
+
+
+def _record(action: str, detail: dict) -> None:
+    if _recorder is not None:
+        _recorder.append({"action": action, **detail})
+
 
 @dataclass
 class RunResult:
@@ -67,8 +87,19 @@ def run_candidate(bundle: Bundle, source: str, timeout: float = 120.0) -> RunRes
             )
         elapsed = time.perf_counter() - started
         blob = proc.stdout + proc.stderr
+        reward = _parse_reward(blob)
+        _record(
+            "run_candidate",
+            {
+                "reward": reward,
+                "seconds": round(elapsed, 3),
+                "exit_code": proc.returncode,
+                "reward_line": bool(REWARD_PATTERN.search(blob)),
+                "source_bytes": len(source),
+            },
+        )
         return RunResult(
-            reward=_parse_reward(blob),
+            reward=reward,
             seconds=elapsed,
             exit_code=proc.returncode,
             stdout=proc.stdout,

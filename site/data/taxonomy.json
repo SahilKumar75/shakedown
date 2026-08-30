@@ -1,0 +1,77 @@
+{
+  "tiers": [
+    {
+      "name": "Visible from two runs",
+      "note": "What a careful author already catches by hand. Running the reference and an empty submission reveals these and nothing else, which is exactly where the baseline tops out.",
+      "classes": [
+        {
+          "defect": "oracle_fails",
+          "what": "The shipped reference solution does not earn full reward.",
+          "proof": "Run the reference through the verifier and read the reward."
+        },
+        {
+          "defect": "nop_passes",
+          "what": "A submission that does nothing earns reward, so the verifier is not testing the work.",
+          "proof": "Run a candidate that exits immediately and read the reward."
+        },
+        {
+          "defect": "slow_oracle",
+          "what": "The reference does not finish inside the budget it declares, which a slower review machine will punish.",
+          "proof": "Time the reference and compare against the declared budget."
+        }
+      ]
+    },
+    {
+      "name": "Reached by a designed experiment",
+      "note": "Each has a fixed shape, so each can be probed mechanically. This is where the measured gain over the baseline comes from.",
+      "classes": [
+        {
+          "defect": "answer_leak",
+          "what": "Material the solver can read contains values only the graded expectations should hold.",
+          "proof": "Compare graded expectations against every solver visible file and report the overlap with both paths named."
+        },
+        {
+          "defect": "hardcodable",
+          "what": "The graded cases are narrow enough to satisfy without solving the problem.",
+          "proof": "Edit the reference so it answers differently on a real input, then show the verifier still awarding full reward."
+        },
+        {
+          "defect": "nondeterministic",
+          "what": "The same submission scores differently on two identical runs.",
+          "proof": "Run the same submission twice and compare, and read the graded path for entropy that cannot be seeded."
+        },
+        {
+          "defect": "graceless_failure",
+          "what": "A failing candidate causes no zero to be recorded, so failure and a broken harness look alike.",
+          "proof": "Run a candidate that raises on start up and check a reward was recorded and the process exited cleanly."
+        },
+        {
+          "defect": "path_escape",
+          "what": "A graded output path can be redirected outside the directory the harness controls.",
+          "proof": "Write the answer elsewhere, leave a link behind, and show the verifier still awarding reward."
+        }
+      ]
+    },
+    {
+      "name": "Needs a reading, not an experiment",
+      "note": "The honest boundary of deterministic probing. These need judgement about content, which is the work the agent layer is being built for.",
+      "classes": [
+        {
+          "defect": "weak_verifier",
+          "what": "The verifier accepts a submission that does not satisfy the stated task, often by grading a candidate against itself.",
+          "proof": "Build the submission the description forbids and show it scoring full reward."
+        },
+        {
+          "defect": "undetermined_rule",
+          "what": "The decisive rule cannot be worked out from anything the solver can see, so a careful answer is marked wrong.",
+          "proof": "Judgement. Read the visible material as a solver would and ask whether a second reasonable reading exists."
+        },
+        {
+          "defect": "unwitnessed_encoding",
+          "what": "The graded cases use an encoding the shipped material never shows.",
+          "proof": "Enumerate the encodings the graded cases can produce against those the shipped material exhibits."
+        }
+      ]
+    }
+  ]
+}

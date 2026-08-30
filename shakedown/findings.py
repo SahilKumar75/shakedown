@@ -73,6 +73,7 @@ class Report:
     seconds: float = 0.0
     dollars: float = 0.0
     notes: list[str] = field(default_factory=list)
+    trace: list[dict[str, Any]] = field(default_factory=list)
 
     @property
     def blocking(self) -> list[Finding]:
@@ -93,6 +94,7 @@ class Report:
             "dollars": round(self.dollars, 6),
             "findings": [f.to_dict() for f in self.findings],
             "notes": self.notes,
+            "trace": self.trace,
         }
 
     def to_json(self) -> str:
