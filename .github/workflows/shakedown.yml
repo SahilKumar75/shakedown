@@ -1,0 +1,61 @@
+name: shakedown
+
+on:
+  pull_request:
+    paths:
+      - "corpus_out/**"
+      - "tasks/**"
+      - "shakedown/**"
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  bench:
+    name: shake the corpus down
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Build the corpus
+        run: python3 corpus/generate.py corpus_out 24 7
+
+      - name: Shake every bundle down
+        id: sweep
+        run: |
+          set +e
+          python3 -m shakedown.cli sweep corpus_out/main --json shakedown.json | tee sweep.txt
+          echo "held=$?" >> "$GITHUB_OUTPUT"
+          exit 0
+
+      - name: Check the bench still scores what the site claims
+        run: python3 tools/check_claims.py shakedown.json site/data/reports.json
+
+      - name: Post the run on the pull request
+        if: github.event_name == 'pull_request'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require("fs");
+            const body = "### Shakedown\n\n```\n"
+              + fs.readFileSync("sweep.txt", "utf8").trim()
+              + "\n```\n\nEvery line above came from executing the bundle on this runner.";
+            const { owner, repo } = context.repo;
+            const number = context.payload.pull_request.number;
+            const mine = (await github.rest.issues.listComments({ owner, repo, issue_number: number }))
+              .data.find((c) => c.body.startsWith("### Shakedown"));
+            if (mine) {
+              await github.rest.issues.updateComment({ owner, repo, comment_id: mine.id, body });
+            } else {
+              await github.rest.issues.createComment({ owner, repo, issue_number: number, body });
+            }
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: shakedown-report
+          path: shakedown.json

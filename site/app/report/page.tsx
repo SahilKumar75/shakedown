@@ -1,41 +1,40 @@
-import { ReportView } from "@/components/reportview";
+import { ReviewConsole } from "@/components/reviewconsole";
 import { allReports, outcome } from "@/lib/data";
 
 export default function ReportPage() {
   const reports = allReports();
   const score = outcome();
-  const heldClean = score.falseAlarms;
 
   return (
     <main>
-      <h1>Run report</h1>
+      <p className="eyebrow">Review console</p>
+      <h1>Every comment has a run behind it</h1>
       <p className="lede">
-        Every bundle below was inspected by the same gauntlet. A finding is only shown when a probe
-        could reproduce it, so each line of evidence is a thing that actually happened on this
-        machine rather than a guess about the code.
+        Each bundle is reviewed the way a pull request is: checks down the top, comments against the
+        file and line they belong to, a decision at the end. The difference is that no comment is
+        written unless a probe reproduced what it claims.
       </p>
 
       <div className="scoreboard">
         <div className="tile">
           <div className="figure">
-            {score.detected} of {score.planted}
+            {score.detected} <span className="of">of {score.planted}</span>
           </div>
           <div className="caption">planted defects caught</div>
         </div>
         <div className="tile">
           <div className="figure">
-            {heldClean} of {score.cleanBundles}
+            {score.falseAlarms} <span className="of">of {score.cleanBundles}</span>
           </div>
           <div className="caption">clean bundles wrongly held</div>
         </div>
         <div className="tile">
           <div className="figure">{score.seconds.toFixed(0)}s</div>
-          <div className="caption">to inspect all {reports.length}</div>
+          <div className="caption">to review all {reports.length}</div>
         </div>
       </div>
 
-      <h2>Bundles</h2>
-      <ReportView reports={reports} />
+      <ReviewConsole reports={reports} />
     </main>
   );
 }

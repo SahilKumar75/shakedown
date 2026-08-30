@@ -78,6 +78,52 @@ def _sweep(args: argparse.Namespace) -> int:
     return 1 if held else 0
 
 
+def _agent(args: argparse.Namespace) -> int:
+    from .agent import AgentUnavailable, investigate
+
+    try:
+        target = bundle_module.load(args.path)
+    except bundle_module.BundleError as error:
+        print(f"Shakedown could not read that bundle. {error}", file=sys.stderr)
+        return 2
+
+    known = []
+    if not args.alone:
+        known = Gauntlet(timeout=args.timeout).run(target).findings
+
+    def announce(step):
+        if args.quiet:
+            return
+        label = step["tool"] or "thinking"
+        print(f"  step {step['index']:2}  {label}", file=sys.stderr, flush=True)
+
+    try:
+        trail, found = investigate(
+            target,
+            known=known,
+            max_steps=args.max_steps,
+            timeout=args.timeout,
+            on_step=announce,
+        )
+    except AgentUnavailable as error:
+        print(str(error), file=sys.stderr)
+        return 3
+
+    _write_json(args.trajectory, trail.to_dict())
+    if args.format == "json":
+        print(trail.to_json())
+    else:
+        print(f"\n{target.name}: the agent took {len(trail.steps)} steps in {trail.seconds:.1f}s")
+        print(f"model {trail.model}, {trail.calls} calls, ended because it {trail.stopped}")
+        if not found:
+            print("It reproduced nothing the probes had not already found.")
+        for finding in found:
+            print(f"\n  {finding.defect.value} at {finding.location}")
+            print(f"  {finding.summary}")
+            print(f"  evidence: {finding.evidence}")
+    return 1 if found and args.fail_on != "never" else 0
+
+
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
         prog="shakedown",
@@ -116,6 +162,27 @@ def build_parser() -> argparse.ArgumentParser:
     sweep = sub.add_parser("sweep", help="inspect every bundle in a directory")
     shared(sweep)
     sweep.set_defaults(handler=_sweep)
+
+    agent = sub.add_parser(
+        "agent",
+        help="send an agent after the classes the deterministic probes cannot reach",
+    )
+    shared(agent)
+    agent.add_argument("--format", default="text", choices=["text", "json"])
+    agent.add_argument("--max-steps", dest="max_steps", type=int, default=14)
+    agent.add_argument(
+        "--trajectory",
+        type=Path,
+        default=None,
+        metavar="PATH",
+        help="write the full step by step trajectory here",
+    )
+    agent.add_argument(
+        "--alone",
+        action="store_true",
+        help="do not run the deterministic probes first",
+    )
+    agent.set_defaults(handler=_agent)
 
     return parser
 
