@@ -1,0 +1,29 @@
+{
+  "machine": {
+    "python": "3.13.4",
+    "platform": "macOS-26.5.2-arm64-arm-64bit-Mach-O",
+    "processor": "arm64"
+  },
+  "steps": [
+    {
+      "label": "generate corpus",
+      "command": "python3 corpus/generate.py corpus_out 24 7",
+      "seconds": 10.02,
+      "exit_code": 0
+    },
+    {
+      "label": "run gauntlet",
+      "command": "python3 tools/emit_reports.py corpus_out site/data/reports.json",
+      "seconds": 24.18,
+      "exit_code": 0
+    },
+    {
+      "label": "run comparison",
+      "command": "python3 tools/emit_compare.py corpus_out site/data/compare.json",
+      "seconds": 32.16,
+      "exit_code": 0
+    }
+  ],
+  "total_seconds": 66.36,
+  "dollars": 0.0
+}
