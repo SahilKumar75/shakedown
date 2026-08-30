@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from ..findings import Defect, Finding, Severity
-from ..runner import run_candidate
+from ..runner import run_candidate, run_on_cases
 from .base import Context
 
 MUTATIONS = (
@@ -22,6 +22,7 @@ class MutationProbe:
             return []
 
         source = bundle.solution
+        reference_outputs = run_on_cases(bundle, source)
         survivors = []
         for find, replace, description in MUTATIONS:
             if find not in source:
@@ -29,17 +30,28 @@ class MutationProbe:
             mutated = source.replace(find, replace, 1)
             if mutated == source:
                 continue
+            if reference_outputs is not None:
+                mutated_outputs = run_on_cases(bundle, mutated)
+                if mutated_outputs is None or mutated_outputs == reference_outputs:
+                    continue
             result = run_candidate(bundle, mutated, timeout=ctx.timeout)
             if result.reward >= 1.0:
-                survivors.append((find, replace, description))
+                changed = 0
+                if reference_outputs is not None:
+                    changed = sum(
+                        1
+                        for name, blob in mutated_outputs.items()
+                        if reference_outputs.get(name) != blob
+                    )
+                survivors.append((find, replace, description, changed))
 
         case_dir = bundle.tests_root / "cases"
         case_count = len([p for p in case_dir.iterdir() if not p.name.startswith(".")]) if case_dir.is_dir() else 0
 
         found = []
         if survivors:
-            find, replace, description = survivors[0]
-            listing = ", ".join(f"{f} to {r}" for f, r, _ in survivors)
+            find, replace, description, changed = survivors[0]
+            listing = ", ".join(f"{f} to {r}" for f, r, _, _ in survivors)
             found.append(
                 Finding(
                     defect=Defect.HARDCODABLE,
@@ -50,7 +62,8 @@ class MutationProbe:
                         "reward, so the graded cases do not pin the behaviour they claim to."
                     ),
                     evidence=(
-                        f"Replacing {find} with {replace} in solution/solve.py {description} and still scored 1.0. "
+                        f"Replacing {find} with {replace} in solution/solve.py {description}, changed the answer on "
+                        f"{changed} of the graded case inputs, and still scored 1.0. "
                         f"Surviving edits: {listing}. Graded cases present: {case_count}."
                     ),
                     remedy="Add graded cases that separate the mutated behaviour from the correct one, so every guard in the reference is load bearing.",

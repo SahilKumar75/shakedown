@@ -76,6 +76,36 @@ def run_candidate(bundle: Bundle, source: str, timeout: float = 120.0) -> RunRes
         )
 
 
+def run_on_cases(bundle: Bundle, source: str, timeout: float = 60.0) -> dict[str, bytes] | None:
+    case_dir = bundle.tests_root / "cases"
+    if not case_dir.is_dir():
+        return None
+    cases = sorted(p for p in case_dir.iterdir() if p.is_file() and not p.name.startswith("."))
+    if not cases:
+        return None
+
+    produced: dict[str, bytes] = {}
+    with tempfile.TemporaryDirectory(prefix="shakedown_cases_") as tmp:
+        base = Path(tmp)
+        candidate = base / "candidate.py"
+        candidate.write_text(source, encoding="utf8")
+        for index, case in enumerate(cases):
+            target = base / f"out_{index}"
+            try:
+                subprocess.run(
+                    [sys.executable, str(candidate), str(case), str(target)],
+                    cwd=base,
+                    capture_output=True,
+                    text=True,
+                    timeout=timeout,
+                )
+            except subprocess.TimeoutExpired:
+                produced[case.name] = b"<timeout>"
+                continue
+            produced[case.name] = target.read_bytes() if target.is_file() else b"<absent>"
+    return produced
+
+
 def run_oracle(bundle: Bundle, timeout: float = 120.0) -> RunResult:
     return run_candidate(bundle, bundle.solution, timeout=timeout)
 

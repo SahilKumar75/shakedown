@@ -11,3 +11,7 @@ build/
 corpus_out/
 runs/
 .env
+node_modules/
+.next/
+out/
+next-env.d.ts

@@ -6,15 +6,17 @@ from ..findings import Defect, Finding, Severity
 from .base import Context
 
 CLOCK = re.compile(
-    r"(time limit|time budget|wall clock|runs out of time|before the clock|"
-    r"your session|session ends|when you stop working|minutes remaining|"
-    r"hour budget|allotted time|run out of time)",
+    r"(time limit|time budget|wall clock|run clock|clock of \w+|runs out of time|"
+    r"before the clock|against that clock|budget your compute|your session|session ends|"
+    r"when you stop working|minutes remaining|hour budget|allotted time|run out of time|"
+    r"\d+ seconds? (of|to) (run|work|compute)|every attempt a run)",
     re.IGNORECASE,
 )
 
 SCORING = re.compile(
     r"(partial credit|scores? higher|earn(s)? more points|worth \d+ points|"
-    r"graded on a curve|partly right|counts for \d+ percent)",
+    r"graded on a curve|partly right|counts for \d+ percent|scores? the submission|"
+    r"reward 1\.0|reward of 1|scored as reward|awards? you reward)",
     re.IGNORECASE,
 )
 
