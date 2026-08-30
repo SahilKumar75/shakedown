@@ -1,0 +1,239 @@
+{
+  "corpus": "main",
+  "baseline": {
+    "name": "hand checks",
+    "score": {
+      "planted": 21,
+      "caught": 6,
+      "clean": 3,
+      "clean_held": 0,
+      "seconds": 9.88,
+      "recall": 0.2857,
+      "by_class": {
+        "oracle_fails": {
+          "planted": 3,
+          "caught": 3
+        },
+        "nondeterministic": {
+          "planted": 3,
+          "caught": 0
+        },
+        "forbidden_wording": {
+          "planted": 2,
+          "caught": 0
+        },
+        "answer_leak": {
+          "planted": 3,
+          "caught": 0
+        },
+        "hardcodable": {
+          "planted": 3,
+          "caught": 0
+        },
+        "path_escape": {
+          "planted": 2,
+          "caught": 0
+        },
+        "nop_passes": {
+          "planted": 3,
+          "caught": 3
+        },
+        "graceless_failure": {
+          "planted": 2,
+          "caught": 0
+        }
+      }
+    }
+  },
+  "shakedown": {
+    "name": "shakedown gauntlet",
+    "score": {
+      "planted": 21,
+      "caught": 13,
+      "clean": 3,
+      "clean_held": 0,
+      "seconds": 28.95,
+      "recall": 0.619,
+      "by_class": {
+        "oracle_fails": {
+          "planted": 3,
+          "caught": 3
+        },
+        "nondeterministic": {
+          "planted": 3,
+          "caught": 0
+        },
+        "forbidden_wording": {
+          "planted": 2,
+          "caught": 2
+        },
+        "answer_leak": {
+          "planted": 3,
+          "caught": 0
+        },
+        "hardcodable": {
+          "planted": 3,
+          "caught": 3
+        },
+        "path_escape": {
+          "planted": 2,
+          "caught": 0
+        },
+        "nop_passes": {
+          "planted": 3,
+          "caught": 3
+        },
+        "graceless_failure": {
+          "planted": 2,
+          "caught": 2
+        }
+      }
+    }
+  },
+  "bundles": [
+    {
+      "bundle": "address_normalise_02",
+      "injected": "oracle_fails",
+      "baseline_caught": true,
+      "shakedown_caught": true
+    },
+    {
+      "bundle": "address_normalise_05",
+      "injected": "nondeterministic",
+      "baseline_caught": false,
+      "shakedown_caught": false
+    },
+    {
+      "bundle": "address_normalise_08",
+      "injected": "forbidden_wording",
+      "baseline_caught": false,
+      "shakedown_caught": true
+    },
+    {
+      "bundle": "address_normalise_10",
+      "injected": "answer_leak",
+      "baseline_caught": false,
+      "shakedown_caught": false
+    },
+    {
+      "bundle": "address_normalise_13",
+      "injected": "hardcodable",
+      "baseline_caught": false,
+      "shakedown_caught": true
+    },
+    {
+      "bundle": "address_normalise_16",
+      "injected": "path_escape",
+      "baseline_caught": false,
+      "shakedown_caught": false
+    },
+    {
+      "bundle": "address_normalise_18",
+      "injected": null,
+      "baseline_caught": false,
+      "shakedown_caught": false
+    },
+    {
+      "bundle": "address_normalise_21",
+      "injected": "nop_passes",
+      "baseline_caught": true,
+      "shakedown_caught": true
+    },
+    {
+      "bundle": "ledger_merge_00",
+      "injected": null,
+      "baseline_caught": false,
+      "shakedown_caught": false
+    },
+    {
+      "bundle": "ledger_merge_03",
+      "injected": "nop_passes",
+      "baseline_caught": true,
+      "shakedown_caught": true
+    },
+    {
+      "bundle": "ledger_merge_06",
+      "injected": "graceless_failure",
+      "baseline_caught": false,
+      "shakedown_caught": true
+    },
+    {
+      "bundle": "ledger_merge_11",
+      "injected": "oracle_fails",
+      "baseline_caught": true,
+      "shakedown_caught": true
+    },
+    {
+      "bundle": "ledger_merge_14",
+      "injected": "nondeterministic",
+      "baseline_caught": false,
+      "shakedown_caught": false
+    },
+    {
+      "bundle": "ledger_merge_17",
+      "injected": "forbidden_wording",
+      "baseline_caught": false,
+      "shakedown_caught": true
+    },
+    {
+      "bundle": "ledger_merge_19",
+      "injected": "answer_leak",
+      "baseline_caught": false,
+      "shakedown_caught": false
+    },
+    {
+      "bundle": "ledger_merge_22",
+      "injected": "hardcodable",
+      "baseline_caught": false,
+      "shakedown_caught": true
+    },
+    {
+      "bundle": "record_recover_01",
+      "injected": "answer_leak",
+      "baseline_caught": false,
+      "shakedown_caught": false
+    },
+    {
+      "bundle": "record_recover_04",
+      "injected": "hardcodable",
+      "baseline_caught": false,
+      "shakedown_caught": true
+    },
+    {
+      "bundle": "record_recover_07",
+      "injected": "path_escape",
+      "baseline_caught": false,
+      "shakedown_caught": false
+    },
+    {
+      "bundle": "record_recover_09",
+      "injected": null,
+      "baseline_caught": false,
+      "shakedown_caught": false
+    },
+    {
+      "bundle": "record_recover_12",
+      "injected": "nop_passes",
+      "baseline_caught": true,
+      "shakedown_caught": true
+    },
+    {
+      "bundle": "record_recover_15",
+      "injected": "graceless_failure",
+      "baseline_caught": false,
+      "shakedown_caught": true
+    },
+    {
+      "bundle": "record_recover_20",
+      "injected": "oracle_fails",
+      "baseline_caught": true,
+      "shakedown_caught": true
+    },
+    {
+      "bundle": "record_recover_23",
+      "injected": "nondeterministic",
+      "baseline_caught": false,
+      "shakedown_caught": false
+    }
+  ]
+}
