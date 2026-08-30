@@ -967,3 +967,27 @@ td.num {
   font-size: 13.5px;
   color: var(--ink_soft);
 }
+
+/* ------------------------------------------------------------- shell block */
+
+.shellblock {
+  margin: 20px 0 0;
+  padding: 16px 18px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--sea_deep);
+  color: #dceaea;
+  font-family: var(--font_mono), monospace;
+  font-size: 13px;
+  line-height: 1.85;
+  overflow-x: auto;
+}
+
+.shellblock .prompt {
+  color: #6fb3ad;
+  margin-right: 8px;
+}
+
+.shellblock .out {
+  color: #9fb5b6;
+}

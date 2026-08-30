@@ -60,6 +60,33 @@ python3 -m shakedown.cli run corpus_out/ledger_merge_00
 python3 -m shakedown.cli sweep corpus_out
 ```
 
+## In a pipeline
+
+Both commands exit non zero when a bundle would be held, stream each finding to standard error as the probe reproduces it, and will write the machine readable report alongside the human one. That is enough to gate a pull request that adds or edits a task bundle.
+
+```
+python3 -m shakedown.cli run tasks/my_bundle --quiet --json shakedown.json
+```
+
+`--fail-on any` fails the build on advisory findings too, and `--fail-on never` reports without ever failing it, which is the honest setting for a first run against an existing tree.
+
+```yaml
+- name: Shake the bundle down
+  run: python3 -m shakedown.cli sweep tasks --quiet --json shakedown.json
+```
+
+Nothing leaves the machine. Every probe decides by executing the bundle, so there is no key to configure and no service to call.
+
+## Prior art
+
+Shakedown was written for this competition. Three projects shaped it and none of their code is vendored here.
+
+[Strix](https://github.com/usestrix/strix) makes the argument this project borrows most directly: a security finding is worth reporting only when the tool has run the code and demonstrated it, because a scanner that guesses spends the reviewer's time rather than saving it. Shakedown applies that rule to benchmark bundles, and its pipeline ergonomics, exit codes, streamed findings and a report written to disk, follow Strix's headless mode.
+
+[Impeccable](https://github.com/pbakaus/impeccable) supplied the design review for the site. Its detector was run over the tree and the anti patterns it flagged were fixed rather than argued with.
+
+[Agency Agents](https://github.com/msitarzewski/agency-agents) is the pattern behind writing a reviewer role as a document with its own rules and deliverables rather than as an ad hoc prompt, which is how the probe specifications in `docs/taxonomy.md` are laid out.
+
 ## The site
 
 `site` holds a reading room for the results: the run report bundle by bundle, the comparison against the baseline, the improvement changelog and the reproduction guide. It is a static export, so it needs no backend.

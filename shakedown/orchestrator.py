@@ -21,9 +21,10 @@ def _rank(finding: Finding) -> tuple[int, int, str]:
 
 
 class Gauntlet:
-    def __init__(self, probes=None, timeout: float = 120.0):
+    def __init__(self, probes=None, timeout: float = 120.0, on_finding=None):
         self.probes = list(probes) if probes is not None else list(DETERMINISTIC_PROBES)
         self.timeout = timeout
+        self.on_finding = on_finding
 
     def run(self, bundle: Bundle) -> Report:
         started = time.perf_counter()
@@ -43,6 +44,8 @@ class Gauntlet:
                     existing = collected.get(key)
                     if existing is None or (not existing.confirmed and finding.confirmed):
                         collected[key] = finding
+                    if self.on_finding is not None and existing is None:
+                        self.on_finding(bundle, finding)
             except Exception as error:
                 error_note = f"{type(error).__name__}: {error}"
                 ctx.note(f"probe {probe.name} stopped early: {error_note}")

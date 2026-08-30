@@ -82,6 +82,23 @@ export default function OverviewPage() {
           <Link href="/compare">See the full comparison</Link>, class by class and bundle by bundle.
         </p>
       </Reveal>
+
+      <Reveal as="section">
+        <h2 className="ruled">Point it at your own bundle</h2>
+        <p className="lede short">
+          It exits non zero when a bundle would be held and streams each finding as the probe
+          reproduces it, so it gates a pull request without a key or a service behind it.
+        </p>
+        <pre className="shellblock">
+          <code>
+            <span className="prompt">$</span> python3 -m shakedown.cli run tasks/my_bundle --json
+            shakedown.json{"\n"}
+            <span className="out">BLOCK oracle_fails solution/solve.py</span>
+            {"\n"}
+            <span className="out">1 of 1 bundles would be held.</span>
+          </code>
+        </pre>
+      </Reveal>
     </main>
   );
 }

@@ -1,11 +1,45 @@
 from __future__ import annotations
 
 import argparse
+import json
 import sys
 from pathlib import Path
 
 from . import bundle as bundle_module
+from .findings import Report
 from .orchestrator import Gauntlet
+
+
+def _held(report: Report, fail_on: str) -> bool:
+    if fail_on == "never":
+        return False
+    if fail_on == "any":
+        return bool(report.findings)
+    return bool(report.blocking)
+
+
+def _streamer(quiet: bool):
+    if quiet:
+        return None
+
+    def announce(target, finding):
+        mark = "BLOCK" if finding.severity.value == "blocking" else "note "
+        print(
+            f"  {mark} {finding.defect.value:20} {finding.location}",
+            file=sys.stderr,
+            flush=True,
+        )
+
+    return announce
+
+
+def _write_json(path: Path | None, payload) -> None:
+    if path is None:
+        return
+    path.parent.mkdir(parents=True, exist_ok=True)
+    with open(path, "w", encoding="utf-8") as handle:
+        json.dump(payload, handle, indent=2)
+        handle.write("\n")
 
 
 def _run(args: argparse.Namespace) -> int:
@@ -14,12 +48,14 @@ def _run(args: argparse.Namespace) -> int:
     except bundle_module.BundleError as error:
         print(f"Shakedown could not read that bundle. {error}", file=sys.stderr)
         return 2
-    report = Gauntlet(timeout=args.timeout).run(target)
+    gauntlet = Gauntlet(timeout=args.timeout, on_finding=_streamer(args.quiet))
+    report = gauntlet.run(target)
     if args.format == "json":
         print(report.to_json())
-    else:
+    elif not args.quiet:
         print(report.render())
-    return 1 if report.blocking else 0
+    _write_json(args.json, report.to_dict())
+    return 1 if _held(report, args.fail_on) else 0
 
 
 def _sweep(args: argparse.Namespace) -> int:
@@ -27,16 +63,19 @@ def _sweep(args: argparse.Namespace) -> int:
     if not bundles:
         print(f"No bundles found under {args.path}", file=sys.stderr)
         return 2
-    gauntlet = Gauntlet(timeout=args.timeout)
+    gauntlet = Gauntlet(timeout=args.timeout, on_finding=_streamer(args.quiet))
     held = 0
+    reports = []
     for target in bundles:
         report = gauntlet.run(target)
+        reports.append(report.to_dict())
         marker = "hold " if report.blocking else "clear"
         names = ", ".join(sorted({f.defect.value for f in report.blocking})) or "none"
         print(f"{marker} {target.name:36} {report.seconds:6.1f}s  {names}")
-        held += 1 if report.blocking else 0
+        held += 1 if _held(report, args.fail_on) else 0
     print(f"\n{held} of {len(bundles)} bundles would be held.")
-    return 0
+    _write_json(args.json, {"bundles": len(bundles), "held": held, "reports": reports})
+    return 1 if held else 0
 
 
 def build_parser() -> argparse.ArgumentParser:
@@ -46,15 +85,36 @@ def build_parser() -> argparse.ArgumentParser:
     )
     sub = parser.add_subparsers(dest="command", required=True)
 
+    def shared(target):
+        target.add_argument("path", type=Path)
+        target.add_argument("--timeout", type=float, default=120.0)
+        target.add_argument(
+            "--json",
+            type=Path,
+            default=None,
+            metavar="PATH",
+            help="write the machine readable report here as well",
+        )
+        target.add_argument(
+            "--fail-on",
+            dest="fail_on",
+            default="blocking",
+            choices=["blocking", "any", "never"],
+            help="which findings make the command exit non zero",
+        )
+        target.add_argument(
+            "--quiet",
+            action="store_true",
+            help="print only the summary, for a pipeline log",
+        )
+
     run = sub.add_parser("run", help="inspect one bundle")
-    run.add_argument("path", type=Path)
-    run.add_argument("format", nargs="?", default="text", choices=["text", "json"])
-    run.add_argument("timeout", nargs="?", type=float, default=120.0)
+    shared(run)
+    run.add_argument("--format", default="text", choices=["text", "json"])
     run.set_defaults(handler=_run)
 
     sweep = sub.add_parser("sweep", help="inspect every bundle in a directory")
-    sweep.add_argument("path", type=Path)
-    sweep.add_argument("timeout", nargs="?", type=float, default=120.0)
+    shared(sweep)
     sweep.set_defaults(handler=_sweep)
 
     return parser
