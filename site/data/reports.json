@@ -23,7 +23,7 @@
     {
       "bundle": "address_normalise_02",
       "verdict": "hold",
-      "seconds": 0.574,
+      "seconds": 0.596,
       "dollars": 0.0,
       "findings": [
         {
@@ -31,19 +31,19 @@
           "severity": "blocking",
           "location": "solution/solve.py",
           "summary": "The shipped reference solution scored 0.0 where the pipeline requires 1.0, so review stops before any probe runs.",
-          "evidence": "verify.py reported reward=0.0 in 0.20s. Last line: reward=0.0",
+          "evidence": "verify.py reported reward=0.0 in 0.19s. Last line: reward=0.0",
           "remedy": "Fix the reference solution or the graded expectations until the reference earns full reward on every case.",
           "confirmed": true,
           "reporter": "execution",
           "detail": {
             "reward": 0.0,
-            "seconds": 0.2010709170717746
+            "seconds": 0.19034424994606525
           },
           "title": "Reference solution does not earn full reward"
         }
       ],
       "notes": [
-        "oracle reward 0.0 in 0.20s, nop reward 0.0"
+        "oracle reward 0.0 in 0.19s, nop reward 0.0"
       ],
       "injected": "oracle_fails",
       "theme": "",
@@ -52,11 +52,11 @@
     {
       "bundle": "address_normalise_05",
       "verdict": "clear",
-      "seconds": 1.405,
+      "seconds": 2.078,
       "dollars": 0.0,
       "findings": [],
       "notes": [
-        "oracle reward 1.0 in 0.24s, nop reward 0.0"
+        "oracle reward 1.0 in 0.32s, nop reward 0.0"
       ],
       "injected": "nondeterministic",
       "theme": "",
@@ -65,7 +65,7 @@
     {
       "bundle": "address_normalise_08",
       "verdict": "hold",
-      "seconds": 1.009,
+      "seconds": 1.419,
       "dollars": 0.0,
       "findings": [
         {
@@ -85,7 +85,7 @@
         }
       ],
       "notes": [
-        "oracle reward 1.0 in 0.17s, nop reward 0.0"
+        "oracle reward 1.0 in 0.34s, nop reward 0.0"
       ],
       "injected": "forbidden_wording",
       "theme": "",
@@ -94,11 +94,11 @@
     {
       "bundle": "address_normalise_10",
       "verdict": "clear",
-      "seconds": 0.978,
+      "seconds": 1.32,
       "dollars": 0.0,
       "findings": [],
       "notes": [
-        "oracle reward 1.0 in 0.16s, nop reward 0.0"
+        "oracle reward 1.0 in 0.25s, nop reward 0.0"
       ],
       "injected": "answer_leak",
       "theme": "",
@@ -107,7 +107,7 @@
     {
       "bundle": "address_normalise_13",
       "verdict": "clear",
-      "seconds": 0.408,
+      "seconds": 0.599,
       "dollars": 0.0,
       "findings": [
         {
@@ -126,7 +126,7 @@
         }
       ],
       "notes": [
-        "oracle reward 1.0 in 0.07s, nop reward 0.0"
+        "oracle reward 1.0 in 0.13s, nop reward 0.0"
       ],
       "injected": "hardcodable",
       "theme": "",
@@ -135,11 +135,11 @@
     {
       "bundle": "address_normalise_16",
       "verdict": "clear",
-      "seconds": 1.098,
+      "seconds": 1.291,
       "dollars": 0.0,
       "findings": [],
       "notes": [
-        "oracle reward 1.0 in 0.15s, nop reward 0.0"
+        "oracle reward 1.0 in 0.23s, nop reward 0.0"
       ],
       "injected": "path_escape",
       "theme": "",
@@ -148,7 +148,7 @@
     {
       "bundle": "address_normalise_18",
       "verdict": "clear",
-      "seconds": 1.108,
+      "seconds": 1.049,
       "dollars": 0.0,
       "findings": [],
       "notes": [
@@ -161,7 +161,312 @@
     {
       "bundle": "address_normalise_21",
       "verdict": "hold",
-      "seconds": 1.114,
+      "seconds": 1.284,
+      "dollars": 0.0,
+      "findings": [
+        {
+          "defect": "nop_passes",
+          "severity": "blocking",
+          "location": "tests/verify.py",
+          "summary": "A candidate that does nothing at all scored 1.0, so the verifier is not testing the work.",
+          "evidence": "An empty candidate that exits immediately scored reward=1.0.",
+          "remedy": "Assert on the produced output. A missing or empty result must score zero.",
+          "confirmed": true,
+          "reporter": "execution",
+          "detail": {
+            "reward": 1.0
+          },
+          "title": "Empty submission earns reward"
+        },
+        {
+          "defect": "path_escape",
+          "severity": "blocking",
+          "location": "tests/verify.py",
+          "summary": "The graded output path can be a link to a file outside the case directory and the verifier still reads it, so a submission controls where graded bytes live.",
+          "evidence": "A candidate that wrote its answer to a directory outside the case tree and left a link behind scored 1.0.",
+          "remedy": "Reject a graded path that is a link, and require the resolved path to stay inside the case directory.",
+          "confirmed": true,
+          "reporter": "resilience",
+          "detail": {
+            "reward": 1.0
+          },
+          "title": "Graded output path can be redirected outside the sandbox"
+        }
+      ],
+      "notes": [
+        "oracle reward 1.0 in 0.18s, nop reward 1.0"
+      ],
+      "injected": "nop_passes",
+      "theme": "",
+      "summary": "Normalise messy address records, drop the repeats and order the survivors"
+    },
+    {
+      "bundle": "ledger_merge_00",
+      "verdict": "clear",
+      "seconds": 1.03,
+      "dollars": 0.0,
+      "findings": [],
+      "notes": [
+        "oracle reward 1.0 in 0.18s, nop reward 0.0"
+      ],
+      "injected": null,
+      "theme": "",
+      "summary": "Merge two transaction logs into one ordered ledger with a running total"
+    },
+    {
+      "bundle": "ledger_merge_03",
+      "verdict": "hold",
+      "seconds": 1.038,
+      "dollars": 0.0,
+      "findings": [
+        {
+          "defect": "nop_passes",
+          "severity": "blocking",
+          "location": "tests/verify.py",
+          "summary": "A candidate that does nothing at all scored 1.0, so the verifier is not testing the work.",
+          "evidence": "An empty candidate that exits immediately scored reward=1.0.",
+          "remedy": "Assert on the produced output. A missing or empty result must score zero.",
+          "confirmed": true,
+          "reporter": "execution",
+          "detail": {
+            "reward": 1.0
+          },
+          "title": "Empty submission earns reward"
+        },
+        {
+          "defect": "path_escape",
+          "severity": "blocking",
+          "location": "tests/verify.py",
+          "summary": "The graded output path can be a link to a file outside the case directory and the verifier still reads it, so a submission controls where graded bytes live.",
+          "evidence": "A candidate that wrote its answer to a directory outside the case tree and left a link behind scored 1.0.",
+          "remedy": "Reject a graded path that is a link, and require the resolved path to stay inside the case directory.",
+          "confirmed": true,
+          "reporter": "resilience",
+          "detail": {
+            "reward": 1.0
+          },
+          "title": "Graded output path can be redirected outside the sandbox"
+        }
+      ],
+      "notes": [
+        "oracle reward 1.0 in 0.17s, nop reward 1.0"
+      ],
+      "injected": "nop_passes",
+      "theme": "",
+      "summary": "Merge two transaction logs into one ordered ledger with a running total"
+    },
+    {
+      "bundle": "ledger_merge_06",
+      "verdict": "hold",
+      "seconds": 1.006,
+      "dollars": 0.0,
+      "findings": [
+        {
+          "defect": "graceless_failure",
+          "severity": "blocking",
+          "location": "tests/verify.py",
+          "summary": "When a candidate fails part way the verifier does not record a zero, so a genuine failure is indistinguishable from a broken harness.",
+          "evidence": "A candidate that raises on start up made the verifier print no reward line.",
+          "remedy": "Wrap the graded run so every path, including exceptions, records a reward and exits cleanly.",
+          "confirmed": true,
+          "reporter": "resilience",
+          "detail": {
+            "exit_code": 1,
+            "reward_line": false
+          },
+          "title": "Failing path does not record a zero reward"
+        }
+      ],
+      "notes": [
+        "oracle reward 1.0 in 0.16s, nop reward 0.0"
+      ],
+      "injected": "graceless_failure",
+      "theme": "",
+      "summary": "Merge two transaction logs into one ordered ledger with a running total"
+    },
+    {
+      "bundle": "ledger_merge_11",
+      "verdict": "hold",
+      "seconds": 0.527,
+      "dollars": 0.0,
+      "findings": [
+        {
+          "defect": "oracle_fails",
+          "severity": "blocking",
+          "location": "solution/solve.py",
+          "summary": "The shipped reference solution scored 0.0 where the pipeline requires 1.0, so review stops before any probe runs.",
+          "evidence": "verify.py reported reward=0.0 in 0.16s. Last line: reward=0.0",
+          "remedy": "Fix the reference solution or the graded expectations until the reference earns full reward on every case.",
+          "confirmed": true,
+          "reporter": "execution",
+          "detail": {
+            "reward": 0.0,
+            "seconds": 0.16040216595865786
+          },
+          "title": "Reference solution does not earn full reward"
+        }
+      ],
+      "notes": [
+        "oracle reward 0.0 in 0.16s, nop reward 0.0"
+      ],
+      "injected": "oracle_fails",
+      "theme": "",
+      "summary": "Merge two transaction logs into one ordered ledger with a running total"
+    },
+    {
+      "bundle": "ledger_merge_14",
+      "verdict": "clear",
+      "seconds": 1.343,
+      "dollars": 0.0,
+      "findings": [],
+      "notes": [
+        "oracle reward 1.0 in 0.22s, nop reward 0.0"
+      ],
+      "injected": "nondeterministic",
+      "theme": "",
+      "summary": "Merge two transaction logs into one ordered ledger with a running total"
+    },
+    {
+      "bundle": "ledger_merge_17",
+      "verdict": "hold",
+      "seconds": 1.071,
+      "dollars": 0.0,
+      "findings": [
+        {
+          "defect": "forbidden_wording",
+          "severity": "blocking",
+          "location": "instruction.md line 30",
+          "summary": "The instruction describes the harness run clock, which the static gate rejects.",
+          "evidence": "Line 30 contains the phrase 'every attempt a run'.",
+          "remedy": "State the deliverable and how it is judged in terms of the files on disk, never in terms of elapsed time.",
+          "confirmed": true,
+          "reporter": "wording",
+          "detail": {
+            "phrase": "every attempt a run",
+            "line": 30
+          },
+          "title": "Instruction describes harness timing or scoring mechanics"
+        }
+      ],
+      "notes": [
+        "oracle reward 1.0 in 0.17s, nop reward 0.0"
+      ],
+      "injected": "forbidden_wording",
+      "theme": "",
+      "summary": "Merge two transaction logs into one ordered ledger with a running total"
+    },
+    {
+      "bundle": "ledger_merge_19",
+      "verdict": "clear",
+      "seconds": 1.024,
+      "dollars": 0.0,
+      "findings": [],
+      "notes": [
+        "oracle reward 1.0 in 0.19s, nop reward 0.0"
+      ],
+      "injected": "answer_leak",
+      "theme": "",
+      "summary": "Merge two transaction logs into one ordered ledger with a running total"
+    },
+    {
+      "bundle": "ledger_merge_22",
+      "verdict": "clear",
+      "seconds": 0.413,
+      "dollars": 0.0,
+      "findings": [
+        {
+          "defect": "hardcodable",
+          "severity": "advisory",
+          "location": "tests/cases",
+          "summary": "A single graded case can be satisfied by returning one stored answer.",
+          "evidence": "tests/cases holds 1 case.",
+          "remedy": "Add unseen cases that vary the inputs so a stored answer cannot pass.",
+          "confirmed": true,
+          "reporter": "mutation",
+          "detail": {
+            "cases": 1
+          },
+          "title": "Graded cases too narrow to force a general solution"
+        }
+      ],
+      "notes": [
+        "oracle reward 1.0 in 0.08s, nop reward 0.0"
+      ],
+      "injected": "hardcodable",
+      "theme": "",
+      "summary": "Merge two transaction logs into one ordered ledger with a running total"
+    },
+    {
+      "bundle": "record_recover_01",
+      "verdict": "clear",
+      "seconds": 1.426,
+      "dollars": 0.0,
+      "findings": [],
+      "notes": [
+        "oracle reward 1.0 in 0.21s, nop reward 0.0"
+      ],
+      "injected": "answer_leak",
+      "theme": "",
+      "summary": "Rebuild records from a framed binary dump with continuations and padding"
+    },
+    {
+      "bundle": "record_recover_04",
+      "verdict": "clear",
+      "seconds": 0.577,
+      "dollars": 0.0,
+      "findings": [
+        {
+          "defect": "hardcodable",
+          "severity": "advisory",
+          "location": "tests/cases",
+          "summary": "A single graded case can be satisfied by returning one stored answer.",
+          "evidence": "tests/cases holds 1 case.",
+          "remedy": "Add unseen cases that vary the inputs so a stored answer cannot pass.",
+          "confirmed": true,
+          "reporter": "mutation",
+          "detail": {
+            "cases": 1
+          },
+          "title": "Graded cases too narrow to force a general solution"
+        }
+      ],
+      "notes": [
+        "oracle reward 1.0 in 0.09s, nop reward 0.0"
+      ],
+      "injected": "hardcodable",
+      "theme": "",
+      "summary": "Rebuild records from a framed binary dump with continuations and padding"
+    },
+    {
+      "bundle": "record_recover_07",
+      "verdict": "clear",
+      "seconds": 1.547,
+      "dollars": 0.0,
+      "findings": [],
+      "notes": [
+        "oracle reward 1.0 in 0.28s, nop reward 0.0"
+      ],
+      "injected": "path_escape",
+      "theme": "",
+      "summary": "Rebuild records from a framed binary dump with continuations and padding"
+    },
+    {
+      "bundle": "record_recover_09",
+      "verdict": "clear",
+      "seconds": 1.408,
+      "dollars": 0.0,
+      "findings": [],
+      "notes": [
+        "oracle reward 1.0 in 0.17s, nop reward 0.0"
+      ],
+      "injected": null,
+      "theme": "",
+      "summary": "Rebuild records from a framed binary dump with continuations and padding"
+    },
+    {
+      "bundle": "record_recover_12",
+      "verdict": "hold",
+      "seconds": 1.432,
       "dollars": 0.0,
       "findings": [
         {
@@ -198,67 +503,12 @@
       ],
       "injected": "nop_passes",
       "theme": "",
-      "summary": "Normalise messy address records, drop the repeats and order the survivors"
+      "summary": "Rebuild records from a framed binary dump with continuations and padding"
     },
     {
-      "bundle": "ledger_merge_00",
-      "verdict": "clear",
-      "seconds": 1.017,
-      "dollars": 0.0,
-      "findings": [],
-      "notes": [
-        "oracle reward 1.0 in 0.20s, nop reward 0.0"
-      ],
-      "injected": null,
-      "theme": "",
-      "summary": "Merge two transaction logs into one ordered ledger with a running total"
-    },
-    {
-      "bundle": "ledger_merge_03",
+      "bundle": "record_recover_15",
       "verdict": "hold",
-      "seconds": 0.92,
-      "dollars": 0.0,
-      "findings": [
-        {
-          "defect": "nop_passes",
-          "severity": "blocking",
-          "location": "tests/verify.py",
-          "summary": "A candidate that does nothing at all scored 1.0, so the verifier is not testing the work.",
-          "evidence": "An empty candidate that exits immediately scored reward=1.0.",
-          "remedy": "Assert on the produced output. A missing or empty result must score zero.",
-          "confirmed": true,
-          "reporter": "execution",
-          "detail": {
-            "reward": 1.0
-          },
-          "title": "Empty submission earns reward"
-        },
-        {
-          "defect": "path_escape",
-          "severity": "blocking",
-          "location": "tests/verify.py",
-          "summary": "The graded output path can be a link to a file outside the case directory and the verifier still reads it, so a submission controls where graded bytes live.",
-          "evidence": "A candidate that wrote its answer to a directory outside the case tree and left a link behind scored 1.0.",
-          "remedy": "Reject a graded path that is a link, and require the resolved path to stay inside the case directory.",
-          "confirmed": true,
-          "reporter": "resilience",
-          "detail": {
-            "reward": 1.0
-          },
-          "title": "Graded output path can be redirected outside the sandbox"
-        }
-      ],
-      "notes": [
-        "oracle reward 1.0 in 0.15s, nop reward 1.0"
-      ],
-      "injected": "nop_passes",
-      "theme": "",
-      "summary": "Merge two transaction logs into one ordered ledger with a running total"
-    },
-    {
-      "bundle": "ledger_merge_06",
-      "verdict": "hold",
-      "seconds": 0.982,
+      "seconds": 1.62,
       "dollars": 0.0,
       "findings": [
         {
@@ -266,7 +516,7 @@
           "severity": "blocking",
           "location": "tests/verify.py",
           "summary": "When a candidate fails part way the verifier does not record a zero, so a genuine failure is indistinguishable from a broken harness.",
-          "evidence": "A candidate that raises on start up made the verifier printed no reward line.",
+          "evidence": "A candidate that raises on start up made the verifier print no reward line.",
           "remedy": "Wrap the graded run so every path, including exceptions, records a reward and exits cleanly.",
           "confirmed": true,
           "reporter": "resilience",
@@ -278,16 +528,16 @@
         }
       ],
       "notes": [
-        "oracle reward 1.0 in 0.15s, nop reward 0.0"
+        "oracle reward 1.0 in 0.17s, nop reward 0.0"
       ],
       "injected": "graceless_failure",
       "theme": "",
-      "summary": "Merge two transaction logs into one ordered ledger with a running total"
+      "summary": "Rebuild records from a framed binary dump with continuations and padding"
     },
     {
-      "bundle": "ledger_merge_11",
+      "bundle": "record_recover_20",
       "verdict": "hold",
-      "seconds": 0.544,
+      "seconds": 0.515,
       "dollars": 0.0,
       "findings": [
         {
@@ -301,7 +551,7 @@
           "reporter": "execution",
           "detail": {
             "reward": 0.0,
-            "seconds": 0.16361279203556478
+            "seconds": 0.16237145906779915
           },
           "title": "Reference solution does not earn full reward"
         }
@@ -311,266 +561,16 @@
       ],
       "injected": "oracle_fails",
       "theme": "",
-      "summary": "Merge two transaction logs into one ordered ledger with a running total"
-    },
-    {
-      "bundle": "ledger_merge_14",
-      "verdict": "clear",
-      "seconds": 1.305,
-      "dollars": 0.0,
-      "findings": [],
-      "notes": [
-        "oracle reward 1.0 in 0.22s, nop reward 0.0"
-      ],
-      "injected": "nondeterministic",
-      "theme": "",
-      "summary": "Merge two transaction logs into one ordered ledger with a running total"
-    },
-    {
-      "bundle": "ledger_merge_17",
-      "verdict": "hold",
-      "seconds": 1.087,
-      "dollars": 0.0,
-      "findings": [
-        {
-          "defect": "forbidden_wording",
-          "severity": "blocking",
-          "location": "instruction.md line 30",
-          "summary": "The instruction describes the harness run clock, which the static gate rejects.",
-          "evidence": "Line 30 contains the phrase 'every attempt a run'.",
-          "remedy": "State the deliverable and how it is judged in terms of the files on disk, never in terms of elapsed time.",
-          "confirmed": true,
-          "reporter": "wording",
-          "detail": {
-            "phrase": "every attempt a run",
-            "line": 30
-          },
-          "title": "Instruction describes harness timing or scoring mechanics"
-        }
-      ],
-      "notes": [
-        "oracle reward 1.0 in 0.15s, nop reward 0.0"
-      ],
-      "injected": "forbidden_wording",
-      "theme": "",
-      "summary": "Merge two transaction logs into one ordered ledger with a running total"
-    },
-    {
-      "bundle": "ledger_merge_19",
-      "verdict": "clear",
-      "seconds": 1.205,
-      "dollars": 0.0,
-      "findings": [],
-      "notes": [
-        "oracle reward 1.0 in 0.21s, nop reward 0.0"
-      ],
-      "injected": "answer_leak",
-      "theme": "",
-      "summary": "Merge two transaction logs into one ordered ledger with a running total"
-    },
-    {
-      "bundle": "ledger_merge_22",
-      "verdict": "clear",
-      "seconds": 0.528,
-      "dollars": 0.0,
-      "findings": [
-        {
-          "defect": "hardcodable",
-          "severity": "advisory",
-          "location": "tests/cases",
-          "summary": "A single graded case can be satisfied by returning one stored answer.",
-          "evidence": "tests/cases holds 1 case.",
-          "remedy": "Add unseen cases that vary the inputs so a stored answer cannot pass.",
-          "confirmed": true,
-          "reporter": "mutation",
-          "detail": {
-            "cases": 1
-          },
-          "title": "Graded cases too narrow to force a general solution"
-        }
-      ],
-      "notes": [
-        "oracle reward 1.0 in 0.09s, nop reward 0.0"
-      ],
-      "injected": "hardcodable",
-      "theme": "",
-      "summary": "Merge two transaction logs into one ordered ledger with a running total"
-    },
-    {
-      "bundle": "record_recover_01",
-      "verdict": "clear",
-      "seconds": 1.882,
-      "dollars": 0.0,
-      "findings": [],
-      "notes": [
-        "oracle reward 1.0 in 0.17s, nop reward 0.0"
-      ],
-      "injected": "answer_leak",
-      "theme": "",
-      "summary": "Rebuild records from a framed binary dump with continuations and padding"
-    },
-    {
-      "bundle": "record_recover_04",
-      "verdict": "clear",
-      "seconds": 0.771,
-      "dollars": 0.0,
-      "findings": [
-        {
-          "defect": "hardcodable",
-          "severity": "advisory",
-          "location": "tests/cases",
-          "summary": "A single graded case can be satisfied by returning one stored answer.",
-          "evidence": "tests/cases holds 1 case.",
-          "remedy": "Add unseen cases that vary the inputs so a stored answer cannot pass.",
-          "confirmed": true,
-          "reporter": "mutation",
-          "detail": {
-            "cases": 1
-          },
-          "title": "Graded cases too narrow to force a general solution"
-        }
-      ],
-      "notes": [
-        "oracle reward 1.0 in 0.09s, nop reward 0.0"
-      ],
-      "injected": "hardcodable",
-      "theme": "",
-      "summary": "Rebuild records from a framed binary dump with continuations and padding"
-    },
-    {
-      "bundle": "record_recover_07",
-      "verdict": "clear",
-      "seconds": 1.565,
-      "dollars": 0.0,
-      "findings": [],
-      "notes": [
-        "oracle reward 1.0 in 0.20s, nop reward 0.0"
-      ],
-      "injected": "path_escape",
-      "theme": "",
-      "summary": "Rebuild records from a framed binary dump with continuations and padding"
-    },
-    {
-      "bundle": "record_recover_09",
-      "verdict": "clear",
-      "seconds": 1.731,
-      "dollars": 0.0,
-      "findings": [],
-      "notes": [
-        "oracle reward 1.0 in 0.18s, nop reward 0.0"
-      ],
-      "injected": null,
-      "theme": "",
-      "summary": "Rebuild records from a framed binary dump with continuations and padding"
-    },
-    {
-      "bundle": "record_recover_12",
-      "verdict": "hold",
-      "seconds": 2.117,
-      "dollars": 0.0,
-      "findings": [
-        {
-          "defect": "nop_passes",
-          "severity": "blocking",
-          "location": "tests/verify.py",
-          "summary": "A candidate that does nothing at all scored 1.0, so the verifier is not testing the work.",
-          "evidence": "An empty candidate that exits immediately scored reward=1.0.",
-          "remedy": "Assert on the produced output. A missing or empty result must score zero.",
-          "confirmed": true,
-          "reporter": "execution",
-          "detail": {
-            "reward": 1.0
-          },
-          "title": "Empty submission earns reward"
-        },
-        {
-          "defect": "path_escape",
-          "severity": "blocking",
-          "location": "tests/verify.py",
-          "summary": "The graded output path can be a link to a file outside the case directory and the verifier still reads it, so a submission controls where graded bytes live.",
-          "evidence": "A candidate that wrote its answer to a directory outside the case tree and left a link behind scored 1.0.",
-          "remedy": "Reject a graded path that is a link, and require the resolved path to stay inside the case directory.",
-          "confirmed": true,
-          "reporter": "resilience",
-          "detail": {
-            "reward": 1.0
-          },
-          "title": "Graded output path can be redirected outside the sandbox"
-        }
-      ],
-      "notes": [
-        "oracle reward 1.0 in 0.25s, nop reward 1.0"
-      ],
-      "injected": "nop_passes",
-      "theme": "",
-      "summary": "Rebuild records from a framed binary dump with continuations and padding"
-    },
-    {
-      "bundle": "record_recover_15",
-      "verdict": "hold",
-      "seconds": 1.77,
-      "dollars": 0.0,
-      "findings": [
-        {
-          "defect": "graceless_failure",
-          "severity": "blocking",
-          "location": "tests/verify.py",
-          "summary": "When a candidate fails part way the verifier does not record a zero, so a genuine failure is indistinguishable from a broken harness.",
-          "evidence": "A candidate that raises on start up made the verifier printed no reward line.",
-          "remedy": "Wrap the graded run so every path, including exceptions, records a reward and exits cleanly.",
-          "confirmed": true,
-          "reporter": "resilience",
-          "detail": {
-            "exit_code": 1,
-            "reward_line": false
-          },
-          "title": "Failing path does not record a zero reward"
-        }
-      ],
-      "notes": [
-        "oracle reward 1.0 in 0.21s, nop reward 0.0"
-      ],
-      "injected": "graceless_failure",
-      "theme": "",
-      "summary": "Rebuild records from a framed binary dump with continuations and padding"
-    },
-    {
-      "bundle": "record_recover_20",
-      "verdict": "hold",
-      "seconds": 0.542,
-      "dollars": 0.0,
-      "findings": [
-        {
-          "defect": "oracle_fails",
-          "severity": "blocking",
-          "location": "solution/solve.py",
-          "summary": "The shipped reference solution scored 0.0 where the pipeline requires 1.0, so review stops before any probe runs.",
-          "evidence": "verify.py reported reward=0.0 in 0.17s. Last line: reward=0.0",
-          "remedy": "Fix the reference solution or the graded expectations until the reference earns full reward on every case.",
-          "confirmed": true,
-          "reporter": "execution",
-          "detail": {
-            "reward": 0.0,
-            "seconds": 0.17464658396784216
-          },
-          "title": "Reference solution does not earn full reward"
-        }
-      ],
-      "notes": [
-        "oracle reward 0.0 in 0.17s, nop reward 0.0"
-      ],
-      "injected": "oracle_fails",
-      "theme": "",
       "summary": "Rebuild records from a framed binary dump with continuations and padding"
     },
     {
       "bundle": "record_recover_23",
       "verdict": "clear",
-      "seconds": 2.108,
+      "seconds": 1.76,
       "dollars": 0.0,
       "findings": [],
       "notes": [
-        "oracle reward 1.0 in 0.23s, nop reward 0.0"
+        "oracle reward 1.0 in 0.22s, nop reward 0.0"
       ],
       "injected": "nondeterministic",
       "theme": "",

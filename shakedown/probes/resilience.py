@@ -40,7 +40,7 @@ class ResilienceProbe:
         crashed = run_candidate(bundle, CRASHING, timeout=ctx.timeout)
         reported = bool(REWARD_PATTERN.search(crashed.stdout + crashed.stderr))
         if not reported or crashed.exit_code != 0:
-            reason = "printed no reward line" if not reported else f"exited with code {crashed.exit_code}"
+            reason = "print no reward line" if not reported else f"exit with code {crashed.exit_code}"
             found.append(
                 Finding(
                     defect=Defect.GRACELESS_FAILURE,
