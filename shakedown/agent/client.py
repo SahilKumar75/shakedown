@@ -6,15 +6,36 @@ import time
 import urllib.error
 import urllib.request
 
-OPENROUTER_ENDPOINT = "https://openrouter.ai/api/v1/chat/completions"
 ANTHROPIC_ENDPOINT = "https://api.anthropic.com/v1/messages"
 ANTHROPIC_VERSION = "2023-06-01"
-
-DEFAULT_ANTHROPIC_MODEL = "claude-sonnet-4-5"
-DEFAULT_OPENROUTER_MODEL = "anthropic/claude-sonnet-4.5"
-
 ANTHROPIC_KEY = "ANTHROPIC_API_KEY"
-OPENROUTER_KEY = "OPENROUTER_API_KEY"
+DEFAULT_ANTHROPIC_MODEL = "claude-sonnet-4-5"
+
+# Everything below speaks the OpenAI chat completions shape, so one code path serves
+# all of them and only the endpoint, the key and the default model differ.
+OPENAI_LIKE = {
+    "openrouter": {
+        "endpoint": "https://openrouter.ai/api/v1/chat/completions",
+        "key": "OPENROUTER_API_KEY",
+        "model": "anthropic/claude-sonnet-4.5",
+        "hint": "an OpenRouter key from openrouter.ai",
+    },
+    "groq": {
+        "endpoint": "https://api.groq.com/openai/v1/chat/completions",
+        "key": "GROQ_API_KEY",
+        "model": "llama-3.3-70b-versatile",
+        "hint": "a Groq key from console.groq.com",
+    },
+    "gemini": {
+        "endpoint": "https://generativelanguage.googleapis.com/v1beta/openai/chat/completions",
+        "key": "GEMINI_API_KEY",
+        "model": "gemini-2.5-flash",
+        "hint": "a Gemini key from aistudio.google.com",
+    },
+}
+
+# Checked in this order, so whichever key is present is simply used.
+ORDER = ("anthropic", "groq", "gemini", "openrouter")
 
 
 class AgentUnavailable(RuntimeError):
@@ -25,30 +46,36 @@ def _env(name: str) -> str:
     return os.environ.get(name, "").strip()
 
 
-def provider() -> str:
-    """Anthropic directly when a key for it exists, otherwise OpenRouter.
+def _key_for(name: str) -> str:
+    return ANTHROPIC_KEY if name == "anthropic" else OPENAI_LIKE[name]["key"]
 
-    Preferring the direct API keeps the request path short and the model name
-    honest. OpenRouter stays supported because it is the cheaper way to try the
-    tool against several models.
+
+def provider() -> str:
+    """Whichever provider has a key in the environment, in a fixed order.
+
+    SHAKEDOWN_PROVIDER overrides it. Nothing here is hardcoded to one vendor: the
+    agent layer is the same loop whichever model answers, which is also the point
+    of keeping the tools rather than the model as the thing that does the work.
     """
     forced = _env("SHAKEDOWN_PROVIDER").lower()
-    if forced in {"anthropic", "openrouter"}:
+    if forced in ORDER:
         return forced
-    if _env(ANTHROPIC_KEY):
-        return "anthropic"
+    for name in ORDER:
+        if _env(_key_for(name)):
+            return name
     return "openrouter"
 
 
 def have_key() -> bool:
-    return bool(_env(ANTHROPIC_KEY) or _env(OPENROUTER_KEY))
+    return any(_env(_key_for(name)) for name in ORDER)
 
 
 def model_name() -> str:
     chosen = _env("SHAKEDOWN_MODEL")
     if chosen:
         return chosen
-    return DEFAULT_ANTHROPIC_MODEL if provider() == "anthropic" else DEFAULT_OPENROUTER_MODEL
+    name = provider()
+    return DEFAULT_ANTHROPIC_MODEL if name == "anthropic" else OPENAI_LIKE[name]["model"]
 
 
 def _require(name: str, hint: str) -> str:
@@ -102,18 +129,20 @@ class Client:
         if self.provider == "anthropic":
             message = self._anthropic(messages, tools)
         else:
-            message = self._openrouter(messages, tools)
+            message = self._openai_like(messages, tools)
         self.calls += 1
         message["_seconds"] = round(time.perf_counter() - started, 3)
         return message
 
     # -------------------------------------------------------------- openrouter
 
-    def _openrouter(self, messages: list[dict], tools: list[dict] | None) -> dict:
+    def _openai_like(self, messages: list[dict], tools: list[dict] | None) -> dict:
+        spec = OPENAI_LIKE[self.provider]
         key = _require(
-            OPENROUTER_KEY,
-            "The agent layer calls a model, so export an OpenRouter key "
-            f"(or an {ANTHROPIC_KEY} to talk to Anthropic directly).",
+            spec["key"],
+            f"The agent layer calls a model, so export {spec['hint']} "
+            "(any of ANTHROPIC_API_KEY, GROQ_API_KEY, GEMINI_API_KEY or "
+            "OPENROUTER_API_KEY will do).",
         )
         body: dict = {"model": self.model, "messages": messages, "temperature": 0}
         if tools:
@@ -121,7 +150,7 @@ class Client:
             body["tool_choice"] = "auto"
 
         payload = _post(
-            OPENROUTER_ENDPOINT,
+            spec["endpoint"],
             {
                 "Authorization": f"Bearer {key}",
                 "Content-Type": "application/json",
@@ -137,7 +166,7 @@ class Client:
 
         choices = payload.get("choices") or []
         if not choices:
-            raise AgentUnavailable("OpenRouter returned no choices")
+            raise AgentUnavailable(f"{self.provider} returned no choices")
         return dict(choices[0].get("message") or {})
 
     # --------------------------------------------------------------- anthropic

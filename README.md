@@ -65,11 +65,20 @@ python3 -m shakedown.cli sweep corpus_out
 Six of the twelve failure classes can be settled by a fixed probe. The rest need something that can read a verifier, form an idea about how it might be cheated, write the submission that would cheat it, and run it.
 
 ```
-export ANTHROPIC_API_KEY=...     # or OPENROUTER_API_KEY, either works
+export GROQ_API_KEY=...      # or GEMINI_API_KEY, ANTHROPIC_API_KEY, OPENROUTER_API_KEY
 python3 -m shakedown.cli agent corpus_out/main/address_normalise_10 --trajectory trail.json
 ```
 
-It talks to the Anthropic messages API directly when `ANTHROPIC_API_KEY` is set, and to OpenRouter otherwise, so a judge can run it against their own key without editing anything. `SHAKEDOWN_PROVIDER` forces one or the other and `SHAKEDOWN_MODEL` picks the model. Both paths are the standard library only, no SDK.
+Four providers, whichever key you have. It uses the first one it finds, in the order Anthropic, Groq, Gemini, OpenRouter, so a judge can run it against a key they already own without editing anything. `SHAKEDOWN_PROVIDER` forces one and `SHAKEDOWN_MODEL` picks the model.
+
+Anthropic goes to the messages API and the other three speak the OpenAI chat completions shape, so one code path serves them and the agent loop never learns which model answered. Everything is the standard library, no SDK.
+
+| provider | key | default model |
+| --- | --- | --- |
+| anthropic | `ANTHROPIC_API_KEY` | `claude-sonnet-4-5` |
+| groq | `GROQ_API_KEY` | `llama-3.3-70b-versatile` |
+| gemini | `GEMINI_API_KEY` | `gemini-2.5-flash` |
+| openrouter | `OPENROUTER_API_KEY` | `anthropic/claude-sonnet-4.5` |
 
 The agent is given the deterministic findings so it does not repeat them, and it is held to the same rule the probes are: it reports only what a run demonstrated. Its tools all execute the bundle, so it cannot assert a defect it has not reproduced. Every step is recorded, and `--trajectory` writes the whole thing out.
 
