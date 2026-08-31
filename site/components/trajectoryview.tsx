@@ -3,6 +3,7 @@
 import { useState } from "react";
 import type { Run, Step } from "@/lib/trajectories";
 import { AgentIcon, ClearIcon, ClockIcon, FileIcon, HoldIcon, ProbeIcon, RunIcon } from "./icons";
+import { AgentGraph } from "./agentgraph";
 
 function toolIcon(tool: string | null) {
   if (tool === "run_candidate" || tool === "run_reference" || tool === "run_empty") {
@@ -172,6 +173,8 @@ export function TrajectoryView({ runs }: { runs: Run[] }) {
             The agent reported nothing here. It ended because it {active.stopped}.
           </p>
         )}
+
+        <AgentGraph run={active} />
 
         <div className="trailhead">
           <ProbeIcon /> every step it took, in order

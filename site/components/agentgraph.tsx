@@ -1,169 +1,211 @@
-const NODE_W = 168;
-const NODE_H = 66;
+"use client";
 
-type Tone = "input" | "probe" | "brain" | "tool" | "out";
+import { useEffect, useRef, useState } from "react";
+import { trajectories } from "@/lib/trajectories";
+import type { Run, Step } from "@/lib/trajectories";
 
-interface Node {
-  id: string;
-  x: number;
-  y: number;
-  title: string;
-  sub: string;
-  tone: Tone;
-  glyph: "play" | "search" | "brain" | "file" | "list" | "run" | "empty" | "flask" | "check";
-}
+const W = 158;
+const H = 70;
+const GX = 44;
+const GY = 58;
+const COLS = 5;
 
-const NODES: Node[] = [
-  { id: "bundle", x: 6, y: 30, title: "bundle", sub: "task + verifier", tone: "input", glyph: "play" },
-  { id: "probes", x: 224, y: 30, title: "six probes", sub: "deterministic", tone: "probe", glyph: "search" },
-  { id: "agent", x: 442, y: 30, title: "agent", sub: "tool loop", tone: "brain", glyph: "brain" },
-  { id: "report", x: 660, y: 30, title: "report", sub: "only what ran", tone: "out", glyph: "check" },
-
-  { id: "read", x: 6, y: 214, title: "read_file", sub: "instruction, verifier", tone: "tool", glyph: "file" },
-  { id: "list", x: 180, y: 214, title: "list_files", sub: "what ships", tone: "tool", glyph: "list" },
-  { id: "ref", x: 354, y: 214, title: "run_reference", sub: "expects 1.0", tone: "tool", glyph: "run" },
-  { id: "empty", x: 528, y: 214, title: "run_empty", sub: "expects 0.0", tone: "tool", glyph: "empty" },
-  { id: "cand", x: 702, y: 214, title: "run_candidate", sub: "it writes this", tone: "tool", glyph: "flask" },
-];
-
-const GLYPHS: Record<Node["glyph"], string> = {
-  play: "M6 4.5 13 9 6 13.5z",
-  search: "M8 3.2a4.6 4.6 0 1 0 0 9.2 4.6 4.6 0 0 0 0-9.2zM11.6 11.6 15 15",
-  brain: "M5 5.5h8v7H5zM8 2.5v3M6.4 8.6h.01M9.6 8.6h.01",
-  file: "M4.5 2.5h5l3 3v8h-8zM9.5 2.5v3h3",
-  list: "M4 4.5h9M4 9h9M4 13.5h5",
-  run: "M3.5 4 7 7 3.5 10M8 12h5",
-  empty: "M4 4h9v9H4zM4 4l9 9",
-  flask: "M6.5 2.5v4L3.5 13h9l-3-6.5v-4M5.5 2.5h5",
-  check: "M4 8.6 7 11.6l5-6",
+const GLYPHS: Record<string, string> = {
+  read_file: "M4.5 2.5h5l3 3v8h-8zM9.5 2.5v3h3",
+  list_files: "M4 4.5h9M4 9h9M4 13.5h5",
+  run_reference: "M3.5 4 7 7 3.5 10M8 12h5",
+  run_empty: "M4 4h9v9H4zM4 4l9 9",
+  run_candidate: "M6.5 2.5v4L3.5 13h9l-3-6.5v-4M5.5 2.5h5",
+  report: "M4 8.6 7 11.6l5-6",
+  thinking: "M5 5.5h8v7H5zM8 2.5v3",
 };
 
-function node(id: string) {
-  return NODES.find((entry) => entry.id === id) as Node;
+function place(index: number) {
+  const row = Math.floor(index / COLS);
+  const col = index % COLS;
+  const leftToRight = row % 2 === 0;
+  const slot = leftToRight ? col : COLS - 1 - col;
+  return { x: slot * (W + GX), y: row * (H + GY), row, leftToRight };
 }
 
-function mainEdge(from: string, to: string) {
-  const a = node(from);
-  const b = node(to);
-  const x1 = a.x + NODE_W;
-  const y1 = a.y + NODE_H / 2;
-  const x2 = b.x;
-  const y2 = b.y + NODE_H / 2;
-  const mid = (x1 + x2) / 2;
-  return `M${x1} ${y1} C${mid} ${y1}, ${mid} ${y2}, ${x2} ${y2}`;
+const TURN = 52;
+
+/** Every connection leaves a node from its side and arrives at the next node's side,
+ *  so the flow reads as one continuous line. Within a row that is a gentle bezier;
+ *  at the end of a row it is a U turn that bulges past the node and comes back into
+ *  the row below, which is what keeps the whole path rounded rather than stepped. */
+function edgePath(index: number) {
+  const from = place(index);
+  const to = place(index + 1);
+  const y1 = from.y + H / 2;
+
+  if (from.row === to.row) {
+    const x1 = from.leftToRight ? from.x + W : from.x;
+    const x2 = from.leftToRight ? to.x : to.x + W;
+    const bend = (x2 - x1) * 0.42;
+    return `M${x1} ${y1} C${x1 + bend} ${y1}, ${x2 - bend} ${y1}, ${x2} ${y1}`;
+  }
+
+  // the row wraps: leave from the outer edge, arc past it, and come back in below
+  const y2 = to.y + H / 2;
+  const x = from.leftToRight ? from.x + W : from.x;
+  const reach = from.leftToRight ? TURN : -TURN;
+  return `M${x} ${y1} C${x + reach} ${y1}, ${x + reach} ${y2}, ${x} ${y2}`;
 }
 
-function toolEdge(toolId: string) {
-  const agent = node("agent");
-  const tool = node(toolId);
-  const x1 = agent.x + NODE_W / 2;
-  const y1 = agent.y + NODE_H;
-  const x2 = tool.x + NODE_W / 2;
-  const y2 = tool.y;
-  const lift = 80;
-  return `M${x1} ${y1} C${x1} ${y1 + lift}, ${x2} ${y2 - lift}, ${x2} ${y2}`;
+function label(step: Step) {
+  const args = step.arguments as Record<string, unknown>;
+  if (typeof args.path === "string") {
+    return args.path;
+  }
+  if (typeof args.why === "string") {
+    return args.why;
+  }
+  if (step.tool === "report") {
+    return "only what a run proved";
+  }
+  return "";
 }
 
-function Port({ x, y }: { x: number; y: number }) {
-  return <circle cx={x} cy={y} r={4} className="gport" />;
+/** The card is 158 wide and the reward sits in the bottom right, so a label has to
+ *  give way to it rather than run underneath it. */
+function trim(text: string, limit: number) {
+  return text.length > limit ? `${text.slice(0, limit - 1)}…` : text;
 }
 
-export function AgentGraph() {
-  const tools = ["read", "list", "ref", "empty", "cand"];
-  const agent = node("agent");
+function reward(step: Step) {
+  const match = step.result.match(/reward=([0-9.]+)/);
+  return match ? match[1] : null;
+}
+
+function tone(step: Step) {
+  const value = reward(step);
+  if (step.tool === "report") {
+    return "out";
+  }
+  if (value === "1.0" && step.tool === "run_candidate") {
+    return "hit";
+  }
+  if (step.tool && step.tool.startsWith("run")) {
+    return "exec";
+  }
+  return "read";
+}
+
+export function AgentGraph({ run: given }: { run?: Run } = {}) {
+  const file = trajectories();
+  const run = given ?? file.runs.find((entry) => entry.findings.length > 0) ?? file.runs[0];
+  const steps = run.steps;
+
+  const host = useRef<HTMLDivElement>(null);
+  const [playing, setPlaying] = useState(false);
+
+  useEffect(() => {
+    const node = host.current;
+    if (!node || typeof IntersectionObserver === "undefined") {
+      setPlaying(true);
+      return;
+    }
+    const watcher = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setPlaying(true);
+          watcher.disconnect();
+        }
+      },
+      { threshold: 0.2 },
+    );
+    watcher.observe(node);
+    return () => watcher.disconnect();
+  }, []);
+
+  const rows = Math.ceil(steps.length / COLS);
+  const width = COLS * W + (COLS - 1) * GX;
+  const height = rows * H + (rows - 1) * GY;
 
   return (
-    <figure className="graph">
+    <figure className="graph" ref={host}>
       <div className="canvasbar">
-        <span className="canvasname">agent workflow</span>
-        <span className="canvastools">
-          <button type="button" aria-label="Zoom out" disabled>−</button>
-          <button type="button" aria-label="Zoom in" disabled>+</button>
-          <button type="button" aria-label="Fit to view" disabled>⤢</button>
+        <span className="canvasname">
+          agent run · <code>{run.bundle}</code>
+        </span>
+        <span className="canvasmeta">
+          {steps.length} steps · {run.model}
         </span>
       </div>
 
-      <svg viewBox="0 0 886 300" role="img" aria-labelledby="graphtitle">
-        <title id="graphtitle">
-          The bundle goes to six deterministic probes, then to an agent that calls five tools in a
-          loop, and only what a tool actually ran reaches the report.
-        </title>
-
-        <g className="edges">
-          {[["bundle", "probes"], ["probes", "agent"], ["agent", "report"]].map(([from, to]) => (
-            <path key={`${from}_${to}`} d={mainEdge(from, to)} className="edge" />
-          ))}
-          {tools.map((tool, index) => (
-            <path
-              key={tool}
-              d={toolEdge(tool)}
-              className="edge dash"
-              style={{ animationDelay: `${index * 240}ms` }}
-            />
-          ))}
-        </g>
-
-        <g className="ports">
-          {[["bundle", "probes"], ["probes", "agent"], ["agent", "report"]].map(([from, to]) => {
-            const a = node(from);
-            const b = node(to);
-            return (
-              <g key={`p_${from}`}>
-                <Port x={a.x + NODE_W} y={a.y + NODE_H / 2} />
-                <Port x={b.x} y={b.y + NODE_H / 2} />
-              </g>
-            );
-          })}
-          <Port x={agent.x + NODE_W / 2} y={agent.y + NODE_H} />
-          {tools.map((tool) => {
-            const entry = node(tool);
-            return <Port key={`tp_${tool}`} x={entry.x + NODE_W / 2} y={entry.y} />;
-          })}
-        </g>
-
-        <g className="nodes">
-          {NODES.map((entry) => (
-            <g key={entry.id} className={`gnode ${entry.tone}`}>
-              <rect
-                x={entry.x}
-                y={entry.y}
-                width={NODE_W}
-                height={NODE_H}
-                rx={10}
-                className="gbox"
-              />
-              <rect
-                x={entry.x + 12}
-                y={entry.y + 15}
-                width={36}
-                height={36}
-                rx={9}
-                className="gtile"
-              />
+      <div className="canvaswrap">
+        <svg
+          viewBox={`${-TURN - 10} -12 ${width + (TURN + 10) * 2} ${height + 24}`}
+          className={playing ? "flowsvg go" : "flowsvg"}
+          role="img"
+          aria-label={`The ${steps.length} steps the agent took on ${run.bundle}, in order`}
+        >
+          <g className="flowedges">
+            {steps.slice(0, -1).map((step, index) => (
               <path
-                d={GLYPHS[entry.glyph]}
-                className="gglyph"
-                transform={`translate(${entry.x + 21} ${entry.y + 24}) scale(1.1)`}
+                key={`e${step.index}`}
+                d={edgePath(index)}
+                className="fedge"
+                style={{ animationDelay: `${index * 170 + 120}ms` }}
               />
-              <text x={entry.x + 58} y={entry.y + 30} className="gtitle">
-                {entry.title}
-              </text>
-              <text x={entry.x + 58} y={entry.y + 46} className="gsub">
-                {entry.sub}
-              </text>
-            </g>
-          ))}
-        </g>
+            ))}
+          </g>
 
-        <text x={443} y={186} className="gloop">
-          five tools, and each one executes the bundle
-        </text>
-      </svg>
+          <g className="flownodes">
+            {steps.map((step, index) => {
+              const at = place(index);
+              const value = reward(step);
+              const kind = tone(step);
+              return (
+                <g
+                  key={step.index}
+                  className={`fnode ${kind}`}
+                  style={{ animationDelay: `${index * 170}ms` }}
+                >
+                  <rect x={at.x} y={at.y} width={W} height={H} rx={10} className="fbox" />
+                  <rect x={at.x + 11} y={at.y + 12} width={28} height={28} rx={8} className="ftile" />
+                  <path
+                    d={GLYPHS[step.tool ?? "thinking"] ?? GLYPHS.thinking}
+                    className="fglyph"
+                    transform={`translate(${at.x + 17} ${at.y + 18}) scale(0.95)`}
+                  />
+                  <text x={at.x + 46} y={at.y + 25} className="fstep">
+                    {step.tool ?? "thinking"}
+                  </text>
+                  <text x={at.x + 11} y={at.y + 54} className="flabel">
+                    {trim(label(step), value ? 15 : 21)}
+                  </text>
+                  <circle cx={at.x + W - 15} cy={at.y + 15} r={9} className="fnum" />
+                  <text x={at.x + W - 15} y={at.y + 18} className="fnumtext">
+                    {index + 1}
+                  </text>
+                  {value ? (
+                    <text x={at.x + W - 11} y={at.y + 54} className="frew">
+                      {value}
+                    </text>
+                  ) : null}
+                </g>
+              );
+            })}
+          </g>
+        </svg>
+      </div>
 
       <figcaption>
-        The agent has no way to learn anything about behaviour except by calling one of those five
-        tools, and every one of them runs the bundle. That is what makes a finding reproducible by
-        construction: it cannot assert what it did not run.
+        {run.findings.length ? (
+          <>
+            Every node is a tool call that actually ran. The one marked in red is where a candidate
+            it wrote earned reward <strong>1.0</strong> without doing the task, which is what turned
+            a suspicion into the finding it reports at the end.
+          </>
+        ) : (
+          <>
+            Every node is a tool call that actually ran. Nothing here earned reward without doing
+            the task, so the run ends by reporting nothing, which is the correct answer for a
+            bundle with no defect to find.
+          </>
+        )}
       </figcaption>
     </figure>
   );
