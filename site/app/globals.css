@@ -96,6 +96,7 @@ a:hover {
   justify-content: space-between;
   gap: 24px;
   height: 62px;
+  position: relative;
 }
 
 .wordmark {
@@ -3779,27 +3780,3 @@ td.num {
   color: var(--ink_faint);
 }
 
-/* the bar condenses into a floating pill once the page moves under it */
-
-.masthead {
-  background: transparent;
-  border-bottom: 1px solid transparent;
-  backdrop-filter: none;
-  padding: 10px 0;
-}
-
-.mastrow {
-  position: relative;
-  border: 1px solid transparent;
-  border-radius: 999px;
-  padding: 0 8px 0 14px;
-  height: 56px;
-  transition: background var(--step), border-color var(--step), box-shadow var(--step);
-}
-
-.mastrow.stuck {
-  background: rgba(255, 255, 255, 0.82);
-  border-color: var(--line);
-  backdrop-filter: blur(12px) saturate(1.4);
-  box-shadow: 0 10px 30px -22px rgba(31, 35, 40, 0.55);
-}

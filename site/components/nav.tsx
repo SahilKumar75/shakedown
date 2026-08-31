@@ -59,19 +59,11 @@ export function Nav() {
   const path = usePathname();
   const [open, setOpen] = useState<string | null>(null);
   const [mobile, setMobile] = useState(false);
-  const [stuck, setStuck] = useState(false);
 
   useEffect(() => {
     setOpen(null);
     setMobile(false);
   }, [path]);
-
-  useEffect(() => {
-    const onScroll = () => setStuck(window.scrollY > 12);
-    onScroll();
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
-  }, []);
 
   useEffect(() => {
     const escape = (event: KeyboardEvent) => {
@@ -87,7 +79,7 @@ export function Nav() {
   const inGroup = (items: { href: string }[]) => items.some((item) => item.href === path);
 
   return (
-    <div className={stuck ? "mastrow stuck" : "mastrow"}>
+    <div className="mastrow">
       <Link href="/" className="brand">
         <Wordmark />
       </Link>
