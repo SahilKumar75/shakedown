@@ -2,6 +2,7 @@ import payload from "@/data/taxonomy.json";
 import { allReports, defectLabel } from "@/lib/data";
 import { Tiers, type Tier } from "@/components/tiers";
 import { Reveal } from "@/components/reveal";
+import { RunPlan } from "@/components/runplan";
 import type { DefectClass } from "@/lib/types";
 
 export const metadata = {
@@ -11,15 +12,6 @@ export const metadata = {
 
 const tiers = (payload as { tiers: Tier[] }).tiers;
 
-const ORDER = [
-  { name: "wording", cost: "reads the instruction", paid: false },
-  { name: "execution", cost: "runs the reference and an empty submission", paid: false },
-  { name: "leak", cost: "reads what the solver can see", paid: false },
-  { name: "determinism", cost: "runs the same thing twice", paid: false },
-  { name: "mutation", cost: "runs edited references", paid: false },
-  { name: "resilience", cost: "runs a crashing and a redirected candidate", paid: false },
-  { name: "agent", cost: "writes its own candidates, needs a key", paid: true },
-];
 
 export default function MethodPage() {
   const reports = allReports();
@@ -55,18 +47,10 @@ export default function MethodPage() {
       <Reveal as="section">
         <h2 className="ruled">Cheapest first</h2>
         <p className="lede short">
-          Reading costs nothing, so it happens before anything is executed. The runs that cost money
-          come last, and only once the reference is known to pass.
+          Reading costs nothing, so it happens before anything is executed. Reorder the probes below
+          and the command updates with them.
         </p>
-        <ol className="order">
-          {ORDER.map((probe, index) => (
-            <li key={probe.name} style={{ animationDelay: `${index * 80}ms` }}>
-              <span className={probe.paid ? "ordernum paid" : "ordernum"}>{index + 1}</span>
-              <span className="ordername">{probe.name}</span>
-              <span className="ordercost">{probe.cost}</span>
-            </li>
-          ))}
-        </ol>
+        <RunPlan />
       </Reveal>
 
       <Reveal as="section">

@@ -10,6 +10,7 @@ import { Coverage } from "@/components/coverage";
 import { Magnetic } from "@/components/magnetic";
 import { Reveal } from "@/components/reveal";
 import { StagePipe } from "@/components/stagepipe";
+import { AgentLoading } from "@/components/agentloading";
 import { Steps } from "@/components/steps";
 import { Aurora, GridField, Marquee, Pill, TerminalDemo } from "@/components/surfaces";
 import { RevealCompare } from "@/components/revealcompare";
@@ -181,6 +182,18 @@ export default function OverviewPage() {
             {agent.totals.bundles} bundles investigated across {agent.totals.steps} recorded steps,
             each one replayable on the trajectory page.
           </p>
+        </div>
+        <div className="split">
+          <AgentLoading />
+          <div className="splitnote">
+            <p className="lede short">
+              The agent gets the probes as tools, so every claim it makes has a run behind it. This
+              replays the shape of one investigation; the real ones are recorded step by step.
+            </p>
+            <Link className="button ghost" href="/trajectory">
+              Read a trajectory
+            </Link>
+          </div>
         </div>
         <StagePipe />
       </Reveal>

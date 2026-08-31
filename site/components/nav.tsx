@@ -2,131 +2,68 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Wordmark } from "./logo";
-import { AgentIcon, ClearIcon, ClockIcon, FileIcon, ProbeIcon, RunIcon } from "./icons";
 
-const GROUPS = [
-  {
-    label: "Product",
-    items: [
-      {
-        href: "/report",
-        title: "Review console",
-        blurb: "Findings as a pull request thread",
-        icon: <FileIcon />,
-      },
-      {
-        href: "/trajectory",
-        title: "Agent trajectories",
-        blurb: "Every step, including the dead ends",
-        icon: <AgentIcon />,
-      },
-      {
-        href: "/method",
-        title: "Method",
-        blurb: "The one rule, and the twelve classes",
-        icon: <ProbeIcon />,
-      },
-    ],
-  },
-  {
-    label: "Evidence",
-    items: [
-      {
-        href: "/compare",
-        title: "Compare",
-        blurb: "Against the manual baseline",
-        icon: <ClearIcon />,
-      },
-      {
-        href: "/changelog",
-        title: "Changelog",
-        blurb: "What was tried, and reverted",
-        icon: <ClockIcon />,
-      },
-      {
-        href: "/reproduce",
-        title: "Reproduce",
-        blurb: "Three commands from a clean machine",
-        icon: <RunIcon />,
-      },
-    ],
-  },
+/**
+ * Morphing pill navigation, after the MorphicNavbar pattern: the group is one solid
+ * bar and the active item detaches from it, rounding on every corner while its
+ * neighbours square off toward the gap it left. Ported to this project's plain CSS,
+ * since the site carries no Tailwind, and wired to the real routes rather than to
+ * local state, so the shape follows the page you are actually on.
+ */
+
+const ITEMS: { href: string; name: string }[] = [
+  { href: "/", name: "overview" },
+  { href: "/report", name: "review" },
+  { href: "/trajectory", name: "agent" },
+  { href: "/compare", name: "compare" },
+  { href: "/method", name: "method" },
+  { href: "/changelog", name: "changelog" },
+  { href: "/reproduce", name: "reproduce" },
 ];
+
+function isActive(path: string, href: string) {
+  return href === "/" ? path === "/" : path.startsWith(href);
+}
 
 export function Nav() {
   const path = usePathname();
-  const [open, setOpen] = useState<string | null>(null);
-  const [mobile, setMobile] = useState(false);
-
-  useEffect(() => {
-    setOpen(null);
-    setMobile(false);
-  }, [path]);
-
-  useEffect(() => {
-    const escape = (event: KeyboardEvent) => {
-      if (event.key === "Escape") {
-        setOpen(null);
-        setMobile(false);
-      }
-    };
-    window.addEventListener("keydown", escape);
-    return () => window.removeEventListener("keydown", escape);
-  }, []);
-
-  const inGroup = (items: { href: string }[]) => items.some((item) => item.href === path);
+  const [open, setOpen] = useState(false);
 
   return (
     <div className="mastrow">
-      <Link href="/" className="brand">
+      <Link href="/" className="brand" onClick={() => setOpen(false)}>
         <Wordmark />
       </Link>
 
-      <nav className="navmenu" onMouseLeave={() => setOpen(null)}>
-        <Link href="/" className={path === "/" ? "navlink on" : "navlink"}>
-          Overview
-        </Link>
+      <nav className={open ? "morph open" : "morph"}>
+        <div className="morphgroup">
+          {ITEMS.map((item, index) => {
+            const active = isActive(path, item.href);
+            const previous = index > 0 ? ITEMS[index - 1] : null;
+            const next = index < ITEMS.length - 1 ? ITEMS[index + 1] : null;
+            const roundLeft = index === 0 || (previous ? isActive(path, previous.href) : false);
+            const roundRight =
+              index === ITEMS.length - 1 || (next ? isActive(path, next.href) : false);
 
-        {GROUPS.map((group) => (
-          <div
-            className="navgroup"
-            key={group.label}
-            onMouseEnter={() => setOpen(group.label)}
-          >
-            <button
-              className={
-                open === group.label || inGroup(group.items) ? "navlink on" : "navlink"
-              }
-              onClick={() => setOpen(open === group.label ? null : group.label)}
-              aria-expanded={open === group.label}
-            >
-              {group.label}
-              <svg viewBox="0 0 10 6" className="navcaret" aria-hidden="true">
-                <path d="M1 1l4 4 4-4" />
-              </svg>
-            </button>
+            const shape = active
+              ? "morphitem on"
+              : `morphitem${roundLeft ? " roundl" : ""}${roundRight ? " roundr" : ""}`;
 
-            {open === group.label ? (
-              <div className="navpanel">
-                {group.items.map((item) => (
-                  <Link
-                    key={item.href}
-                    href={item.href}
-                    className={item.href === path ? "navitem on" : "navitem"}
-                  >
-                    <span className="navicon">{item.icon}</span>
-                    <span>
-                      <span className="navtitle">{item.title}</span>
-                      <span className="navblurb">{item.blurb}</span>
-                    </span>
-                  </Link>
-                ))}
-              </div>
-            ) : null}
-          </div>
-        ))}
+            return (
+              <Link
+                key={item.href}
+                href={item.href}
+                className={shape}
+                onClick={() => setOpen(false)}
+                aria-current={active ? "page" : undefined}
+              >
+                {item.name}
+              </Link>
+            );
+          })}
+        </div>
       </nav>
 
       <a
@@ -147,30 +84,13 @@ export function Nav() {
 
       <button
         className="navburger"
-        onClick={() => setMobile(!mobile)}
+        onClick={() => setOpen(!open)}
         aria-label="Menu"
-        aria-expanded={mobile}
+        aria-expanded={open}
       >
         <span />
         <span />
       </button>
-
-      {mobile ? (
-        <div className="navdrawer">
-          <Link href="/" className="navitem">
-            <span className="navtitle">Overview</span>
-          </Link>
-          {GROUPS.flatMap((group) => group.items).map((item) => (
-            <Link key={item.href} href={item.href} className="navitem">
-              <span className="navicon">{item.icon}</span>
-              <span>
-                <span className="navtitle">{item.title}</span>
-                <span className="navblurb">{item.blurb}</span>
-              </span>
-            </Link>
-          ))}
-        </div>
-      ) : null}
     </div>
   );
 }

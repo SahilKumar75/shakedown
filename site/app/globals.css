@@ -3308,110 +3308,54 @@ td.num {
 
 /* ------------------------------------------------------------ navigation */
 
-.navmenu {
-  display: flex;
-  align-items: center;
-  gap: 4px;
+.morph {
   margin-left: auto;
   margin-right: 14px;
+  min-width: 0;
 }
 
-.navlink {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  font: inherit;
-  font-size: 14px;
-  color: var(--ink_soft);
-  background: transparent;
-  border: none;
-  border-radius: 6px;
-  padding: 7px 11px;
-  cursor: pointer;
-  transition: color var(--step), background var(--step);
-}
-
-.navlink:hover,
-.navlink.on {
-  color: var(--ink);
-  background: var(--wash);
-}
-
-.navcaret {
-  width: 9px;
-  height: 6px;
-  fill: none;
-  stroke: currentColor;
-  stroke-width: 1.6;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-  opacity: 0.7;
-}
-
-.navgroup {
-  position: relative;
-}
-
-.navpanel {
-  position: absolute;
-  top: calc(100% + 8px);
-  left: 0;
-  width: 320px;
-  padding: 8px;
-  border: 1px solid var(--line);
-  border-radius: 10px;
-  background: var(--paper);
-  box-shadow: 0 18px 40px -22px rgba(31, 35, 40, 0.4);
-  z-index: 20;
-  animation: panelin 160ms cubic-bezier(0.22, 0.61, 0.36, 1) both;
-}
-
-@keyframes panelin {
-  from { opacity: 0; transform: translateY(-5px); }
-  to { opacity: 1; transform: none; }
-}
-
-.navitem {
+.morphgroup {
   display: flex;
-  align-items: flex-start;
-  gap: 11px;
-  padding: 10px 11px;
-  border-radius: 7px;
-  border-bottom: none;
-  color: inherit;
-  transition: background var(--step);
+  align-items: center;
+  overflow: hidden;
+  border-radius: 12px;
 }
 
-.navitem:hover,
-.navitem.on {
-  background: var(--wash);
-}
-
-.navicon {
-  display: inline-flex;
-  width: 28px;
-  height: 28px;
-  border-radius: 7px;
+.morphitem {
+  display: flex;
   align-items: center;
   justify-content: center;
-  border: 1px solid var(--accent_line);
-  background: var(--accent_wash);
-  color: var(--accent);
-  flex: 0 0 auto;
+  padding: 7px 15px;
+  font-size: 13px;
+  line-height: 1;
+  white-space: nowrap;
+  background: var(--ink);
+  color: #ffffff;
+  border-bottom: none;
+  border-radius: 0;
+  transition: background 300ms cubic-bezier(0.22, 0.61, 0.36, 1),
+    color 300ms cubic-bezier(0.22, 0.61, 0.36, 1),
+    border-radius 300ms cubic-bezier(0.22, 0.61, 0.36, 1),
+    margin 300ms cubic-bezier(0.22, 0.61, 0.36, 1);
 }
 
-.navtitle {
-  display: block;
-  font-size: 14px;
-  font-weight: 500;
-  color: var(--ink);
+.morphitem:hover {
+  background: #33393f;
 }
 
-.navblurb {
-  display: block;
-  font-size: 12.5px;
-  color: var(--ink_faint);
-  margin-top: 2px;
+.morphitem.roundl { border-top-left-radius: 12px; border-bottom-left-radius: 12px; }
+.morphitem.roundr { border-top-right-radius: 12px; border-bottom-right-radius: 12px; }
+
+.morphitem.on {
+  margin: 0 6px;
+  border-radius: 12px;
+  font-weight: 600;
+  background: var(--accent);
+  color: #ffffff;
+}
+
+.morphitem.on:hover {
+  background: var(--accent);
 }
 
 .navcta {
@@ -3421,7 +3365,7 @@ td.num {
   font-size: 13.5px;
   padding: 7px 13px;
   border: 1px solid var(--line);
-  border-radius: 6px;
+  border-radius: 8px;
   color: var(--ink);
   background: var(--paper);
   transition: border-color var(--step), background var(--step);
@@ -3441,7 +3385,7 @@ td.num {
   align-items: center;
   justify-content: center;
   border: 1px solid var(--line);
-  border-radius: 6px;
+  border-radius: 8px;
   background: var(--paper);
   cursor: pointer;
 }
@@ -3453,21 +3397,40 @@ td.num {
   background: var(--ink);
 }
 
-.navdrawer {
-  position: absolute;
-  top: 100%;
-  left: 0;
-  right: 0;
-  padding: 10px;
-  display: grid;
-  gap: 2px;
-  background: var(--paper);
-  border-bottom: 1px solid var(--line);
-  box-shadow: 0 18px 30px -22px rgba(31, 35, 40, 0.4);
+@media (max-width: 1040px) {
+  .morphitem {
+    padding: 7px 11px;
+    font-size: 12.5px;
+  }
 }
 
-@media (max-width: 860px) {
-  .navmenu,
+@media (max-width: 880px) {
+  .morph {
+    display: none;
+  }
+  .morph.open {
+    display: block;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    margin: 6px 0 0;
+    z-index: 30;
+  }
+  .morph.open .morphgroup {
+    flex-direction: column;
+    align-items: stretch;
+    border-radius: 12px;
+  }
+  .morph.open .morphitem {
+    justify-content: flex-start;
+    padding: 12px 16px;
+    border-radius: 0;
+  }
+  .morph.open .morphitem.on {
+    margin: 6px;
+    border-radius: 10px;
+  }
   .navcta {
     display: none;
   }
@@ -3780,3 +3743,318 @@ td.num {
   color: var(--ink_faint);
 }
 
+
+/* ------------------------------------------------------- agent loading state */
+
+.agentload {
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: var(--paper);
+  padding: 18px 20px 20px;
+}
+
+.agenthead {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  margin-bottom: 14px;
+}
+
+.ringart {
+  width: 26px;
+  height: 26px;
+  flex: 0 0 auto;
+}
+
+.rings circle {
+  fill: none;
+  transform-origin: 120px 120px;
+  opacity: 0.95;
+}
+
+.rings circle:nth-child(odd) {
+  animation: ringcw 8s linear infinite;
+}
+
+.rings circle:nth-child(even) {
+  animation: ringccw 8s linear infinite;
+}
+
+.rings circle:nth-child(2n) { animation-delay: 0.2s; }
+.rings circle:nth-child(3n) { animation-delay: 0.3s; }
+
+@keyframes ringcw {
+  to { transform: rotate(360deg); }
+}
+
+@keyframes ringccw {
+  from { transform: rotate(360deg); }
+  to { transform: rotate(0deg); }
+}
+
+.agentstatus {
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.agentstep {
+  margin-left: auto;
+  font-family: var(--font_mono), monospace;
+  font-size: 11px;
+  color: var(--ink_faint);
+}
+
+.agentlogwrap {
+  position: relative;
+}
+
+.agentlog {
+  height: 84px;
+  overflow: hidden;
+  scroll-behavior: smooth;
+  font-family: var(--font_mono), monospace;
+  font-size: 12.5px;
+}
+
+.agentline {
+  display: flex;
+  align-items: center;
+  height: 28px;
+  gap: 12px;
+}
+
+.agentnum {
+  width: 18px;
+  text-align: right;
+  color: var(--ink_faint);
+  user-select: none;
+}
+
+.agenttext {
+  color: var(--ink_soft);
+}
+
+.agenttext.bad {
+  color: var(--danger);
+  font-weight: 600;
+}
+
+.agentfade {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.86) 0%,
+    rgba(255, 255, 255, 0.3) 34%,
+    transparent 100%
+  );
+}
+
+/* --------------------------------------------------------------- run plan */
+
+.plan {
+  margin-top: 20px;
+}
+
+.planlist {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: var(--paper);
+  overflow: hidden;
+}
+
+.planrow {
+  display: grid;
+  grid-template-columns: 18px 22px 22px 1fr auto auto;
+  align-items: center;
+  gap: 12px;
+  padding: 11px 16px;
+  border-bottom: 1px solid var(--line_soft);
+  background: var(--paper);
+  cursor: grab;
+  transition: background var(--step), opacity var(--step), transform var(--step);
+}
+
+.planrow:last-child {
+  border-bottom: none;
+}
+
+.planrow:hover {
+  background: var(--wash);
+}
+
+.planrow.lifted {
+  opacity: 0.55;
+  transform: scale(0.995);
+  cursor: grabbing;
+}
+
+.planrow.off .planbody,
+.planrow.off .plancost {
+  opacity: 0.42;
+}
+
+.plangrip svg {
+  width: 10px;
+  height: 16px;
+  fill: var(--ink_faint);
+  opacity: 0.55;
+}
+
+.planbox {
+  width: 20px;
+  height: 20px;
+  border-radius: 5px;
+  border: 1px solid var(--line);
+  background: var(--paper);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  color: #ffffff;
+  transition: background var(--step), border-color var(--step);
+}
+
+.planbox.on {
+  background: var(--success);
+  border-color: var(--success);
+}
+
+.planbox .icon {
+  width: 13px;
+  height: 13px;
+}
+
+.planorder {
+  font-family: var(--font_mono), monospace;
+  font-size: 11px;
+  color: var(--ink_faint);
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+}
+
+.planname {
+  display: block;
+  font-family: var(--font_mono), monospace;
+  font-size: 13px;
+}
+
+.planblurb {
+  display: block;
+  font-size: 12.5px;
+  color: var(--ink_faint);
+  margin-top: 2px;
+}
+
+.plancost {
+  font-family: var(--font_mono), monospace;
+  font-size: 11.5px;
+  color: var(--ink_faint);
+  white-space: nowrap;
+}
+
+.planmove {
+  display: flex;
+  gap: 3px;
+}
+
+.planmove button {
+  width: 22px;
+  height: 22px;
+  border: 1px solid var(--line);
+  border-radius: 5px;
+  background: var(--paper);
+  color: var(--ink_soft);
+  cursor: pointer;
+  font-size: 11px;
+  line-height: 1;
+  padding: 0;
+  transition: border-color var(--step), color var(--step);
+}
+
+.planmove button:hover:not(:disabled) {
+  border-color: var(--ink_faint);
+  color: var(--ink);
+}
+
+.planmove button:disabled {
+  opacity: 0.32;
+  cursor: default;
+}
+
+.planfoot {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 18px;
+  padding: 12px 4px 0;
+  font-family: var(--font_mono), monospace;
+  font-size: 11.5px;
+  color: var(--ink_faint);
+}
+
+.planstat {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.plancmd {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 12px;
+  padding: 13px 16px;
+  border-radius: 8px;
+  background: #0d1117;
+  overflow-x: auto;
+}
+
+.plancmd code {
+  flex: 1 1 auto;
+  font-family: var(--font_mono), monospace;
+  font-size: 12.5px;
+  color: #c9d1d9;
+  white-space: nowrap;
+}
+
+.plancopy {
+  flex: 0 0 auto;
+  font-family: var(--font_mono), monospace;
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  padding: 5px 11px;
+  border-radius: 5px;
+  border: 1px solid #30363d;
+  background: #161b22;
+  color: #8b949e;
+  cursor: pointer;
+  transition: color var(--step), border-color var(--step);
+}
+
+.plancopy:hover {
+  color: #c9d1d9;
+  border-color: #58636d;
+}
+
+.planhint {
+  margin: 12px 0 0;
+  font-size: 13px;
+  color: var(--ink_faint);
+  max-width: 68ch;
+}
+
+@media (max-width: 760px) {
+  .planrow {
+    grid-template-columns: 18px 22px 1fr auto;
+  }
+  .planorder,
+  .plancost {
+    display: none;
+  }
+}

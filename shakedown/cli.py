@@ -8,6 +8,27 @@ from pathlib import Path
 from . import bundle as bundle_module
 from .findings import Report
 from .orchestrator import Gauntlet
+from .probes import DETERMINISTIC_PROBES
+
+
+def _select(names: str | None):
+    """Pick and order the probes for this run.
+
+    Without --only the shipped order stands, which runs the reading probes before
+    anything is executed and the expensive ones last. With it, the caller's order is
+    honoured exactly, so a run can be narrowed to the one class under investigation.
+    """
+    if not names:
+        return None
+    known = {probe.name: probe for probe in DETERMINISTIC_PROBES}
+    wanted = [name.strip() for name in names.split(",") if name.strip()]
+    unknown = [name for name in wanted if name not in known]
+    if unknown:
+        raise SystemExit(
+            f"unknown probe(s): {', '.join(unknown)}. "
+            f"available: {', '.join(known)}"
+        )
+    return [known[name] for name in wanted]
 
 
 def _held(report: Report, fail_on: str) -> bool:
@@ -48,7 +69,9 @@ def _run(args: argparse.Namespace) -> int:
     except bundle_module.BundleError as error:
         print(f"Shakedown could not read that bundle. {error}", file=sys.stderr)
         return 2
-    gauntlet = Gauntlet(timeout=args.timeout, on_finding=_streamer(args.quiet))
+    gauntlet = Gauntlet(
+        probes=_select(args.only), timeout=args.timeout, on_finding=_streamer(args.quiet)
+    )
     report = gauntlet.run(target)
     if args.format == "json":
         print(report.to_json())
@@ -63,7 +86,9 @@ def _sweep(args: argparse.Namespace) -> int:
     if not bundles:
         print(f"No bundles found under {args.path}", file=sys.stderr)
         return 2
-    gauntlet = Gauntlet(timeout=args.timeout, on_finding=_streamer(args.quiet))
+    gauntlet = Gauntlet(
+        probes=_select(args.only), timeout=args.timeout, on_finding=_streamer(args.quiet)
+    )
     held = 0
     reports = []
     for target in bundles:
@@ -152,6 +177,12 @@ def build_parser() -> argparse.ArgumentParser:
             "--quiet",
             action="store_true",
             help="print only the summary, for a pipeline log",
+        )
+        target.add_argument(
+            "--only",
+            default=None,
+            metavar="PROBE,PROBE",
+            help="run just these probes, in this order",
         )
 
     run = sub.add_parser("run", help="inspect one bundle")
