@@ -2,7 +2,7 @@ import Link from "next/link";
 import { allReports, outcome } from "@/lib/data";
 import { ArmBars } from "@/components/armbars";
 import { Coverage } from "@/components/coverage";
-import { Pipeline } from "@/components/pipeline";
+import { StagePipe } from "@/components/stagepipe";
 import { Reveal } from "@/components/reveal";
 import { Steps } from "@/components/steps";
 
@@ -21,6 +21,10 @@ export default function OverviewPage() {
           A shakedown run is the trial voyage a ship makes before it enters service. Run one on a
           task bundle and the faults surface while they are still cheap.
         </p>
+        <p className="lede rise d2 short">
+          Six probes execute the bundle on your machine and report only what they reproduced. No
+          key, no service, nothing leaves the room.
+        </p>
         <div className="actions rise d3">
           <Link className="button" href="/report">
             Open the run report <span className="arrow">&rarr;</span>
@@ -32,7 +36,7 @@ export default function OverviewPage() {
       </section>
 
       <Reveal delay={60}>
-        <Pipeline />
+        <StagePipe />
       </Reveal>
 
       <div className="scoreboard">
@@ -74,8 +78,8 @@ export default function OverviewPage() {
       <Reveal as="section">
         <h2 className="ruled">Against doing it by hand</h2>
         <p className="lede short">
-          The baseline is what an author already does before submitting: run the reference, run an
-          empty submission. Same bundles, same labels, both measured on this machine.
+          The baseline is what an author already does by hand: run the reference, run an empty
+          submission. Same bundles, same labels, both measured here.
         </p>
         <ArmBars />
         <p className="lede short">

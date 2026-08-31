@@ -1,4 +1,4 @@
-import { ReviewConsole } from "@/components/reviewconsole";
+import { PrThread } from "@/components/prthread";
 import { allReports, outcome } from "@/lib/data";
 
 export default function ReportPage() {
@@ -9,10 +9,9 @@ export default function ReportPage() {
     <main>
       <p className="eyebrow">Review console</p>
       <h1>Every comment has a run behind it</h1>
-      <p className="lede">
-        Each bundle is reviewed the way a pull request is: checks down the top, comments against the
-        file and line they belong to, a decision at the end. The difference is that no comment is
-        written unless a probe reproduced what it claims.
+      <p className="lede short">
+        Reviewed like a pull request: checks, comments against the file they belong to, a decision.
+        No comment is written unless a probe reproduced what it claims.
       </p>
 
       <div className="scoreboard">
@@ -34,7 +33,7 @@ export default function ReportPage() {
         </div>
       </div>
 
-      <ReviewConsole reports={reports} />
+      <PrThread reports={reports} />
     </main>
   );
 }
