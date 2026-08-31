@@ -1,6 +1,11 @@
 import { TrajectoryView } from "@/components/trajectoryview";
 import { trajectories } from "@/lib/trajectories";
 
+export const metadata = {
+  title: "Agent",
+  description: "Every step the agent took, including the ones that led nowhere.",
+};
+
 export default function TrajectoryPage() {
   const file = trajectories();
   const totals = file.totals;

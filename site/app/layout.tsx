@@ -25,8 +25,19 @@ const mono = IBM_Plex_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Shakedown",
-  description: "Rehearse an expensive benchmark review pipeline locally, before you submit.",
+  title: {
+    default: "Shakedown",
+    template: "%s · Shakedown",
+  },
+  description:
+    "Find the defect in a benchmark task bundle before the review pipeline charges you for it. Six probes and an agent execute the bundle and report only what they reproduced.",
+  applicationName: "Shakedown",
+  openGraph: {
+    title: "Shakedown",
+    description:
+      "Pre submission review for benchmark task bundles. Every finding is backed by a run.",
+    type: "website",
+  },
 };
 
 const LINKS = [

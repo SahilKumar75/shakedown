@@ -2,6 +2,12 @@ import { classNames, comparison } from "@/lib/compare";
 import { defectLabel } from "@/lib/data";
 import { ArmBars } from "@/components/armbars";
 import { Reveal } from "@/components/reveal";
+import { ClassDiff } from "@/components/classdiff";
+
+export const metadata = {
+  title: "Compare",
+  description: "Shakedown against the two checks an author already runs by hand.",
+};
 
 function percent(value: number): string {
   return `${Math.round(value * 100)} percent`;
@@ -85,43 +91,31 @@ export default function ComparePage() {
         </tbody>
       </table>
 
-      <h2>Where the gain comes from</h2>
-      <p className="lede">
-        The hand checks only ever see two failure modes, because running the reference and an empty
-        submission can only reveal what those two runs happen to expose. Everything else needs a
-        probe that goes looking.
+      <h2 className="ruled">Where the gain comes from</h2>
+      <p className="lede short">
+        The hand checks only ever see two failure modes, because two runs can only reveal what those
+        two runs expose. Everything else needs a probe that goes looking.
       </p>
-      <table className="plain">
-        <thead>
-          <tr>
-            <th>Defect class</th>
-            <th>In corpus</th>
-            <th>Hand checks</th>
-            <th>Shakedown</th>
-          </tr>
-        </thead>
-        <tbody>
-          {classes.map((name) => {
+      <Reveal>
+        <ClassDiff
+          rows={classes.map((name) => {
             const baseRow = base.by_class[name] ?? { planted: 0, caught: 0 };
             const shakeRow = shake.by_class[name] ?? { planted: 0, caught: 0 };
-            const gained = shakeRow.caught > baseRow.caught;
-            return (
-              <tr key={name}>
-                <td>{defectLabel(name as never)}</td>
-                <td>{shakeRow.planted || baseRow.planted}</td>
-                <td>{baseRow.caught}</td>
-                <td style={gained ? { fontWeight: 700 } : undefined}>{shakeRow.caught}</td>
-              </tr>
-            );
+            return {
+              name,
+              label: defectLabel(name as never),
+              planted: shakeRow.planted || baseRow.planted,
+              baseline: baseRow.caught,
+              shakedown: shakeRow.caught,
+            };
           })}
-        </tbody>
-      </table>
+        />
+      </Reveal>
 
-      <h2>What is still missed</h2>
-      <p className="lede">
-        Three classes remain out of reach for now, and they are named here rather than hidden because
-        the changelog is meant to show the work as it stands. Closing them is the next piece of work,
-        and the same corpus will measure whether it landed.
+      <h2 className="ruled">What is still missed</h2>
+      <p className="lede short">
+        Named rather than hidden. Closing them is the next piece of work, and the same corpus will
+        measure whether it landed.
       </p>
       <ul className="lede">
         {classes

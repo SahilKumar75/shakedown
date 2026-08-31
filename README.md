@@ -60,6 +60,19 @@ python3 -m shakedown.cli run corpus_out/ledger_merge_00
 python3 -m shakedown.cli sweep corpus_out
 ```
 
+## The agent layer
+
+Six of the twelve failure classes can be settled by a fixed probe. The rest need something that can read a verifier, form an idea about how it might be cheated, write the submission that would cheat it, and run it.
+
+```
+export OPENROUTER_API_KEY=...
+python3 -m shakedown.cli agent corpus_out/main/address_normalise_10 --trajectory trail.json
+```
+
+The agent is given the deterministic findings so it does not repeat them, and it is held to the same rule the probes are: it reports only what a run demonstrated. Its tools all execute the bundle, so it cannot assert a defect it has not reproduced. Every step is recorded, and `--trajectory` writes the whole thing out.
+
+Only `instruction.md` and `env/` are shipped into the solver's image, so the agent is told that reading `solution/solve.py` is reviewing, not a leak. Without a key the command says so and exits rather than pretending to have run.
+
 ## In a pipeline
 
 Both commands exit non zero when a bundle would be held, stream each finding to standard error as the probe reproduces it, and will write the machine readable report alongside the human one. That is enough to gate a pull request that adds or edits a task bundle.

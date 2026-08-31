@@ -22,10 +22,14 @@ The deterministic probes have already run and their findings are given to you. D
 repeat them. Your value is in the classes they cannot reach, which need a candidate written
 on purpose to test one idea:
 
-  answer_leak      the expected answers are reachable from material the agent can see, so a
-                   submission can read the answer instead of computing it. If a visible
-                   file holds what a graded case expects, prove it: write a candidate
-                   that reads that file, copies it out and does nothing else, and run it
+  answer_leak      the expected answers are reachable from material THE SOLVER can see,
+                   so a submission can read the answer instead of computing it. Only
+                   instruction.md and env/ are shipped into the solver's image;
+                   solution/ and tests/ are not. You can read those to review them, but
+                   a reference solution you can read is not a leak, because the solver
+                   never receives it. If a SHIPPED file holds what a graded case
+                   expects, prove it: write a candidate that reads that file, copies it
+                   out and does nothing else, and run it
   hardcodable      the verifier accepts a submission that returns fixed values, because it
                    never varies its inputs
   weak_verifier    the verifier passes something that plainly does not do the task

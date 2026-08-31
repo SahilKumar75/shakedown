@@ -1,6 +1,11 @@
 import { PrThread } from "@/components/prthread";
 import { allReports, outcome } from "@/lib/data";
 
+export const metadata = {
+  title: "Review",
+  description: "Every finding written as a review comment, with the run that proves it.",
+};
+
 export default function ReportPage() {
   const reports = allReports();
   const score = outcome();

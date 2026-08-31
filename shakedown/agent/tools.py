@@ -173,15 +173,22 @@ class Toolbox:
     # ------------------------------------------------------------------ reading
 
     def _list_files(self, args: dict) -> str:
-        graded = {p.resolve() for p in self.bundle.graded_files()}
+        """List the bundle, saying of each file whether the SOLVER would ever see it.
+
+        Only instruction.md and env/ are built into the image the solver runs in.
+        solution/ and tests/ stay on the review side. You can read all of it, because
+        you are reviewing the bundle rather than solving it, but a leak means the
+        SOLVER can reach the answer -- never that a reviewer can read the reference.
+        """
         lines = []
         for path in sorted(self.bundle.root.rglob("*")):
             if not path.is_file() or "__pycache__" in path.parts:
                 continue
-            where = "verifier only" if path.resolve() in graded else "visible to the agent"
-            lines.append(
-                f"{path.relative_to(self.bundle.root)}  {path.stat().st_size} bytes  {where}"
-            )
+            rel = path.relative_to(self.bundle.root)
+            top = rel.parts[0]
+            shipped = top == "env" or rel.name == "instruction.md"
+            where = "SHIPPED to the solver" if shipped else "review side only, the solver never sees it"
+            lines.append(f"{rel}  {path.stat().st_size} bytes  {where}")
         return "\n".join(lines)
 
     def _read_file(self, args: dict) -> str:

@@ -1,4 +1,11 @@
 import payload from "@/data/changelog.json";
+import { Reveal } from "@/components/reveal";
+import { ClearIcon, HoldIcon, RunIcon } from "@/components/icons";
+
+export const metadata = {
+  title: "Changelog",
+  description: "What was tried, what it measured, and what was reverted.",
+};
 
 interface Entry {
   stage: string;
@@ -12,36 +19,62 @@ interface Entry {
 const entries = (payload as { entries: Entry[] }).entries;
 
 export default function ChangelogPage() {
+  const kept = entries.filter((entry) => entry.kept).length;
+
   return (
     <main>
-      <h1>Improvement changelog</h1>
+      <p className="eyebrow">Changelog</p>
+      <h1>What was tried, and what it cost</h1>
       <p className="lede">
-        One entry for every meaningful change, with the evidence that prompted the next decision.
-        The experiment that was removed is kept here on purpose, because what it taught is the
-        reason the mutation probe works the way it does now.
+        One entry per meaningful change, each with the evidence that decided the next one. The
+        experiment that was removed is kept here on purpose.
       </p>
 
-      {entries.map((entry) => (
-        <section key={entry.stage} className="panel" style={{ marginTop: 18 }}>
-          <div className="panelhead">
-            <div>
-              <h3 style={{ fontFamily: "inherit" }}>{entry.stage}</h3>
-              <div className="sub">{entry.tried}</div>
-            </div>
-            <span className={entry.kept ? "badge clear" : "badge hold"}>
-              {entry.kept ? "kept" : "removed"}
-            </span>
-          </div>
-          <dl className="detail" style={{ marginTop: 14 }}>
-            <dt>Why</dt>
-            <dd>{entry.why}</dd>
-            <dt>Evidence</dt>
-            <dd className="mono">{entry.evidence}</dd>
-            <dt>Decision</dt>
-            <dd>{entry.decision}</dd>
-          </dl>
-        </section>
-      ))}
+      <div className="scoreboard">
+        <div className="tile">
+          <div className="figure">{entries.length}</div>
+          <div className="caption">recorded changes</div>
+        </div>
+        <div className="tile">
+          <div className="figure">{kept}</div>
+          <div className="caption">kept after measuring</div>
+        </div>
+        <div className="tile">
+          <div className="figure">{entries.length - kept}</div>
+          <div className="caption">reverted, and why</div>
+        </div>
+      </div>
+
+      <Reveal>
+        <ol className="timeline log">
+          {entries.map((entry) => (
+            <li className="ev" key={entry.stage}>
+              <span className={entry.kept ? "evdot sound" : "evdot flare"}>
+                {entry.kept ? <ClearIcon /> : <HoldIcon />}
+              </span>
+              <div className="evcard">
+                <div className="evtop">
+                  <strong>{entry.stage}</strong>
+                  <span className={entry.kept ? "chip" : "chip block"}>
+                    {entry.kept ? "kept" : "reverted"}
+                  </span>
+                </div>
+                <h4>{entry.tried}</h4>
+                <p>{entry.why}</p>
+                <div className="proof">
+                  <span className="prooflabel">
+                    <RunIcon /> what the run showed
+                  </span>
+                  <code>{entry.evidence}</code>
+                </div>
+                <p className="fix">
+                  <strong>Decision</strong> {entry.decision}
+                </p>
+              </div>
+            </li>
+          ))}
+        </ol>
+      </Reveal>
     </main>
   );
 }

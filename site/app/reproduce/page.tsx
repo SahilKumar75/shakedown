@@ -1,6 +1,11 @@
 import payload from "@/data/repro.json";
 import { ActionRun } from "@/components/actionrun";
 
+export const metadata = {
+  title: "Reproduce",
+  description: "Three commands, sixty six seconds, no key and no service.",
+};
+
 interface Step {
   label: string;
   command: string;
