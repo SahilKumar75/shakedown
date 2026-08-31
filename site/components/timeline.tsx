@@ -1,7 +1,7 @@
 "use client";
 
-import { useState } from "react";
-import { ClearIcon, HoldIcon } from "./icons";
+import { useMemo, useState } from "react";
+import { ClearIcon, FileIcon, HoldIcon } from "./icons";
 
 export interface Metric {
   label: string;
@@ -18,11 +18,9 @@ export interface Beat {
   decision: string;
   kept: boolean;
   metrics?: Metric[];
+  files?: string[];
 }
 
-/** A short, stable id per stage. Deliberately not called a commit: these are recorded
- *  stages of the project, not git objects, and labelling them otherwise would imply
- *  a history that does not exist. */
 function stageId(stage: string): string {
   let hash = 0;
   for (let index = 0; index < stage.length; index += 1) {
@@ -31,25 +29,65 @@ function stageId(stage: string): string {
   return hash.toString(16).padStart(7, "0").slice(0, 7);
 }
 
-/** Metric values are written either as a plain figure or as "before to after". The
- *  second shape becomes a removed line and an added line, the first stays context. */
-function diffLines(metrics: Metric[] = []) {
-  const lines: { sign: "+" | "-" | " "; text: string }[] = [];
-  metrics.forEach((metric) => {
+/** Each metric becomes one row of the split: what it was on the left, what it became
+ *  on the right. A figure with no "before to after" shape is unchanged, so it sits on
+ *  both sides as context. */
+function rows(metrics: Metric[] = []) {
+  return metrics.map((metric) => {
     const parts = metric.value.split(" to ");
     if (parts.length === 2) {
-      lines.push({ sign: "-", text: `${metric.label} ${parts[0]}` });
-      lines.push({ sign: "+", text: `${metric.label} ${parts[1]}` });
-    } else {
-      lines.push({ sign: " ", text: `${metric.label} ${metric.value}` });
+      return {
+        label: metric.label,
+        before: `${metric.label} ${parts[0]}`,
+        after: `${metric.label} ${parts[1]}`,
+        changed: true,
+      };
     }
+    return {
+      label: metric.label,
+      before: `${metric.label} ${metric.value}`,
+      after: `${metric.label} ${metric.value}`,
+      changed: false,
+    };
   });
-  return lines;
+}
+
+function folderOf(path: string) {
+  const cut = path.lastIndexOf("/");
+  return cut === -1 ? "." : path.slice(0, cut);
+}
+
+function nameOf(path: string) {
+  const cut = path.lastIndexOf("/");
+  return cut === -1 ? path : path.slice(cut + 1);
 }
 
 export function Timeline({ beats }: { beats: Beat[] }) {
-  const [open, setOpen] = useState<string | null>(beats[0]?.stage ?? null);
+  const [selected, setSelected] = useState(beats[0]?.stage ?? "");
+  const active = beats.find((beat) => beat.stage === selected) ?? beats[0];
   const kept = beats.filter((beat) => beat.kept).length;
+
+  /** The tree is grouped by directory, and a file carries how many stages touched it,
+   *  which is what makes the mutation probe visibly the most reworked thing here. */
+  const tree = useMemo(() => {
+    const counts = new Map<string, number>();
+    beats.forEach((beat) => {
+      (beat.files ?? []).forEach((file) => {
+        counts.set(file, (counts.get(file) ?? 0) + 1);
+      });
+    });
+    const folders = new Map<string, { path: string; touches: number }[]>();
+    Array.from(counts.entries())
+      .sort((a, b) => a[0].localeCompare(b[0]))
+      .forEach(([path, touches]) => {
+        const folder = folderOf(path);
+        folders.set(folder, [...(folders.get(folder) ?? []), { path, touches }]);
+      });
+    return Array.from(folders.entries());
+  }, [beats]);
+
+  const split = rows(active.metrics);
+  const touched = new Set(active.files ?? []);
 
   return (
     <div className="cmp">
@@ -63,77 +101,98 @@ export function Timeline({ beats }: { beats: Beat[] }) {
         <span className="cmpstat">
           <span className="plus">+7 caught</span>
           <span className="minus">−3 false alarms</span>
-          <span className="bars">
-            <i className="on" />
-            <i className="on" />
-            <i className="on" />
-            <i className="on" />
-            <i className="off" />
-          </span>
         </span>
       </div>
 
-      <ul className="cmplist">
-        {beats.map((beat) => {
-          const showing = open === beat.stage;
-          const lines = diffLines(beat.metrics);
-          return (
-            <li className={showing ? "cmprow open" : "cmprow"} key={beat.stage}>
-              <button className="cmpbar" onClick={() => setOpen(showing ? null : beat.stage)}>
+      <div className="filesview">
+        <aside className="ftree">
+          <div className="ftreehead">changed files</div>
+          {tree.map(([folder, entries]) => (
+            <div className="fgroup" key={folder}>
+              <div className="ffolder">
+                <svg viewBox="0 0 16 16" className="icon" aria-hidden="true">
+                  <path d="M1.5 3.5h4l1.5 2h7.5v8h-13z" />
+                </svg>
+                {folder}
+              </div>
+              {entries.map((entry) => (
+                <div
+                  key={entry.path}
+                  className={touched.has(entry.path) ? "ffile on" : "ffile"}
+                  title={`${entry.touches} stage${entry.touches === 1 ? "" : "s"} touched this`}
+                >
+                  <FileIcon />
+                  <span className="fname">{nameOf(entry.path)}</span>
+                  <span className="ftouch">{entry.touches}</span>
+                </div>
+              ))}
+            </div>
+          ))}
+          <p className="ftreefoot">
+            Highlighted files are the ones the selected stage changed.
+          </p>
+        </aside>
+
+        <section className="fdiff">
+          <div className="stagepicker">
+            {beats.map((beat) => (
+              <button
+                key={beat.stage}
+                className={beat.stage === active.stage ? "spick on" : "spick"}
+                onClick={() => setSelected(beat.stage)}
+              >
                 <span className={beat.kept ? "cmpmark kept" : "cmpmark gone"}>
                   {beat.kept ? <ClearIcon /> : <HoldIcon />}
                 </span>
-                <span className="cmpmsg">
-                  <span className="cmptitle">{beat.tried}</span>
-                  <span className="cmpmeta">
-                    <span className="cmpstage">{beat.stage}</span>
-                    <span className={beat.kept ? "cmpbadge" : "cmpbadge gone"}>
-                      {beat.kept ? "kept" : "reverted"}
-                    </span>
-                  </span>
-                </span>
+                <span className="spickname">{beat.stage}</span>
                 <code className="cmpsha">{stageId(beat.stage)}</code>
               </button>
+            ))}
+          </div>
 
-              {showing ? (
-                <div className="cmpbody">
-                  <div className="cmpdiff">
-                    <div className="cmpfile">
-                      <span>results</span>
-                      <span className="cmpcount">
-                        {lines.filter((line) => line.sign === "+").length} additions,{" "}
-                        {lines.filter((line) => line.sign === "-").length} deletions
-                      </span>
-                    </div>
-                    {lines.map((line, index) => (
-                      <div
-                        className={
-                          line.sign === "+" ? "dline add" : line.sign === "-" ? "dline del" : "dline"
-                        }
-                        key={`${line.text}_${index}`}
-                      >
-                        <span className="dsign">{line.sign}</span>
-                        <span className="dtext">{line.text}</span>
-                      </div>
-                    ))}
-                    <div className="dline note">
-                      <span className="dsign"> </span>
-                      <span className="dtext">{beat.evidence}</span>
-                    </div>
-                  </div>
+          <div className="fdiffhead">
+            <div>
+              <h4>{active.tried}</h4>
+              <span className="cmpmeta">
+                <span className={active.kept ? "cmpbadge" : "cmpbadge gone"}>
+                  {active.kept ? "kept" : "reverted"}
+                </span>
+                <span className="cmpstage">
+                  {(active.files ?? []).length} file
+                  {(active.files ?? []).length === 1 ? "" : "s"} changed
+                </span>
+              </span>
+            </div>
+          </div>
 
-                  <div className="cmpnotes">
-                    <p>{beat.why}</p>
-                    <p className="fix">
-                      <strong>Decision</strong> {beat.decision}
-                    </p>
-                  </div>
+          <div className="splitdiff">
+            <div className="splithead">
+              <span>before</span>
+              <span>after</span>
+            </div>
+            {split.map((row) => (
+              <div className="splitrow" key={row.label}>
+                <div className={row.changed ? "spane del" : "spane"}>
+                  <span className="ssign">{row.changed ? "−" : " "}</span>
+                  <span>{row.before}</span>
                 </div>
-              ) : null}
-            </li>
-          );
-        })}
-      </ul>
+                <div className={row.changed ? "spane add" : "spane"}>
+                  <span className="ssign">{row.changed ? "+" : " "}</span>
+                  <span>{row.after}</span>
+                </div>
+              </div>
+            ))}
+            <div className="splitnote2">{active.evidence}</div>
+          </div>
+
+          <div className="cmpnotes">
+            <p>{active.why}</p>
+            <p className="fix">
+              <strong>Decision</strong> {active.decision}
+            </p>
+          </div>
+        </section>
+      </div>
     </div>
   );
 }

@@ -14,6 +14,7 @@ interface Entry {
   decision: string;
   kept: boolean;
   metrics?: { label: string; value: string; good?: boolean; bad?: boolean }[];
+  files?: string[];
 }
 
 const entries = (payload as { entries: Entry[] }).entries;

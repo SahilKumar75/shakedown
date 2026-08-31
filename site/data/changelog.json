@@ -20,6 +20,10 @@
           "label": "seconds",
           "value": "10"
         }
+      ],
+      "files": [
+        "shakedown/baseline.py",
+        "shakedown/runner.py"
       ]
     },
     {
@@ -44,6 +48,14 @@
           "value": "0 of 2",
           "bad": true
         }
+      ],
+      "files": [
+        "shakedown/probes/execution.py",
+        "shakedown/probes/leak.py",
+        "shakedown/probes/mutation.py",
+        "shakedown/probes/determinism.py",
+        "shakedown/probes/resilience.py",
+        "shakedown/probes/wording.py"
       ]
     },
     {
@@ -59,6 +71,10 @@
           "value": "3 to 0",
           "good": true
         }
+      ],
+      "files": [
+        "shakedown/probes/mutation.py",
+        "shakedown/runner.py"
       ]
     },
     {
@@ -79,6 +95,9 @@
           "value": "0",
           "good": true
         }
+      ],
+      "files": [
+        "shakedown/probes/wording.py"
       ]
     },
     {
@@ -94,6 +113,9 @@
           "value": "all of them",
           "bad": true
         }
+      ],
+      "files": [
+        "shakedown/probes/mutation.py"
       ]
     },
     {
@@ -123,6 +145,10 @@
           "label": "seconds",
           "value": "29"
         }
+      ],
+      "files": [
+        "shakedown/orchestrator.py",
+        "corpus/generate.py"
       ]
     }
   ]
