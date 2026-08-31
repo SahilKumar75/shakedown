@@ -4801,60 +4801,110 @@ td.num {
 
 .graph {
   margin: 22px 0 0;
-  padding: 22px 20px 18px;
   border: 1px solid var(--line);
   border-radius: 12px;
-  background:
-    radial-gradient(circle at 1px 1px, rgba(31, 35, 40, 0.10) 1px, transparent 0) 0 0 / 20px 20px,
-    var(--paper);
-  overflow-x: auto;
+  background: var(--paper);
+  overflow: hidden;
 }
 
+.canvasbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  padding: 10px 14px;
+  background: var(--wash);
+  border-bottom: 1px solid var(--line);
+}
+
+.canvasname {
+  font-family: var(--font_mono), monospace;
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink_faint);
+}
+
+.canvastools {
+  display: inline-flex;
+  gap: 4px;
+}
+
+.canvastools button {
+  width: 26px;
+  height: 26px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: var(--paper);
+  color: var(--ink_faint);
+  font-size: 13px;
+  line-height: 1;
+  cursor: default;
+}
+
+.graphcanvas,
 .graph svg {
+  display: block;
   width: 100%;
   min-width: 720px;
   height: auto;
   overflow: visible;
+  background:
+    radial-gradient(circle at 1px 1px, rgba(31, 35, 40, 0.13) 1px, transparent 0) 0 0 / 18px 18px,
+    var(--ground);
+  padding: 16px 14px 10px;
+}
+
+.graph {
+  overflow-x: auto;
 }
 
 .graph figcaption {
-  margin-top: 16px;
-  padding-top: 14px;
-  border-top: 1px solid var(--line_soft);
+  padding: 14px 18px 16px;
+  border-top: 1px solid var(--line);
   font-size: 14px;
   color: var(--ink_soft);
-  max-width: 76ch;
+  max-width: 78ch;
+  background: var(--paper);
 }
 
 .gbox {
   fill: var(--paper);
   stroke: var(--line);
   stroke-width: 1;
-  filter: drop-shadow(0 4px 10px rgba(31, 35, 40, 0.07));
+  filter: drop-shadow(0 4px 12px rgba(31, 35, 40, 0.09));
 }
 
-.grail {
-  rx: 2;
+.gtile {
+  fill: var(--wash);
+  stroke: var(--line);
+  stroke-width: 1;
 }
 
-.gnode.input .grail { fill: var(--ink_faint); }
-.gnode.probe .grail { fill: var(--accent); }
-.gnode.brain .grail { fill: var(--done); }
-.gnode.tool .grail { fill: var(--attention); }
-.gnode.out .grail { fill: var(--success); }
-
-.gnode.brain .gbox {
-  stroke: var(--done_line);
-  fill: var(--done_wash);
+.gglyph {
+  fill: none;
+  stroke: var(--ink_soft);
+  stroke-width: 1.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
 }
 
-.gnode.tool .gbox {
-  fill: var(--ground);
-}
+.gnode.probe .gtile { fill: var(--accent_wash); stroke: var(--accent_line); }
+.gnode.probe .gglyph { stroke: var(--accent); }
+
+.gnode.brain .gbox { stroke: var(--done_line); }
+.gnode.brain .gtile { fill: var(--done_wash); stroke: var(--done_line); }
+.gnode.brain .gglyph { stroke: var(--done); }
+
+.gnode.tool .gtile { fill: var(--attention_wash); stroke: var(--attention_line); }
+.gnode.tool .gglyph { stroke: var(--attention); }
+
+.gnode.out .gtile { fill: var(--success_wash); stroke: var(--success_line); }
+.gnode.out .gglyph { stroke: var(--success); }
 
 .gtitle {
   font-family: var(--font_mono), monospace;
-  font-size: 12.5px;
+  font-size: 13px;
   font-weight: 600;
   fill: var(--ink);
 }
@@ -4866,24 +4916,27 @@ td.num {
 
 .edge {
   fill: none;
-  stroke: var(--line);
+  stroke: var(--ink_faint);
   stroke-width: 1.6;
-}
-
-.arrowhead {
-  fill: var(--ink_faint);
+  opacity: 0.55;
 }
 
 .edge.dash {
   stroke: var(--attention);
-  stroke-width: 1.4;
+  stroke-width: 1.6;
   stroke-dasharray: 5 7;
-  opacity: 0.85;
-  animation: flow 1.4s linear infinite;
+  opacity: 0.9;
+  animation: flow 1.3s linear infinite;
 }
 
 @keyframes flow {
   to { stroke-dashoffset: -24; }
+}
+
+.gport {
+  fill: var(--paper);
+  stroke: var(--ink_faint);
+  stroke-width: 1.5;
 }
 
 .gloop {

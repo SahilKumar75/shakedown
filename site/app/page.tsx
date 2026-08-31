@@ -98,6 +98,10 @@ export default function OverviewPage() {
 
       <Marquee items={CLASSES} />
 
+      <Reveal delay={60}>
+        <StagePipe />
+      </Reveal>
+
       <Reveal as="section" className="band">
         <div className="bandhead">
           <Pill tone="done">the product</Pill>
