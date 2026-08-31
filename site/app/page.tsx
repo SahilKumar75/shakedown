@@ -5,6 +5,10 @@ import { Coverage } from "@/components/coverage";
 import { StagePipe } from "@/components/stagepipe";
 import { Reveal } from "@/components/reveal";
 import { Steps } from "@/components/steps";
+import { Magnetic } from "@/components/magnetic";
+import { CountUp } from "@/components/countup";
+import { Spotlight } from "@/components/spotlight";
+import { BundleScan } from "@/components/bundlescan";
 
 export default function OverviewPage() {
   const score = outcome();
@@ -13,6 +17,7 @@ export default function OverviewPage() {
   return (
     <main>
       <section className="hero">
+        <div className="herotext">
         <p className="eyebrow rise">Pre submission review for benchmark task bundles</p>
         <h1 className="rise d1">
           Find the defect before the pipeline <em>charges you for it</em>
@@ -26,41 +31,49 @@ export default function OverviewPage() {
           key, no service, nothing leaves the room.
         </p>
         <div className="actions rise d3">
-          <Link className="button" href="/report">
-            Open the run report <span className="arrow">&rarr;</span>
-          </Link>
-          <Link className="button ghost" href="/method">
-            How it decides
-          </Link>
+          <Magnetic>
+            <Link className="button" href="/report">
+              Open the run report <span className="arrow">&rarr;</span>
+            </Link>
+          </Magnetic>
+          <Magnetic>
+            <Link className="button ghost" href="/method">
+              How it decides
+            </Link>
+          </Magnetic>
         </div>
+        </div>
+        <BundleScan />
       </section>
 
       <Reveal delay={60}>
         <StagePipe />
       </Reveal>
 
-      <div className="scoreboard">
+      <Spotlight className="scoreboard">
         <div className="tile">
-          <div className="figure">
-            {score.detected} <span className="of">of {score.planted}</span>
+          <div className="figure ok">
+            <CountUp value={score.detected} /> <span className="of">of {score.planted}</span>
           </div>
           <div className="caption">planted defects caught</div>
         </div>
         <div className="tile">
           <div className="figure">
-            {score.falseAlarms} <span className="of">of {score.cleanBundles}</span>
+            <CountUp value={score.falseAlarms} /> <span className="of">of {score.cleanBundles}</span>
           </div>
           <div className="caption">clean bundles wrongly held</div>
         </div>
         <div className="tile">
-          <div className="figure">{score.seconds.toFixed(0)}s</div>
+          <div className="figure">
+            <CountUp value={Number(score.seconds.toFixed(0))} suffix="s" />
+          </div>
           <div className="caption">to inspect {reports.length} bundles</div>
         </div>
         <div className="tile">
           <div className="figure">$0</div>
           <div className="caption">spent on model calls</div>
         </div>
-      </div>
+      </Spotlight>
 
       <Reveal as="section">
         <h2 className="ruled">Three moves</h2>

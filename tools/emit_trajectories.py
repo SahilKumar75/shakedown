@@ -45,8 +45,43 @@ def main(argv: list[str]) -> int:
     names = argv[3:] or pick(root)
 
     labels = json.loads((root / "labels.json").read_text())["bundles"]
+
+    # Resume: a run that already completed is kept rather than paid for twice. A
+    # model call can fail on credit or rate limit half way through a sweep, and
+    # losing four minutes of completed work to the fifth failure is not acceptable.
     runs = []
+    done = set()
+    if out.exists():
+        try:
+            previous = json.loads(out.read_text())
+            for row in previous.get("runs", []):
+                if row.get("bundle") in names:
+                    runs.append(row)
+                    done.add(row["bundle"])
+        except (json.JSONDecodeError, OSError):
+            pass
+    if done:
+        print(f"resuming, {len(done)} already recorded: {sorted(done)}", flush=True)
+
+    def save():
+        payload = {
+            "model": model_name(),
+            "runs": runs,
+            "totals": {
+                "bundles": len(runs),
+                "steps": sum(len(run["steps"]) for run in runs),
+                "seconds": round(sum(run["seconds"] for run in runs), 1),
+                "found": sum(len(run["findings"]) for run in runs),
+                "prompt_tokens": sum(run["prompt_tokens"] for run in runs),
+                "completion_tokens": sum(run["completion_tokens"] for run in runs),
+            },
+        }
+        out.parent.mkdir(parents=True, exist_ok=True)
+        out.write_text(json.dumps(payload, indent=2) + "\n")
+
     for name in names:
+        if name in done:
+            continue
         target = bundle_module.load(root / name)
         probes = Gauntlet().run(target)
         print(f"{name}: probes found {len(probes.findings)}, sending the agent in", flush=True)
@@ -55,6 +90,9 @@ def main(argv: list[str]) -> int:
             trail, found = investigate(target, known=probes.findings, max_steps=26)
         except AgentUnavailable as error:
             print(str(error), file=sys.stderr)
+            if runs:
+                save()
+                print(f"kept {len(runs)} completed runs in {out}", file=sys.stderr)
             return 3
         row = trail.to_dict()
         row["planted"] = labels.get(name, {}).get("defect")
@@ -63,26 +101,14 @@ def main(argv: list[str]) -> int:
             for f in probes.findings
         ]
         runs.append(row)
+        save()
         print(
             f"  {len(trail.steps)} steps, {len(found)} findings, "
             f"{time.perf_counter() - started:.1f}s",
             flush=True,
         )
 
-    payload = {
-        "model": model_name(),
-        "runs": runs,
-        "totals": {
-            "bundles": len(runs),
-            "steps": sum(len(run["steps"]) for run in runs),
-            "seconds": round(sum(run["seconds"] for run in runs), 1),
-            "found": sum(len(run["findings"]) for run in runs),
-            "prompt_tokens": sum(run["prompt_tokens"] for run in runs),
-            "completion_tokens": sum(run["completion_tokens"] for run in runs),
-        },
-    }
-    out.parent.mkdir(parents=True, exist_ok=True)
-    out.write_text(json.dumps(payload, indent=2) + "\n")
+    save()
     print(f"wrote {out}")
     return 0
 

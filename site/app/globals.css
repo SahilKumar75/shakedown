@@ -1,27 +1,47 @@
 :root {
-  --ink: #12171d;
-  --ink_soft: #4d5866;
-  --ink_faint: #79838f;
-  --line: #e0e2dd;
-  --line_soft: #ecedea;
+  --ink: #1f2328;
+  --ink_soft: #59636e;
+  --ink_faint: #818b98;
+  --line: #d1d9e0;
+  --line_soft: #e4e8ed;
   --paper: #ffffff;
-  --ground: #fbfaf7;
-  --wash: #f4f3ee;
-  --sea: #0d5560;
-  --sea_deep: #08383f;
-  --flare: #b23a2a;
-  --flare_wash: #fbf0ed;
-  --flare_line: #ecd2cb;
-  --sound: #1b6a48;
-  --sound_wash: #eef5f1;
-  --sound_line: #cee0d6;
-  --mind: #4c3f9e;
-  --mind_wash: #f1effa;
-  --mind_line: #d6d0ee;
-  --amber: #9a6512;
-  --amber_wash: #fbf4e6;
-  --amber_line: #ecdcbb;
-  --radius: 4px;
+  --ground: #f6f8fa;
+  --wash: #eef2f5;
+
+  /* semantic set, in the spirit of GitHub's: one colour per meaning */
+  --success: #1a7f37;
+  --success_wash: #e9f6ec;
+  --success_line: #b7e0c2;
+  --danger: #cf222e;
+  --danger_wash: #fdeeee;
+  --danger_line: #f5c2c4;
+  --attention: #9a6700;
+  --attention_wash: #fdf6e3;
+  --attention_line: #ecdca8;
+  --done: #8250df;
+  --done_wash: #f4effd;
+  --done_line: #ddcffa;
+  --accent: #0969da;
+  --accent_wash: #e8f0fc;
+  --accent_line: #b9d3f5;
+
+  /* the older names map onto the semantic set so every existing rule holds */
+  --sea: var(--accent);
+  --sea_deep: #0a3069;
+  --flare: var(--danger);
+  --flare_wash: var(--danger_wash);
+  --flare_line: var(--danger_line);
+  --sound: var(--success);
+  --sound_wash: var(--success_wash);
+  --sound_line: var(--success_line);
+  --mind: var(--done);
+  --mind_wash: var(--done_wash);
+  --mind_line: var(--done_line);
+  --amber: var(--attention);
+  --amber_wash: var(--attention_wash);
+  --amber_line: var(--attention_line);
+
+  --radius: 6px;
   --step: 150ms cubic-bezier(0.22, 0.61, 0.36, 1);
 }
 
@@ -42,14 +62,14 @@ body {
 }
 
 a {
-  color: var(--sea);
+  color: var(--accent);
   text-decoration: none;
-  border-bottom: 1px solid rgba(13, 85, 96, 0.28);
+  border-bottom: 1px solid rgba(9, 105, 218, 0.28);
   transition: border-color var(--step), color var(--step);
 }
 
 a:hover {
-  border-bottom-color: var(--sea);
+  border-bottom-color: var(--accent);
 }
 
 .shell {
@@ -62,7 +82,7 @@ a:hover {
 
 .masthead {
   border-bottom: 1px solid var(--line);
-  background: rgba(251, 250, 247, 0.92);
+  background: rgba(246, 248, 250, 0.88);
   backdrop-filter: blur(6px);
   position: sticky;
   top: 0;
@@ -2064,15 +2084,26 @@ td.num {
 
 .tier {
   border: 1px solid var(--line);
-  border-left: 3px solid var(--line);
   border-radius: var(--radius);
   background: var(--paper);
   padding: 18px 20px 8px;
 }
 
-.tier.hand { border-left-color: var(--sound); }
-.tier.probe { border-left-color: var(--sea); }
-.tier.open { border-left-color: var(--mind); }
+/* The tier is identified by the colour of its icon chip rather than by a stripe
+   down its edge, which reads as a template. */
+.tier .tiericon {
+  width: 26px;
+  height: 26px;
+  border-radius: 6px;
+  align-items: center;
+  justify-content: center;
+  padding-top: 0;
+  border: 1px solid var(--line);
+}
+
+.tier.hand .tiericon { background: var(--success_wash); border-color: var(--success_line); }
+.tier.probe .tiericon { background: var(--accent_wash); border-color: var(--accent_line); }
+.tier.open .tiericon { background: var(--done_wash); border-color: var(--done_line); }
 
 .tier > header {
   display: flex;
@@ -2302,4 +2333,222 @@ td.num {
   .cdname {
     grid-column: 1 / 3;
   }
+}
+
+/* ------------------------------------------------------------------- brand */
+
+.brand {
+  border-bottom: none;
+  color: inherit;
+}
+
+.wordmark {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-family: var(--font_display), sans-serif;
+  font-size: 18px;
+  font-weight: 700;
+  letter-spacing: -0.022em;
+  color: var(--ink);
+}
+
+.wmtext {
+  line-height: 1;
+}
+
+.wmdown {
+  color: var(--ink_faint);
+  font-weight: 600;
+}
+
+.logomark {
+  display: block;
+  flex: 0 0 auto;
+  overflow: visible;
+}
+
+.lmtile {
+  fill: var(--ink);
+  stroke: none;
+}
+
+.lmring {
+  fill: none;
+  stroke: #ffffff;
+  stroke-width: 2;
+  opacity: 0.9;
+  stroke-dasharray: 44 13;
+  stroke-linecap: round;
+  transform-origin: 16px 16px;
+  animation: lmspin 9s linear infinite;
+}
+
+.lmscan {
+  fill: none;
+  stroke: var(--danger);
+  stroke-width: 2;
+  transform-origin: 16px 16px;
+  animation: lmpulse 3.4s cubic-bezier(0.3, 0, 0.2, 1) infinite;
+}
+
+.lmticks {
+  stroke: #ffffff;
+  stroke-width: 1.6;
+  stroke-linecap: round;
+  opacity: 0.4;
+}
+
+.lmcore {
+  fill: var(--danger);
+}
+
+@keyframes lmspin {
+  to { transform: rotate(360deg); }
+}
+
+@keyframes lmpulse {
+  0%, 62% { transform: scale(0.34); opacity: 0; }
+  70% { opacity: 0.85; }
+  100% { transform: scale(1.55); opacity: 0; }
+}
+
+.brand:hover .lmring {
+  animation-duration: 2.4s;
+}
+
+/* ---------------------------------------------------------------- magnetic */
+
+.magnetic {
+  display: inline-flex;
+  will-change: transform;
+}
+
+/* --------------------------------------------------------------- spotlight */
+
+.spot {
+  position: relative;
+  isolation: isolate;
+}
+
+.spot::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  opacity: var(--lit, 0);
+  transition: opacity 220ms ease-out;
+  background: radial-gradient(
+    260px circle at var(--mx, 50%) var(--my, 50%),
+    rgba(9, 105, 218, 0.09),
+    transparent 62%
+  );
+  z-index: 0;
+}
+
+.spot > * {
+  position: relative;
+  z-index: 1;
+}
+
+.tile .figure.ok {
+  color: var(--success);
+}
+
+/* ----------------------------------------------------------- hero artwork */
+
+.hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr);
+  gap: 44px;
+  align-items: center;
+}
+
+@media (max-width: 900px) {
+  .hero {
+    grid-template-columns: 1fr;
+    gap: 26px;
+  }
+  .scanart {
+    max-width: 420px;
+  }
+}
+
+.herotext {
+  min-width: 0;
+}
+
+.scanart svg {
+  width: 100%;
+  height: auto;
+  overflow: visible;
+}
+
+.scanbox {
+  fill: var(--paper);
+  stroke: var(--line);
+  stroke-width: 1;
+}
+
+.scanrow {
+  animation: rise 520ms cubic-bezier(0.22, 0.61, 0.36, 1) both;
+}
+
+.scanfile {
+  fill: var(--ground);
+  stroke: var(--line_soft);
+  stroke-width: 1;
+}
+
+.scanchip {
+  fill: var(--ink_faint);
+  opacity: 0.5;
+}
+
+.scanchip.ships {
+  fill: var(--accent);
+  opacity: 1;
+}
+
+.scanname {
+  font-family: var(--font_mono), monospace;
+  font-size: 11px;
+  fill: var(--ink_soft);
+}
+
+.scanbadge {
+  fill: var(--danger_wash);
+  stroke: var(--danger_line);
+  stroke-width: 1;
+}
+
+.scanbadgetext {
+  font-family: var(--font_mono), monospace;
+  font-size: 9.5px;
+  fill: var(--danger);
+  text-anchor: middle;
+  letter-spacing: 0.06em;
+}
+
+.scanflag {
+  animation: flagin 420ms cubic-bezier(0.22, 0.61, 0.36, 1) 2100ms both;
+  transform-origin: 235px 0px;
+}
+
+@keyframes flagin {
+  from { opacity: 0; transform: translateX(10px); }
+  to { opacity: 1; transform: none; }
+}
+
+.scanbeam {
+  fill: rgba(9, 105, 218, 0.10);
+  animation: sweepbeam 2600ms cubic-bezier(0.4, 0, 0.3, 1) 400ms 1 forwards;
+}
+
+@keyframes sweepbeam {
+  0% { transform: translateY(6px); opacity: 0; }
+  10% { opacity: 1; }
+  85% { opacity: 1; }
+  100% { transform: translateY(186px); opacity: 0; }
 }

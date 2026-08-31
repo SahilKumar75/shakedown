@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { Wordmark } from "@/components/logo";
 import { Space_Grotesk, IBM_Plex_Sans, IBM_Plex_Mono } from "next/font/google";
 import "./globals.css";
 
@@ -56,9 +57,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body>
         <header className="masthead">
           <div className="shell mastrow">
-            <Link href="/" className="wordmark">
-              <span className="mark" aria-hidden="true" />
-              Shakedown
+            <Link href="/" className="brand">
+              <Wordmark />
             </Link>
             <nav>
               {LINKS.map((link) => (
