@@ -1,4 +1,14 @@
 :root {
+  --term_bg: #0d1117;
+  --term_bg_soft: #161b22;
+  --term_line: #30363d;
+  --term_text: #c9d1d9;
+  --term_dim: #8b949e;
+  --term_green: #7ee787;
+  --term_red: #ff7b72;
+  --term_blue: #79c0ff;
+  --term_yellow: #d29922;
+
   --ink: #1f2328;
   --ink_soft: #59636e;
   --ink_faint: #818b98;
@@ -543,10 +553,13 @@ dl.detail dd.mono {
 
 .notes {
   margin-top: 22px;
-  border-top: 1px solid var(--line_soft);
-  padding-top: 16px;
-  font-size: 13px;
-  color: var(--ink_soft);
+  padding: 13px 15px;
+  border: 1px solid var(--term_line);
+  border-radius: 6px;
+  background: var(--term_bg);
+  font-size: 12.5px;
+  line-height: 1.75;
+  color: var(--term_dim);
   font-family: var(--font_mono), monospace;
 }
 
@@ -1003,8 +1016,9 @@ td.num {
   padding: 16px 18px;
   border: 1px solid var(--line);
   border-radius: var(--radius);
-  background: var(--sea_deep);
-  color: #dceaea;
+  background: var(--term_bg);
+  border-color: var(--term_line);
+  color: var(--term_text);
   font-family: var(--font_mono), monospace;
   font-size: 13px;
   line-height: 1.85;
@@ -1012,12 +1026,12 @@ td.num {
 }
 
 .shellblock .prompt {
-  color: #6fb3ad;
+  color: var(--term_green);
   margin-right: 8px;
 }
 
 .shellblock .out {
-  color: #9fb5b6;
+  color: var(--term_dim);
 }
 
 /* ------------------------------------------------------------------- icons */
@@ -1396,11 +1410,11 @@ td.num {
 }
 
 .proof {
-  border-left: 2px solid var(--flare_line);
-  background: var(--ground);
-  padding: 10px 14px;
+  background: var(--term_bg);
+  border: 1px solid var(--term_line);
+  padding: 12px 14px;
   margin: 0 0 12px;
-  border-radius: 0 2px 2px 0;
+  border-radius: 6px;
 }
 
 .prooflabel {
@@ -1411,15 +1425,15 @@ td.num {
   font-size: 10.5px;
   letter-spacing: 0.1em;
   text-transform: uppercase;
-  color: var(--ink_faint);
-  margin-bottom: 6px;
+  color: var(--term_dim);
+  margin-bottom: 7px;
 }
 
 .proof code {
   display: block;
   font-family: var(--font_mono), monospace;
   font-size: 12.5px;
-  color: var(--ink);
+  color: var(--term_text);
   white-space: pre-wrap;
 }
 
@@ -1571,13 +1585,14 @@ td.num {
 
 .tcode pre {
   margin: 0;
-  padding: 12px 14px;
-  border: 1px solid var(--line_soft);
-  border-radius: 2px;
-  background: var(--ground);
+  padding: 13px 15px;
+  border: 1px solid var(--term_line);
+  border-radius: 6px;
+  background: var(--term_bg);
+  color: var(--term_text);
   font-family: var(--font_mono), monospace;
   font-size: 12.5px;
-  line-height: 1.65;
+  line-height: 1.7;
   overflow-x: auto;
   white-space: pre-wrap;
   max-height: 320px;
@@ -2008,8 +2023,8 @@ td.num {
 .runlog {
   margin: 0;
   padding: 14px 18px 16px 46px;
-  background: var(--sea_deep);
-  color: #cfe0e0;
+  background: var(--term_bg);
+  color: var(--term_text);
   font-family: var(--font_mono), monospace;
   font-size: 12.5px;
   line-height: 1.8;
@@ -3810,6 +3825,13 @@ td.num {
   position: relative;
 }
 
+.agentlogwrap {
+  border: 1px solid var(--term_line);
+  border-radius: 6px;
+  background: var(--term_bg);
+  padding: 8px 10px;
+}
+
 .agentlog {
   height: 84px;
   overflow: hidden;
@@ -3828,16 +3850,16 @@ td.num {
 .agentnum {
   width: 18px;
   text-align: right;
-  color: var(--ink_faint);
+  color: var(--term_dim);
   user-select: none;
 }
 
 .agenttext {
-  color: var(--ink_soft);
+  color: var(--term_text);
 }
 
 .agenttext.bad {
-  color: var(--danger);
+  color: var(--term_red);
   font-weight: 600;
 }
 
@@ -3847,8 +3869,8 @@ td.num {
   pointer-events: none;
   background: linear-gradient(
     180deg,
-    rgba(255, 255, 255, 0.86) 0%,
-    rgba(255, 255, 255, 0.3) 34%,
+    rgba(13, 17, 23, 0.92) 0%,
+    rgba(13, 17, 23, 0.35) 34%,
     transparent 100%
   );
 }
@@ -4241,5 +4263,270 @@ td.num {
   }
   .arclabel {
     font-size: 9px;
+  }
+}
+
+/* ------------------------------------------------------- changelog compare */
+
+.cmp {
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: var(--paper);
+  overflow: hidden;
+  margin-top: 26px;
+}
+
+.cmphead {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  padding: 14px 18px;
+  background: var(--wash);
+  border-bottom: 1px solid var(--line);
+}
+
+.cmpref {
+  font-family: var(--font_mono), monospace;
+  font-size: 12px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  background: var(--paper);
+  color: var(--ink_soft);
+}
+
+.cmpref.head {
+  border-color: var(--accent_line);
+  background: var(--accent_wash);
+  color: var(--accent);
+}
+
+.cmpdots {
+  color: var(--ink_faint);
+}
+
+.cmpsummary {
+  font-size: 13px;
+  color: var(--ink_soft);
+}
+
+.cmpstat {
+  margin-left: auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-family: var(--font_mono), monospace;
+  font-size: 12px;
+}
+
+.cmpstat .plus { color: var(--success); }
+.cmpstat .minus { color: var(--danger); }
+
+.bars {
+  display: inline-flex;
+  gap: 2px;
+}
+
+.bars i {
+  width: 9px;
+  height: 9px;
+  border-radius: 2px;
+}
+
+.bars i.on { background: var(--success); }
+.bars i.off { background: var(--line); }
+
+.cmplist {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.cmprow {
+  border-bottom: 1px solid var(--line_soft);
+}
+
+.cmprow:last-child {
+  border-bottom: none;
+}
+
+.cmpbar {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  width: 100%;
+  padding: 13px 18px;
+  border: none;
+  background: transparent;
+  font: inherit;
+  color: inherit;
+  text-align: left;
+  cursor: pointer;
+  transition: background var(--step);
+}
+
+.cmpbar:hover {
+  background: var(--wash);
+}
+
+.cmpmark {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+  border: 1px solid var(--line);
+}
+
+.cmpmark.kept {
+  background: var(--success_wash);
+  border-color: var(--success_line);
+  color: var(--success);
+}
+
+.cmpmark.gone {
+  background: var(--danger_wash);
+  border-color: var(--danger_line);
+  color: var(--danger);
+}
+
+.cmpmsg {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.cmptitle {
+  display: block;
+  font-size: 14.5px;
+  color: var(--ink);
+  margin-bottom: 4px;
+}
+
+.cmpmeta {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+}
+
+.cmpstage {
+  font-family: var(--font_mono), monospace;
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink_faint);
+}
+
+.cmpbadge {
+  font-family: var(--font_mono), monospace;
+  font-size: 10.5px;
+  padding: 2px 8px;
+  border-radius: 999px;
+  border: 1px solid var(--success_line);
+  background: var(--success_wash);
+  color: var(--success);
+}
+
+.cmpbadge.gone {
+  border-color: var(--danger_line);
+  background: var(--danger_wash);
+  color: var(--danger);
+}
+
+.cmpsha {
+  font-family: var(--font_mono), monospace;
+  font-size: 12px;
+  color: var(--ink_faint);
+  padding: 3px 9px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: var(--ground);
+  flex: 0 0 auto;
+}
+
+.cmpbody {
+  padding: 0 18px 18px;
+  animation: rise 300ms cubic-bezier(0.22, 0.61, 0.36, 1) both;
+}
+
+.cmpdiff {
+  border: 1px solid var(--term_line);
+  border-radius: 6px;
+  background: var(--term_bg);
+  overflow: hidden;
+  font-family: var(--font_mono), monospace;
+  font-size: 12.5px;
+}
+
+.cmpfile {
+  display: flex;
+  justify-content: space-between;
+  gap: 14px;
+  padding: 9px 14px;
+  background: var(--term_bg_soft);
+  border-bottom: 1px solid var(--term_line);
+  color: var(--term_text);
+}
+
+.cmpcount {
+  color: var(--term_dim);
+}
+
+.dline {
+  display: flex;
+  gap: 12px;
+  padding: 4px 14px;
+  color: var(--term_text);
+  line-height: 1.7;
+}
+
+.dline.add {
+  background: rgba(46, 160, 67, 0.16);
+  color: var(--term_green);
+}
+
+.dline.del {
+  background: rgba(248, 81, 73, 0.14);
+  color: var(--term_red);
+}
+
+.dline.note {
+  color: var(--term_dim);
+  border-top: 1px solid var(--term_line);
+  padding-top: 9px;
+  padding-bottom: 9px;
+}
+
+.dsign {
+  width: 10px;
+  flex: 0 0 auto;
+  user-select: none;
+  opacity: 0.85;
+}
+
+.dtext {
+  white-space: pre-wrap;
+}
+
+.cmpnotes {
+  margin-top: 14px;
+  font-size: 14.5px;
+  color: var(--ink_soft);
+}
+
+.cmpnotes p {
+  margin: 0 0 10px;
+}
+
+.cmpnotes p:last-child {
+  margin-bottom: 0;
+}
+
+@media (max-width: 700px) {
+  .cmpsha,
+  .cmpstat {
+    display: none;
   }
 }

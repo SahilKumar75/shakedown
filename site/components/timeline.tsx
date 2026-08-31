@@ -1,7 +1,7 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
-import { ClearIcon, HoldIcon, RunIcon } from "./icons";
+import { useState } from "react";
+import { ClearIcon, HoldIcon } from "./icons";
 
 export interface Metric {
   label: string;
@@ -20,159 +20,120 @@ export interface Beat {
   metrics?: Metric[];
 }
 
-function Chip({ metric }: { metric: Metric }) {
-  const tone = metric.good ? "mchip up" : metric.bad ? "mchip down" : "mchip";
-  return (
-    <span className={tone}>
-      <span className="mlabel">{metric.label}</span>
-      <span className="mvalue">{metric.value}</span>
-    </span>
-  );
+/** A short, stable id per stage. Deliberately not called a commit: these are recorded
+ *  stages of the project, not git objects, and labelling them otherwise would imply
+ *  a history that does not exist. */
+function stageId(stage: string): string {
+  let hash = 0;
+  for (let index = 0; index < stage.length; index += 1) {
+    hash = (hash * 31 + stage.charCodeAt(index)) >>> 0;
+  }
+  return hash.toString(16).padStart(7, "0").slice(0, 7);
 }
 
-/** The arc of the project in one strip: where recall started and where it landed. */
-function Arc() {
-  const points = [
-    { at: "baseline", caught: 6, alarms: 0 },
-    { at: "iteration one", caught: 13, alarms: 3 },
-    { at: "iteration two", caught: 13, alarms: 0 },
-    { at: "iteration three", caught: 13, alarms: 0 },
-    { at: "now", caught: 13, alarms: 0 },
-  ];
-  const max = 21;
-  return (
-    <div className="arc">
-      <div className="arcplot">
-        {points.map((point, index) => (
-          <div className="arcstep" key={point.at}>
-            <div className="arcbars">
-              <span
-                className="arcbar caught"
-                style={{
-                  height: `${(point.caught / max) * 100}%`,
-                  animationDelay: `${index * 90}ms`,
-                }}
-                title={`${point.caught} of 21 caught`}
-              />
-              <span
-                className={point.alarms ? "arcbar alarm" : "arcbar alarm none"}
-                style={{
-                  height: `${Math.max(point.alarms / 3, 0.04) * 100}%`,
-                  animationDelay: `${index * 90 + 45}ms`,
-                }}
-                title={`${point.alarms} clean bundles wrongly held`}
-              />
-            </div>
-            <span className="arclabel">{point.at}</span>
-          </div>
-        ))}
-      </div>
-      <div className="arckey">
-        <span>
-          <span className="keyswatch caught" /> planted defects caught, out of 21
-        </span>
-        <span>
-          <span className="keyswatch alarm" /> clean bundles wrongly held, out of 3
-        </span>
-      </div>
-    </div>
-  );
+/** Metric values are written either as a plain figure or as "before to after". The
+ *  second shape becomes a removed line and an added line, the first stays context. */
+function diffLines(metrics: Metric[] = []) {
+  const lines: { sign: "+" | "-" | " "; text: string }[] = [];
+  metrics.forEach((metric) => {
+    const parts = metric.value.split(" to ");
+    if (parts.length === 2) {
+      lines.push({ sign: "-", text: `${metric.label} ${parts[0]}` });
+      lines.push({ sign: "+", text: `${metric.label} ${parts[1]}` });
+    } else {
+      lines.push({ sign: " ", text: `${metric.label} ${metric.value}` });
+    }
+  });
+  return lines;
 }
 
 export function Timeline({ beats }: { beats: Beat[] }) {
-  const host = useRef<HTMLOListElement>(null);
-  const [fill, setFill] = useState(0);
-  const [open, setOpen] = useState<string | null>(null);
-
-  useEffect(() => {
-    const node = host.current;
-    if (!node) {
-      return;
-    }
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-      setFill(100);
-      return;
-    }
-    let raf = 0;
-    const measure = () => {
-      const box = node.getBoundingClientRect();
-      const start = window.innerHeight * 0.82;
-      const travelled = start - box.top;
-      setFill(Math.max(0, Math.min(100, (travelled / box.height) * 100)));
-    };
-    const onScroll = () => {
-      cancelAnimationFrame(raf);
-      raf = requestAnimationFrame(measure);
-    };
-    measure();
-    window.addEventListener("scroll", onScroll, { passive: true });
-    window.addEventListener("resize", onScroll);
-    return () => {
-      window.removeEventListener("scroll", onScroll);
-      window.removeEventListener("resize", onScroll);
-      cancelAnimationFrame(raf);
-    };
-  }, []);
+  const [open, setOpen] = useState<string | null>(beats[0]?.stage ?? null);
+  const kept = beats.filter((beat) => beat.kept).length;
 
   return (
-    <>
-      <Arc />
-      <ol className="tl" ref={host}>
-        <span className="tlspine" />
-        <span className="tlfill" style={{ transform: `scaleY(${fill / 100})` }} />
-        {beats.map((beat, index) => {
-          const at = ((index + 0.5) / beats.length) * 100;
-          const lit = fill >= at;
+    <div className="cmp">
+      <div className="cmphead">
+        <span className="cmpref">baseline</span>
+        <span className="cmpdots">…</span>
+        <span className="cmpref head">now</span>
+        <span className="cmpsummary">
+          {beats.length} stages, {kept} kept, {beats.length - kept} reverted
+        </span>
+        <span className="cmpstat">
+          <span className="plus">+7 caught</span>
+          <span className="minus">−3 false alarms</span>
+          <span className="bars">
+            <i className="on" />
+            <i className="on" />
+            <i className="on" />
+            <i className="on" />
+            <i className="off" />
+          </span>
+        </span>
+      </div>
+
+      <ul className="cmplist">
+        {beats.map((beat) => {
           const showing = open === beat.stage;
+          const lines = diffLines(beat.metrics);
           return (
-            <li className={lit ? "tlbeat lit" : "tlbeat"} key={beat.stage}>
-              <span className={beat.kept ? "tldot kept" : "tldot gone"}>
-                {beat.kept ? <ClearIcon /> : <HoldIcon />}
-              </span>
-              <div className="tlcard">
-                <div className="tltop">
-                  <span className="tlstage">{beat.stage}</span>
-                  <span className={beat.kept ? "chip" : "chip block"}>
-                    {beat.kept ? "kept" : "reverted"}
+            <li className={showing ? "cmprow open" : "cmprow"} key={beat.stage}>
+              <button className="cmpbar" onClick={() => setOpen(showing ? null : beat.stage)}>
+                <span className={beat.kept ? "cmpmark kept" : "cmpmark gone"}>
+                  {beat.kept ? <ClearIcon /> : <HoldIcon />}
+                </span>
+                <span className="cmpmsg">
+                  <span className="cmptitle">{beat.tried}</span>
+                  <span className="cmpmeta">
+                    <span className="cmpstage">{beat.stage}</span>
+                    <span className={beat.kept ? "cmpbadge" : "cmpbadge gone"}>
+                      {beat.kept ? "kept" : "reverted"}
+                    </span>
                   </span>
-                </div>
-                <h4>{beat.tried}</h4>
+                </span>
+                <code className="cmpsha">{stageId(beat.stage)}</code>
+              </button>
 
-                {beat.metrics && beat.metrics.length ? (
-                  <div className="mchips">
-                    {beat.metrics.map((metric) => (
-                      <Chip key={metric.label} metric={metric} />
+              {showing ? (
+                <div className="cmpbody">
+                  <div className="cmpdiff">
+                    <div className="cmpfile">
+                      <span>results</span>
+                      <span className="cmpcount">
+                        {lines.filter((line) => line.sign === "+").length} additions,{" "}
+                        {lines.filter((line) => line.sign === "-").length} deletions
+                      </span>
+                    </div>
+                    {lines.map((line, index) => (
+                      <div
+                        className={
+                          line.sign === "+" ? "dline add" : line.sign === "-" ? "dline del" : "dline"
+                        }
+                        key={`${line.text}_${index}`}
+                      >
+                        <span className="dsign">{line.sign}</span>
+                        <span className="dtext">{line.text}</span>
+                      </div>
                     ))}
+                    <div className="dline note">
+                      <span className="dsign"> </span>
+                      <span className="dtext">{beat.evidence}</span>
+                    </div>
                   </div>
-                ) : null}
 
-                <div className="proof">
-                  <span className="prooflabel">
-                    <RunIcon /> what the run showed
-                  </span>
-                  <code>{beat.evidence}</code>
-                </div>
-
-                <button className="tlmore" onClick={() => setOpen(showing ? null : beat.stage)}>
-                  {showing ? "hide the reasoning" : "why, and what we decided"}
-                  <svg viewBox="0 0 10 6" className={showing ? "navcaret up" : "navcaret"} aria-hidden="true">
-                    <path d="M1 1l4 4 4-4" />
-                  </svg>
-                </button>
-
-                {showing ? (
-                  <div className="tlreason">
+                  <div className="cmpnotes">
                     <p>{beat.why}</p>
                     <p className="fix">
                       <strong>Decision</strong> {beat.decision}
                     </p>
                   </div>
-                ) : null}
-              </div>
+                </div>
+              ) : null}
             </li>
           );
         })}
-      </ol>
-    </>
+      </ul>
+    </div>
   );
 }
