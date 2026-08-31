@@ -3585,3 +3585,221 @@ td.num {
   font-size: 14.5px;
   color: var(--ink_soft);
 }
+
+/* --------------------------------------------------------- gauntlet status */
+
+.status {
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: var(--paper);
+  overflow: hidden;
+}
+
+.statushead {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+  padding: 18px 22px;
+  border-bottom: 1px solid var(--line);
+  background: var(--wash);
+}
+
+.statushead h3 {
+  font-family: var(--font_display), sans-serif;
+  font-size: 16px;
+  font-weight: 600;
+  letter-spacing: -0.014em;
+  margin: 0 0 3px;
+}
+
+.statushead p {
+  margin: 0;
+  font-size: 13px;
+  color: var(--ink_faint);
+}
+
+.statustoggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font: inherit;
+  font-size: 13px;
+  color: var(--ink_soft);
+  padding: 7px 13px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: var(--paper);
+  cursor: pointer;
+  transition: border-color var(--step), color var(--step);
+}
+
+.statustoggle:hover {
+  border-color: var(--ink_faint);
+  color: var(--ink);
+}
+
+.navcaret.up {
+  transform: rotate(180deg);
+}
+
+.statusrow {
+  padding: 15px 22px 17px;
+  border-bottom: 1px solid var(--line_soft);
+}
+
+.statusrow:last-of-type {
+  border-bottom: none;
+}
+
+.statusmeta {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-bottom: 9px;
+}
+
+.statusdot {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  flex: 0 0 auto;
+}
+
+.statusdot.calm {
+  background: var(--success);
+  box-shadow: 0 0 0 3px var(--success_wash);
+}
+
+.statusdot.alert {
+  background: var(--danger);
+  box-shadow: 0 0 0 3px var(--danger_wash);
+  animation: beacon 2.8s ease-in-out infinite;
+}
+
+.statusname {
+  font-family: var(--font_mono), monospace;
+  font-size: 13.5px;
+  font-weight: 500;
+}
+
+.statusstate {
+  font-size: 13px;
+  color: var(--ink_soft);
+}
+
+.statustime {
+  margin-left: auto;
+  font-family: var(--font_mono), monospace;
+  font-size: 11.5px;
+  color: var(--ink_faint);
+  font-variant-numeric: tabular-nums;
+}
+
+.strip {
+  display: flex;
+  gap: 3px;
+  margin-bottom: 8px;
+}
+
+.tick {
+  flex: 1 1 auto;
+  height: 26px;
+  min-width: 5px;
+  border-radius: 2px;
+  background: var(--success);
+  opacity: 0.85;
+  transform-origin: center bottom;
+  animation: grow 420ms cubic-bezier(0.22, 0.61, 0.36, 1) both;
+  transition: opacity var(--step), transform var(--step);
+}
+
+.tick:hover {
+  opacity: 1;
+  transform: scaleY(1.12);
+}
+
+.tick.hit {
+  background: var(--danger);
+}
+
+.tick.idle {
+  background: var(--line);
+}
+
+.statusblurb {
+  margin: 0;
+  font-size: 13px;
+  color: var(--ink_faint);
+}
+
+.statuslog {
+  border-top: 1px solid var(--line);
+  background: var(--ground);
+  padding: 14px 22px 18px;
+}
+
+.logrow {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 7px 0;
+  border-bottom: 1px solid var(--line_soft);
+  font-size: 13px;
+}
+
+.logrow:last-of-type {
+  border-bottom: none;
+}
+
+.logprobe {
+  font-family: var(--font_mono), monospace;
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--danger);
+  min-width: 84px;
+}
+
+.logrow code {
+  font-family: var(--font_mono), monospace;
+  font-size: 12.5px;
+  flex: 1 1 auto;
+}
+
+.logdefect {
+  color: var(--ink_soft);
+}
+
+.logfoot {
+  margin: 12px 0 0;
+  font-size: 12.5px;
+  color: var(--ink_faint);
+}
+
+/* the bar condenses into a floating pill once the page moves under it */
+
+.masthead {
+  background: transparent;
+  border-bottom: 1px solid transparent;
+  backdrop-filter: none;
+  padding: 10px 0;
+}
+
+.mastrow {
+  position: relative;
+  border: 1px solid transparent;
+  border-radius: 999px;
+  padding: 0 8px 0 14px;
+  height: 56px;
+  transition: background var(--step), border-color var(--step), box-shadow var(--step);
+}
+
+.mastrow.stuck {
+  background: rgba(255, 255, 255, 0.82);
+  border-color: var(--line);
+  backdrop-filter: blur(12px) saturate(1.4);
+  box-shadow: 0 10px 30px -22px rgba(31, 35, 40, 0.55);
+}

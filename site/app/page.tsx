@@ -14,6 +14,7 @@ import { Steps } from "@/components/steps";
 import { Aurora, GridField, Marquee, Pill, TerminalDemo } from "@/components/surfaces";
 import { RevealCompare } from "@/components/revealcompare";
 import { Versus } from "@/components/versus";
+import { ProbeStatus } from "@/components/probestatus";
 
 const CLASSES = [
   "answer leak",
@@ -147,6 +148,18 @@ export default function OverviewPage() {
           </p>
         </div>
         <Versus />
+      </Reveal>
+
+      <Reveal as="section" className="band">
+        <div className="bandhead">
+          <Pill>live corpus</Pill>
+          <h2>Every probe, every bundle</h2>
+          <p className="lede short">
+            One tick per bundle. Red is a defect that probe reproduced, and hovering a tick names
+            it.
+          </p>
+        </div>
+        <ProbeStatus reports={reports} />
       </Reveal>
 
       <Reveal as="section" className="band">
