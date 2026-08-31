@@ -6,7 +6,21 @@
       "why": "It is the honest starting point. If a cheap manual habit already catches most defects then the project has no reason to exist.",
       "evidence": "Caught 6 of 21 planted defects across the corpus, reaching only 2 of the 8 defect classes, in 10 seconds.",
       "decision": "Established the starting point. Both classes it catches are the ones those two runs happen to expose, which suggested the gain would come from probes that go looking rather than from running the same thing more carefully.",
-      "kept": true
+      "kept": true,
+      "metrics": [
+        {
+          "label": "caught",
+          "value": "6 of 21"
+        },
+        {
+          "label": "classes",
+          "value": "2 of 8"
+        },
+        {
+          "label": "seconds",
+          "value": "10"
+        }
+      ]
     },
     {
       "stage": "Iteration one",
@@ -14,7 +28,23 @@
       "why": "Each probe owns one defect class and reproduces the failure by executing something, so a finding carries evidence rather than an opinion.",
       "evidence": "Held 13 of 24 bundles, but 3 clean controls were held wrongly and the wording probe caught 0 of its 2 planted cases.",
       "decision": "Kept the structure and fixed the two probes that were wrong. The false alarms all traced to one probe, which made the fault easy to isolate.",
-      "kept": true
+      "kept": true,
+      "metrics": [
+        {
+          "label": "bundles held",
+          "value": "13 of 24"
+        },
+        {
+          "label": "false alarms",
+          "value": "3",
+          "bad": true
+        },
+        {
+          "label": "wording",
+          "value": "0 of 2",
+          "bad": true
+        }
+      ]
     },
     {
       "stage": "Iteration two",
@@ -22,7 +52,14 @@
       "why": "The first version reported any edit that still earned full reward. That conflates a real coverage hole with an edit that changed nothing, and a review tool that cries wolf will be ignored.",
       "evidence": "Clean controls wrongly held fell from 3 to 0. The false alarm on the clean record recovery bundle was an inclusive bound loosened at a site where no graded input could tell the difference.",
       "decision": "Kept. It also improved the wording of the finding, which can now state how many graded inputs the edit changed.",
-      "kept": true
+      "kept": true,
+      "metrics": [
+        {
+          "label": "false alarms",
+          "value": "3 to 0",
+          "good": true
+        }
+      ]
     },
     {
       "stage": "Iteration three",
@@ -30,7 +67,19 @@
       "why": "The probe was written from memory of the rule rather than from the text it had to match, so it looked for phrases nobody writes.",
       "evidence": "Went from 0 of 2 to 2 of 2 on the planted wording cases, with no new false alarms.",
       "decision": "Kept. The lesson generalises: a pattern probe has to be built against real examples of the thing it hunts.",
-      "kept": true
+      "kept": true,
+      "metrics": [
+        {
+          "label": "wording",
+          "value": "0 of 2 to 2 of 2",
+          "good": true
+        },
+        {
+          "label": "new false alarms",
+          "value": "0",
+          "good": true
+        }
+      ]
     },
     {
       "stage": "Removed",
@@ -38,7 +87,14 @@
       "why": "It was the cheapest possible signal and it needed no extra runs.",
       "evidence": "It produced every false alarm in iteration one, all on clean bundles, and each was a semantically neutral edit.",
       "decision": "Removed. Survival is not evidence of a coverage hole unless the mutant demonstrably answers differently somewhere, and that distinction is what separates a usable tool from a noisy one.",
-      "kept": false
+      "kept": false,
+      "metrics": [
+        {
+          "label": "false alarms caused",
+          "value": "all of them",
+          "bad": true
+        }
+      ]
     },
     {
       "stage": "Where it stands",
@@ -46,7 +102,28 @@
       "why": "Every claim on this site should come from a run rather than an estimate.",
       "evidence": "Catches 13 of 21 planted defects, reaches 5 of the 8 defect classes, and holds none of the 3 clean controls, taking 29 seconds for all 24 bundles.",
       "decision": "Answer leakage, nondeterminism and path escape are still missed. They are named on the comparison page rather than hidden, and the same corpus will measure whether the next round closes them.",
-      "kept": true
+      "kept": true,
+      "metrics": [
+        {
+          "label": "caught",
+          "value": "13 of 21",
+          "good": true
+        },
+        {
+          "label": "classes",
+          "value": "5 of 8",
+          "good": true
+        },
+        {
+          "label": "false alarms",
+          "value": "0 of 3",
+          "good": true
+        },
+        {
+          "label": "seconds",
+          "value": "29"
+        }
+      ]
     }
   ]
 }

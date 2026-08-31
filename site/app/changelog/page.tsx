@@ -13,6 +13,7 @@ interface Entry {
   evidence: string;
   decision: string;
   kept: boolean;
+  metrics?: { label: string; value: string; good?: boolean; bad?: boolean }[];
 }
 
 const entries = (payload as { entries: Entry[] }).entries;
@@ -24,9 +25,9 @@ export default function ChangelogPage() {
     <main>
       <p className="eyebrow">Changelog</p>
       <h1>What was tried, and what it cost</h1>
-      <p className="lede">
-        One entry per meaningful change, each with the evidence that decided the next one. The
-        experiment that was removed is kept here on purpose.
+      <p className="lede short">
+        One entry per change, each with the run that decided the next. The experiment that was
+        reverted keeps its place.
       </p>
 
       <div className="scoreboard">
