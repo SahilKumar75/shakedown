@@ -184,8 +184,9 @@ export default function OverviewPage() {
           <Pill tone="done">the agent layer</Pill>
           <h2>Where a fixed probe cannot go</h2>
           <p className="lede short">
-            {agent.totals.bundles} bundles investigated across {agent.totals.steps} recorded steps,
-            each one replayable on the trajectory page.
+            {agent.totals.bundles
+              ? `${agent.totals.bundles} bundles investigated across ${agent.totals.steps} recorded steps, each one replayable on the trajectory page.`
+              : "The probes settle six of the twelve classes. The rest need something that can read a verifier and write the submission that would cheat it."}
           </p>
         </div>
         <div className="split">

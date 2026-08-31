@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import json
 import os
+import re
 import time
 import urllib.error
 import urllib.request
@@ -23,7 +24,7 @@ OPENAI_LIKE = {
     "groq": {
         "endpoint": "https://api.groq.com/openai/v1/chat/completions",
         "key": "GROQ_API_KEY",
-        "model": "llama-3.3-70b-versatile",
+        "model": "openai/gpt-oss-120b",
         "hint": "a Groq key from console.groq.com",
     },
     "gemini": {
@@ -40,6 +41,15 @@ ORDER = ("anthropic", "groq", "gemini", "openrouter")
 
 class AgentUnavailable(RuntimeError):
     pass
+
+
+class ToolCallRejected(AgentUnavailable):
+    """The model asked for a tool that was never offered.
+
+    Some providers reject the whole request rather than passing the bad call
+    through, so the turn is lost. That is recoverable: tell the model what it may
+    actually call and let it try again.
+    """
 
 
 def _env(name: str) -> str:
@@ -88,21 +98,53 @@ def _require(name: str, hint: str) -> str:
     return value
 
 
+RETRIES = 8
+
+
+def _wait_for(detail: str, header: str | None) -> float:
+    """How long to hold off after a 429.
+
+    Providers say so either in a Retry-After header or in the message itself, and a
+    free tier says it often, so honouring the number they give beats guessing.
+    """
+    if header:
+        try:
+            return min(float(header), 40.0)
+        except ValueError:
+            pass
+    match = re.search(r"try again in ([0-9.]+)s", detail)
+    if match:
+        return min(float(match.group(1)) + 1.0, 40.0)
+    return 12.0
+
+
 def _post(url: str, headers: dict, body: dict, timeout: float) -> dict:
-    request = urllib.request.Request(
-        url,
-        data=json.dumps(body).encode("utf8"),
-        headers=headers,
-        method="POST",
-    )
-    try:
-        with urllib.request.urlopen(request, timeout=timeout) as response:
-            return json.loads(response.read().decode("utf8"))
-    except urllib.error.HTTPError as error:
-        detail = error.read().decode("utf8", "replace")[:400]
-        raise AgentUnavailable(f"{url} returned {error.code}: {detail}") from None
-    except urllib.error.URLError as error:
-        raise AgentUnavailable(f"{url} could not be reached: {error.reason}") from None
+    payload = json.dumps(body).encode("utf8")
+    for attempt in range(RETRIES):
+        request = urllib.request.Request(url, data=payload, headers=headers, method="POST")
+        try:
+            with urllib.request.urlopen(request, timeout=timeout) as response:
+                return json.loads(response.read().decode("utf8"))
+        except urllib.error.HTTPError as error:
+            detail = error.read().decode("utf8", "replace")[:400]
+            if error.code == 400 and "tool_use_failed" in detail:
+                raise ToolCallRejected(detail) from None
+            retryable = error.code == 429 or 500 <= error.code < 600
+            if retryable and attempt < RETRIES - 1:
+                delay = _wait_for(detail, error.headers.get("Retry-After"))
+                print(
+                    f"    {error.code} from the model, waiting {delay:.0f}s",
+                    flush=True,
+                )
+                time.sleep(delay)
+                continue
+            raise AgentUnavailable(f"{url} returned {error.code}: {detail}") from None
+        except urllib.error.URLError as error:
+            if attempt < RETRIES - 1:
+                time.sleep(4.0)
+                continue
+            raise AgentUnavailable(f"{url} could not be reached: {error.reason}") from None
+    raise AgentUnavailable(f"{url} kept failing after {RETRIES} attempts")
 
 
 class Client:
@@ -149,16 +191,17 @@ class Client:
             body["tools"] = tools
             body["tool_choice"] = "auto"
 
-        payload = _post(
-            spec["endpoint"],
-            {
-                "Authorization": f"Bearer {key}",
-                "Content-Type": "application/json",
-                "X-Title": "Shakedown",
-            },
-            body,
-            self.timeout,
-        )
+        headers = {
+            "Authorization": f"Bearer {key}",
+            "Content-Type": "application/json",
+            # urllib announces itself as Python-urllib, which some providers sit
+            # behind a bot check that rejects outright.
+            "User-Agent": "shakedown/1.0",
+        }
+        if self.provider == "openrouter":
+            headers["X-Title"] = "Shakedown"
+
+        payload = _post(spec["endpoint"], headers, body, self.timeout)
 
         usage = payload.get("usage") or {}
         self.prompt_tokens += int(usage.get("prompt_tokens") or 0)
@@ -203,6 +246,7 @@ class Client:
                 "x-api-key": key,
                 "anthropic-version": ANTHROPIC_VERSION,
                 "content-type": "application/json",
+                "user-agent": "shakedown/1.0",
             },
             body,
             self.timeout,

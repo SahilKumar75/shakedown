@@ -6,7 +6,7 @@ from dataclasses import dataclass, field
 
 from ..bundle import Bundle
 from ..findings import Defect, Finding, Severity
-from .client import Client
+from .client import Client, ToolCallRejected
 from .tools import SCHEMA, Toolbox, bundle_brief
 
 SYSTEM = """You review benchmark task bundles before they are submitted to an expensive
@@ -95,7 +95,7 @@ def _as_finding(raw: dict) -> Finding | None:
     )
 
 
-KEEP_TAIL = 14
+KEEP_TAIL = 6
 
 
 def _trim(messages: list[dict], keep: int = KEEP_TAIL) -> list[dict]:
@@ -156,9 +156,25 @@ def investigate(
     found: list[Finding] = []
     nudged = False
 
+    allowed = ", ".join(tool["function"]["name"] for tool in SCHEMA)
+
     for index in range(max_steps):
         messages = _trim(messages)
-        message = agent.complete(messages, tools=SCHEMA)
+        try:
+            message = agent.complete(messages, tools=SCHEMA)
+        except ToolCallRejected:
+            # The model reached for a tool that does not exist. Say so and carry on
+            # rather than losing the whole investigation to one bad turn.
+            messages.append(
+                {
+                    "role": "user",
+                    "content": (
+                        "That tool does not exist. The only tools you can call are: "
+                        f"{allowed}. Call one of those, or call report."
+                    ),
+                }
+            )
+            continue
         seconds = message.pop("_seconds", 0.0)
         calls = message.get("tool_calls") or []
         step = {

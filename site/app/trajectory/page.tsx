@@ -45,7 +45,16 @@ export default function TrajectoryPage() {
         </div>
       </div>
 
-      <TrajectoryView runs={file.runs} />
+      {file.runs.length ? (
+        <TrajectoryView runs={file.runs} />
+      ) : (
+        <p className="empty">
+          No agent runs are recorded in this checkout. The deterministic probes need no key
+          and run without one; the agent layer calls a model, so set a key and run{" "}
+          <code>python3 tools/emit_trajectories.py corpus_out site/data/trajectories.json</code>{" "}
+          to populate this page with real steps.
+        </p>
+      )}
     </main>
   );
 }

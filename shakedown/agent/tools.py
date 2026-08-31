@@ -6,7 +6,7 @@ from pathlib import Path
 from ..bundle import Bundle
 from ..runner import run_candidate, run_nop, run_oracle
 
-MAX_CHARS = 2600
+MAX_CHARS = 900
 
 
 def _clip(text: str, limit: int = MAX_CHARS) -> str:
@@ -214,7 +214,7 @@ class Toolbox:
             }
         )
         head = f"reward={result.reward} exit={result.exit_code} in {result.seconds:.2f}s"
-        tail = _clip((result.stdout or "") + (result.stderr or ""), 900)
+        tail = _clip((result.stdout or "") + (result.stderr or ""), 500)
         return f"{head}\n{tail}"
 
     def _run_reference(self, args: dict) -> str:

@@ -45,8 +45,36 @@ export interface TrajectoryFile {
   };
 }
 
-const file = payload as unknown as TrajectoryFile;
+const EMPTY: TrajectoryFile = {
+  model: "",
+  runs: [],
+  totals: {
+    bundles: 0,
+    steps: 0,
+    seconds: 0,
+    found: 0,
+    prompt_tokens: 0,
+    completion_tokens: 0,
+  },
+};
+
+/**
+ * The agent layer needs a key, so a clone that has only run the deterministic probes
+ * has no trajectories to show. That is a normal state, not a build failure, so the
+ * file ships empty and the page says so rather than the site refusing to compile.
+ */
+const loaded = payload as unknown as Partial<TrajectoryFile>;
+const file: TrajectoryFile = {
+  ...EMPTY,
+  ...loaded,
+  runs: Array.isArray(loaded?.runs) ? (loaded.runs as Run[]) : [],
+  totals: { ...EMPTY.totals, ...(loaded?.totals ?? {}) },
+};
 
 export function trajectories(): TrajectoryFile {
   return file;
+}
+
+export function hasRuns(): boolean {
+  return file.runs.length > 0;
 }

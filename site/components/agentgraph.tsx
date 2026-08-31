@@ -95,7 +95,7 @@ function tone(step: Step) {
 export function AgentGraph({ run: given }: { run?: Run } = {}) {
   const file = trajectories();
   const run = given ?? file.runs.find((entry) => entry.findings.length > 0) ?? file.runs[0];
-  const steps = run.steps;
+  const steps = run?.steps ?? [];
 
   const host = useRef<HTMLDivElement>(null);
   const [playing, setPlaying] = useState(false);
@@ -118,6 +118,10 @@ export function AgentGraph({ run: given }: { run?: Run } = {}) {
     watcher.observe(node);
     return () => watcher.disconnect();
   }, []);
+
+  if (!run || steps.length === 0) {
+    return null;
+  }
 
   const rows = Math.ceil(steps.length / COLS);
   const width = COLS * W + (COLS - 1) * GX;

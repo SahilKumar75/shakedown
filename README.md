@@ -51,7 +51,7 @@ python3 tools/emit_reports.py corpus_out site/data/reports.json
 python3 tools/emit_compare.py corpus_out site/data/compare.json
 ```
 
-That takes about 66 seconds end to end and costs nothing. Every probe reaches its verdict by executing the bundle rather than by asking a model, so no key, account or network call is involved. The generator is seeded, so the same seed produces the same corpus byte for byte.
+That takes about 66 seconds end to end and costs nothing. Checked from a clean directory: the seeded corpus rebuilds and the reports come back with the same 24 bundles, the same 10 held and the same 13 caught, verdict for verdict. Every probe reaches its verdict by executing the bundle rather than by asking a model, so no key, account or network call is involved. The generator is seeded, so the same seed produces the same corpus byte for byte.
 
 To inspect a single bundle:
 
@@ -66,7 +66,7 @@ Six of the twelve failure classes can be settled by a fixed probe. The rest need
 
 ```
 export GROQ_API_KEY=...      # or GEMINI_API_KEY, ANTHROPIC_API_KEY, OPENROUTER_API_KEY
-python3 -m shakedown.cli agent corpus_out/main/address_normalise_10 --trajectory trail.json
+python3 -m shakedown.cli agent corpus_out/address_normalise_10 --trajectory trail.json
 ```
 
 Four providers, whichever key you have. It uses the first one it finds, in the order Anthropic, Groq, Gemini, OpenRouter, so a judge can run it against a key they already own without editing anything. `SHAKEDOWN_PROVIDER` forces one and `SHAKEDOWN_MODEL` picks the model.
