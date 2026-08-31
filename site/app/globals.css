@@ -4796,3 +4796,101 @@ td.num {
     border-right: none;
   }
 }
+
+/* --------------------------------------------------------------- agent graph */
+
+.graph {
+  margin: 22px 0 0;
+  padding: 22px 20px 18px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background:
+    radial-gradient(circle at 1px 1px, rgba(31, 35, 40, 0.10) 1px, transparent 0) 0 0 / 20px 20px,
+    var(--paper);
+  overflow-x: auto;
+}
+
+.graph svg {
+  width: 100%;
+  min-width: 720px;
+  height: auto;
+  overflow: visible;
+}
+
+.graph figcaption {
+  margin-top: 16px;
+  padding-top: 14px;
+  border-top: 1px solid var(--line_soft);
+  font-size: 14px;
+  color: var(--ink_soft);
+  max-width: 76ch;
+}
+
+.gbox {
+  fill: var(--paper);
+  stroke: var(--line);
+  stroke-width: 1;
+  filter: drop-shadow(0 4px 10px rgba(31, 35, 40, 0.07));
+}
+
+.grail {
+  rx: 2;
+}
+
+.gnode.input .grail { fill: var(--ink_faint); }
+.gnode.probe .grail { fill: var(--accent); }
+.gnode.brain .grail { fill: var(--done); }
+.gnode.tool .grail { fill: var(--attention); }
+.gnode.out .grail { fill: var(--success); }
+
+.gnode.brain .gbox {
+  stroke: var(--done_line);
+  fill: var(--done_wash);
+}
+
+.gnode.tool .gbox {
+  fill: var(--ground);
+}
+
+.gtitle {
+  font-family: var(--font_mono), monospace;
+  font-size: 12.5px;
+  font-weight: 600;
+  fill: var(--ink);
+}
+
+.gsub {
+  font-size: 11px;
+  fill: var(--ink_faint);
+}
+
+.edge {
+  fill: none;
+  stroke: var(--line);
+  stroke-width: 1.6;
+}
+
+.arrowhead {
+  fill: var(--ink_faint);
+}
+
+.edge.dash {
+  stroke: var(--attention);
+  stroke-width: 1.4;
+  stroke-dasharray: 5 7;
+  opacity: 0.85;
+  animation: flow 1.4s linear infinite;
+}
+
+@keyframes flow {
+  to { stroke-dashoffset: -24; }
+}
+
+.gloop {
+  font-family: var(--font_mono), monospace;
+  font-size: 10.5px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  fill: var(--ink_faint);
+  text-anchor: middle;
+}

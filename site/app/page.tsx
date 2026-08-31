@@ -11,6 +11,7 @@ import { Magnetic } from "@/components/magnetic";
 import { Reveal } from "@/components/reveal";
 import { StagePipe } from "@/components/stagepipe";
 import { AgentLoading } from "@/components/agentloading";
+import { AgentGraph } from "@/components/agentgraph";
 import { Steps } from "@/components/steps";
 import { Aurora, GridField, Marquee, Pill, TerminalDemo } from "@/components/surfaces";
 import { RevealCompare } from "@/components/revealcompare";
@@ -195,7 +196,7 @@ export default function OverviewPage() {
             </Link>
           </div>
         </div>
-        <StagePipe />
+        <AgentGraph />
       </Reveal>
 
       <Reveal as="section" className="cta">
