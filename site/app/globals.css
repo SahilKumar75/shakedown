@@ -2991,3 +2991,316 @@ td.num {
   0%, 62% { left: -60px; }
   86%, 100% { left: 118%; }
 }
+
+/* ------------------------------------------------------------ aurora field */
+
+.aurora {
+  position: absolute;
+  inset: -140px 0 auto;
+  height: 620px;
+  pointer-events: none;
+  z-index: -1;
+  overflow: hidden;
+}
+
+.aurora span {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(58px);
+  opacity: 0.72;
+  will-change: transform;
+}
+
+.aurora .a1 {
+  width: 460px;
+  height: 320px;
+  left: 4%;
+  top: 60px;
+  background: rgba(9, 105, 218, 0.38);
+  animation: drift1 17s ease-in-out infinite alternate;
+}
+
+.aurora .a2 {
+  width: 400px;
+  height: 280px;
+  right: 6%;
+  top: 20px;
+  background: rgba(130, 80, 223, 0.32);
+  animation: drift2 21s ease-in-out infinite alternate;
+}
+
+.aurora .a3 {
+  width: 340px;
+  height: 240px;
+  left: 42%;
+  top: 150px;
+  background: rgba(207, 34, 46, 0.18);
+  animation: drift3 24s ease-in-out infinite alternate;
+}
+
+@keyframes drift1 {
+  to { transform: translate3d(70px, 34px, 0) scale(1.14); }
+}
+
+@keyframes drift2 {
+  to { transform: translate3d(-64px, 48px, 0) scale(1.1); }
+}
+
+@keyframes drift3 {
+  to { transform: translate3d(38px, -30px, 0) scale(0.9); }
+}
+
+/* ---------------------------------------------------------- reveal compare */
+
+.reveal2 {
+  position: relative;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  overflow: hidden;
+  background: var(--paper);
+  user-select: none;
+  min-height: 296px;
+}
+
+.r2pane {
+  padding: 20px 22px 22px;
+}
+
+.r2pane.ours {
+  position: absolute;
+  inset: 0;
+  background: var(--paper);
+  border-left: 1px solid var(--line);
+}
+
+.r2head {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  flex-wrap: wrap;
+  padding-bottom: 14px;
+  border-bottom: 1px solid var(--line_soft);
+  margin-bottom: 14px;
+}
+
+.r2tag {
+  font-family: var(--font_mono), monospace;
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 4px 10px;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  background: var(--wash);
+  color: var(--ink_soft);
+  white-space: nowrap;
+}
+
+.r2tag.ours {
+  border-color: var(--accent_line);
+  background: var(--accent_wash);
+  color: var(--accent);
+}
+
+.r2sub {
+  font-size: 13px;
+  color: var(--ink_faint);
+}
+
+.r2list {
+  list-style: none;
+  margin: 0 0 16px;
+  padding: 0;
+  display: grid;
+  gap: 9px;
+}
+
+.r2list li {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  font-size: 14px;
+  white-space: nowrap;
+}
+
+.r2list li.ok { color: var(--ink); }
+.r2list li.ok svg { color: var(--success); }
+.r2list li.bad { color: var(--ink); }
+.r2list li.bad svg { color: var(--danger); }
+.r2list li.proof {
+  color: var(--ink_soft);
+  font-family: var(--font_mono), monospace;
+  font-size: 12px;
+}
+.r2list li.proof svg { color: var(--accent); }
+.r2list li.idle { color: var(--ink_faint); }
+
+.r2verdict {
+  display: inline-block;
+  font-family: var(--font_mono), monospace;
+  font-size: 11.5px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  padding: 7px 13px;
+  border-radius: 6px;
+  white-space: nowrap;
+}
+
+.r2verdict.pass {
+  background: var(--wash);
+  border: 1px solid var(--line);
+  color: var(--ink_soft);
+}
+
+.r2verdict.hold {
+  background: var(--danger_wash);
+  border: 1px solid var(--danger_line);
+  color: var(--danger);
+}
+
+.r2handle {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 40px;
+  margin-left: -20px;
+  border: none;
+  background: transparent;
+  cursor: ew-resize;
+  padding: 0;
+  z-index: 3;
+}
+
+.r2handle::before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  margin-left: -1px;
+  background: var(--accent);
+  opacity: 0.75;
+}
+
+.r2grip {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 34px;
+  height: 34px;
+  margin: -17px 0 0 -17px;
+  border-radius: 50%;
+  background: var(--paper);
+  border: 1px solid var(--accent);
+  box-shadow: 0 4px 14px -4px rgba(9, 105, 218, 0.5);
+  transition: transform var(--step);
+}
+
+.r2grip svg {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 20px;
+  height: 20px;
+  margin: -10px 0 0 -10px;
+  fill: none;
+  stroke: var(--accent);
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.r2handle:hover .r2grip,
+.r2handle:focus-visible .r2grip {
+  transform: scale(1.12);
+}
+
+/* ------------------------------------------------------------------ versus */
+
+.versus {
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: var(--paper);
+  overflow: hidden;
+  margin-top: 22px;
+}
+
+.vshead,
+.vsrow {
+  display: grid;
+  grid-template-columns: 1fr 130px 130px;
+  align-items: center;
+  gap: 14px;
+  padding: 11px 20px;
+}
+
+.vshead {
+  background: var(--wash);
+  border-bottom: 1px solid var(--line);
+}
+
+.vscol {
+  font-family: var(--font_mono), monospace;
+  font-size: 10.5px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink_faint);
+  text-align: center;
+}
+
+.vscol.ours {
+  color: var(--accent);
+}
+
+.vsrow {
+  border-bottom: 1px solid var(--line_soft);
+  font-size: 14px;
+  transition: background var(--step);
+}
+
+.vsrow:last-child {
+  border-bottom: none;
+}
+
+.vsrow:hover {
+  background: var(--wash);
+}
+
+.vsmark {
+  display: flex;
+  justify-content: center;
+}
+
+.vsmark.yes { color: var(--success); }
+.vsmark.yes.muted { color: var(--ink_faint); opacity: 0.55; }
+.vsmark.no { color: var(--danger); opacity: 0.45; }
+
+.vsval {
+  display: block;
+  text-align: center;
+  font-family: var(--font_mono), monospace;
+  font-size: 12.5px;
+  color: var(--ink_soft);
+}
+
+@media (max-width: 760px) {
+  .vshead,
+  .vsrow {
+    grid-template-columns: 1fr 70px 70px;
+    padding: 10px 14px;
+    font-size: 13px;
+  }
+  .r2list li {
+    white-space: normal;
+  }
+}
+
+.draghint {
+  margin: 10px 0 26px;
+  font-family: var(--font_mono), monospace;
+  font-size: 11.5px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ink_faint);
+}

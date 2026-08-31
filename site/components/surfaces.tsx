@@ -3,6 +3,16 @@
 import { useEffect, useRef, useState } from "react";
 
 /** A dotted field with a soft radial mask, fading as the page scrolls away from it. */
+export function Aurora() {
+  return (
+    <div className="aurora" aria-hidden="true">
+      <span className="a1" />
+      <span className="a2" />
+      <span className="a3" />
+    </div>
+  );
+}
+
 export function GridField() {
   const [offset, setOffset] = useState(0);
 

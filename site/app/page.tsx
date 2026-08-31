@@ -11,7 +11,9 @@ import { Magnetic } from "@/components/magnetic";
 import { Reveal } from "@/components/reveal";
 import { StagePipe } from "@/components/stagepipe";
 import { Steps } from "@/components/steps";
-import { GridField, Marquee, Pill, TerminalDemo } from "@/components/surfaces";
+import { Aurora, GridField, Marquee, Pill, TerminalDemo } from "@/components/surfaces";
+import { RevealCompare } from "@/components/revealcompare";
+import { Versus } from "@/components/versus";
 
 const CLASSES = [
   "answer leak",
@@ -43,6 +45,7 @@ export default function OverviewPage() {
 
   return (
     <main className="landing">
+      <Aurora />
       <GridField />
 
       <section className="hero">
@@ -121,6 +124,8 @@ export default function OverviewPage() {
             baseline is the manual process: run the reference, then run an empty submission.
           </p>
         </div>
+        <RevealCompare />
+        <p className="draghint">Drag the divider. Same bundle, reviewed both ways.</p>
         <ArmBars />
         <div className="liftrow">
           <span className="liftfig">
@@ -131,6 +136,17 @@ export default function OverviewPage() {
             {baseClasses}
           </span>
         </div>
+      </Reveal>
+
+      <Reveal as="section" className="band">
+        <div className="bandhead">
+          <Pill tone="success">side by side</Pill>
+          <h2>What each one can actually tell you</h2>
+          <p className="lede short">
+            Both arms get the same bundles. The difference is how many questions each can answer.
+          </p>
+        </div>
+        <Versus />
       </Reveal>
 
       <Reveal as="section" className="band">
