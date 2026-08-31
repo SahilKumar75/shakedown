@@ -1,6 +1,5 @@
 import payload from "@/data/changelog.json";
-import { Reveal } from "@/components/reveal";
-import { ClearIcon, HoldIcon, RunIcon } from "@/components/icons";
+import { Timeline } from "@/components/timeline";
 
 export const metadata = {
   title: "Changelog",
@@ -45,36 +44,7 @@ export default function ChangelogPage() {
         </div>
       </div>
 
-      <Reveal>
-        <ol className="timeline log">
-          {entries.map((entry) => (
-            <li className="ev" key={entry.stage}>
-              <span className={entry.kept ? "evdot sound" : "evdot flare"}>
-                {entry.kept ? <ClearIcon /> : <HoldIcon />}
-              </span>
-              <div className="evcard">
-                <div className="evtop">
-                  <strong>{entry.stage}</strong>
-                  <span className={entry.kept ? "chip" : "chip block"}>
-                    {entry.kept ? "kept" : "reverted"}
-                  </span>
-                </div>
-                <h4>{entry.tried}</h4>
-                <p>{entry.why}</p>
-                <div className="proof">
-                  <span className="prooflabel">
-                    <RunIcon /> what the run showed
-                  </span>
-                  <code>{entry.evidence}</code>
-                </div>
-                <p className="fix">
-                  <strong>Decision</strong> {entry.decision}
-                </p>
-              </div>
-            </li>
-          ))}
-        </ol>
-      </Reveal>
+      <Timeline beats={entries} />
     </main>
   );
 }

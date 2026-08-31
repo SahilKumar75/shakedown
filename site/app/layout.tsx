@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { Wordmark } from "@/components/logo";
+import { Nav } from "@/components/nav";
 import { Space_Grotesk, IBM_Plex_Sans, IBM_Plex_Mono } from "next/font/google";
 import "./globals.css";
 
@@ -41,32 +41,14 @@ export const metadata: Metadata = {
   },
 };
 
-const LINKS = [
-  { href: "/", label: "Overview" },
-  { href: "/method", label: "Method" },
-  { href: "/report", label: "Review" },
-  { href: "/trajectory", label: "Agent" },
-  { href: "/compare", label: "Compare" },
-  { href: "/changelog", label: "Changelog" },
-  { href: "/reproduce", label: "Reproduce" },
-];
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" className={`${display.variable} ${text.variable} ${mono.variable}`}>
       <body>
         <header className="masthead">
-          <div className="shell mastrow">
-            <Link href="/" className="brand">
-              <Wordmark />
-            </Link>
-            <nav>
-              {LINKS.map((link) => (
-                <Link key={link.href} href={link.href}>
-                  {link.label}
-                </Link>
-              ))}
-            </nav>
+          <div className="shell">
+            <Nav />
           </div>
         </header>
         <div className="shell">{children}</div>
